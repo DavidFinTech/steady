@@ -18,3 +18,8 @@
 .callout,.local-note,.help-band{border-left:3px solid var(--cerulean)}
 .faq summary span{color:var(--cerulean)}
 .source-note{border-top-color:var(--cerulean-line)}
+
+/* Warm section canvas, with crisp white cards; hero remains unchanged. */
+body{background:#fbf7f1}
+header,.breadcrumb{background:#fff}
+.jump-grid>a,.calculator,.calculator form,.result,.cards article,.method,.callout,.local-note,.help-band{background:#fff}
