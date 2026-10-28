@@ -23,3 +23,29 @@
 body{background:#fbf7f1}
 header,.breadcrumb{background:#fff}
 .jump-grid>a,.calculator,.calculator form,.result,.cards article,.method,.callout,.local-note,.help-band{background:#fff}
+
+/* Focused weekly planner and homepage profile. */
+[hidden]{display:none!important}
+.account-section{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.account-panel{background:white;border:1px solid var(--line);border-top:3px solid var(--cerulean);border-radius:12px;padding:28px}
+.account-tabs{display:flex;gap:12px;flex-wrap:wrap}
+.account-tabs button,.account-panel .outline{font:inherit;border:1px solid #185079;border-radius:7px;padding:10px 16px;background:white;color:#185079;cursor:pointer}
+.account-tabs [aria-pressed="true"]{background:#185079;color:white}
+.account-form{padding:0}
+.account-form input{padding:11px 14px;margin-top:7px}
+.account-form .button{margin-top:22px}
+.account-help,.account-status{font-size:12px;margin:18px 0 0}
+.weekly-page{min-height:75vh}
+.weekly-section h1{font-size:clamp(32px,4vw,48px);letter-spacing:-1px}
+.weekly-section .eyebrow{color:var(--cerulean)}
+.weekly-section .planner{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px}
+.weekly-section .planner>div{min-width:0;background:white;border:1px solid var(--line);border-top:3px solid var(--cerulean);border-radius:12px;padding:28px}
+.weekly-section .fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.weekly-section input{margin-top:8px;padding:11px 14px}
+.weekly-section input[type="range"]{padding:0;accent-color:var(--cerulean)}
+.weekly-section .small{font-size:12px;padding:0}
+.weekly-section .amount{font-size:48px;color:#185079;overflow-wrap:anywhere}
+.weekly-section .row{display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);font-size:13px}
+.weekly-section .row b{text-align:right}
+.weekly-section .result p{font-size:13px}
+@media(max-width:760px){.account-section,.weekly-section .planner{grid-template-columns:1fr}.account-section{gap:20px}.weekly-section .fields{grid-template-columns:1fr}.account-panel,.weekly-section .planner>div{padding:22px}}
