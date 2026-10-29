@@ -8,6 +8,8 @@ const accountForm = $('account-form');
 const accountStatus = $('account-status');
 const accountUsernameWrap = $('username-wrap');
 const accountUsername = $('account-username');
+const optionalProfileFields = $('optional-profile-fields');
+const profileFieldIds = ['occupation', 'industry', 'location', 'bio', 'background'];
 const accountPassword = $('account-password');
 const accountSubmit = $('account-submit');
 const signinTab = $('account-signin-tab');
@@ -22,6 +24,7 @@ function setAccountMode(mode) {
   const signup = mode === 'signup';
   accountUsernameWrap.hidden = !signup;
   accountUsername.required = signup;
+  optionalProfileFields.hidden = !signup;
   accountPassword.autocomplete = signup ? 'new-password' : 'current-password';
   accountSubmit.textContent = signup ? 'Create profile' : 'Sign in';
   signinTab.setAttribute('aria-pressed', String(!signup));
@@ -44,8 +47,17 @@ function showAccountSession(user) {
     accountForm.hidden = false;
     return;
   }
-  const username = user.user_metadata && user.user_metadata.username;
-  $('account-profile-summary').textContent = (username ? '@' + username + ' · ' : '') + user.email;
+  const metadata = user.user_metadata || {};
+  const profileLines = [
+    metadata.username ? '@' + metadata.username : '',
+    user.email || '',
+    metadata.occupation ? 'Occupation: ' + metadata.occupation : '',
+    metadata.industry ? 'Industry: ' + metadata.industry : '',
+    metadata.location ? 'Location: ' + metadata.location : '',
+    metadata.bio ? 'Bio: ' + metadata.bio : '',
+    metadata.background ? 'Background: ' + metadata.background : ''
+  ].filter(Boolean);
+  $('account-profile-summary').textContent = profileLines.join('\n');
   accountForm.hidden = true;
   signedInPanel.hidden = false;
   setAccountStatus('Signed in successfully.');
@@ -70,7 +82,16 @@ accountForm.addEventListener('submit', async event => {
         setAccountStatus('Choose a username of 3–30 letters, numbers, or underscores.');
         return;
       }
-      result = await client.auth.signUp({ email, password, options: { data: { username } } });
+      const profileData = { username };
+      profileFieldIds.forEach(field => {
+        const value = $('account-' + field).value.trim();
+        if (value) profileData[field] = value;
+      });
+      result = await client.auth.signUp({
+        email,
+        password,
+        options: { data: profileData }
+      });
       if (result.error) throw result.error;
       if (result.data.session && result.data.user) showAccountSession(result.data.user);
       else setAccountStatus('Profile created. Check your email for a confirmation link before signing in.');
