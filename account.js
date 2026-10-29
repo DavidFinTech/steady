@@ -123,7 +123,9 @@ accountForm.addEventListener('submit', async event => {
       }
       const profileData = { username };
       profileFieldIds.forEach(field => {
-        const value = $('account-' + field).value.trim();
+        const value = field === 'occupation'
+          ? (accountForm.querySelector('input[name="occupation"]:checked')?.value || '')
+          : $('account-' + field).value.trim();
         if (value) profileData[field] = value;
       });
       result = await client.auth.signUp({
