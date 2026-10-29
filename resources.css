@@ -49,3 +49,25 @@ header,.breadcrumb{background:#fff}
 .weekly-section .row b{text-align:right}
 .weekly-section .result p{font-size:13px}
 @media(max-width:760px){.account-section,.weekly-section .planner{grid-template-columns:1fr}.account-section{gap:20px}.weekly-section .fields{grid-template-columns:1fr}.account-panel,.weekly-section .planner>div{padding:22px}}
+
+
+/* Gentle scroll reveals: motion is subtle, one-shot, and disabled for reduced-motion users. */
+.scroll-effects-ready .scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition: opacity 620ms cubic-bezier(.2,.7,.2,1),
+              transform 620ms cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.scroll-effects-ready .scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-effects-ready .scroll-reveal,
+  .scroll-effects-ready .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
