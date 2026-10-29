@@ -71,3 +71,7 @@ header,.breadcrumb{background:#fff}
     transition: none;
   }
 }
+
+
+/* Compact language toggle in the site header. */
+.language-toggle{font:600 12px/1.2 Arial,Helvetica,sans-serif;color:#185079;background:#fff;border:1px solid #9bd4e7;border-radius:7px;padding:9px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0}.language-toggle:hover{background:#e6f5fb;color:#00658a}.language-toggle:focus-visible{outline:3px solid #3885ab;outline-offset:3px}@media(max-width:900px){.language-toggle{padding:8px 10px;font-size:11px}}@media(max-width:650px){.language-toggle{order:2;margin-left:auto}.header-profile{order:2;margin-left:0}header>.button.small{order:2}}
