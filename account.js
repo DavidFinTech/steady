@@ -19,12 +19,13 @@ const headerUsername = $('header-username');
 let selectedAvatarDataUrl = '';
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 function setHeaderProfile(user) {
-  if (!user) { headerProfile.hidden = true; headerAvatar.removeAttribute('src'); headerUsername.textContent = ''; return; }
-  const metadata = user.user_metadata || {};
-  headerUsername.textContent = metadata.username || (user.email ? user.email.split('@')[0] : 'Profile');
-  const avatarUrl = metadata.avatar_url || '';
-  if (avatarUrl) { headerAvatar.src = avatarUrl; headerAvatar.hidden = false; }
-  else { headerAvatar.removeAttribute('src'); headerAvatar.hidden = true; }
+  const metadata = user && user.user_metadata ? user.user_metadata : {};
+  headerUsername.textContent = user
+    ? (metadata.username || (user.email ? user.email.split('@')[0] : 'Profile'))
+    : 'Profile';
+  headerAvatar.src = metadata.avatar_url || 'default-avatar.svg';
+  headerAvatar.alt = 'Default profile picture';
+  headerAvatar.hidden = false;
   headerProfile.hidden = false;
 }
 avatarInput.addEventListener('change', () => {
