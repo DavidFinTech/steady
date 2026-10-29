@@ -10,6 +10,42 @@ const accountUsernameWrap = $('username-wrap');
 const accountUsername = $('account-username');
 const optionalProfileFields = $('optional-profile-fields');
 const profileFieldIds = ['occupation', 'industry', 'location', 'bio', 'background'];
+const avatarInput = $('account-avatar');
+const avatarPreviewWrap = $('avatar-preview-wrap');
+const avatarPreview = $('avatar-preview');
+const headerProfile = $('header-profile');
+const headerAvatar = $('header-avatar');
+const headerUsername = $('header-username');
+let selectedAvatarDataUrl = '';
+const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
+function setHeaderProfile(user) {
+  if (!user) { headerProfile.hidden = true; headerAvatar.removeAttribute('src'); headerUsername.textContent = ''; return; }
+  const metadata = user.user_metadata || {};
+  headerUsername.textContent = metadata.username || (user.email ? user.email.split('@')[0] : 'Profile');
+  const avatarUrl = metadata.avatar_url || '';
+  if (avatarUrl) { headerAvatar.src = avatarUrl; headerAvatar.hidden = false; }
+  else { headerAvatar.removeAttribute('src'); headerAvatar.hidden = true; }
+  headerProfile.hidden = false;
+}
+avatarInput.addEventListener('change', () => {
+  const file = avatarInput.files && avatarInput.files[0]; selectedAvatarDataUrl = ''; avatarPreviewWrap.hidden = true; if (!file) return;
+  if (!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)) { avatarInput.value = ''; setAccountStatus('Choose a JPG, PNG, WebP, or GIF image.'); return; }
+  if (file.size > MAX_AVATAR_BYTES) { avatarInput.value = ''; setAccountStatus('Profile pictures must be 2 MB or smaller.'); return; }
+  const reader = new FileReader(); reader.onload = () => { selectedAvatarDataUrl = String(reader.result || ''); avatarPreview.src = selectedAvatarDataUrl; avatarPreviewWrap.hidden = false; };
+  reader.onerror = () => setAccountStatus('Could not read that image. Please choose another file.'); reader.readAsDataURL(file);
+});
+$('avatar-remove').addEventListener('click', () => { avatarInput.value = ''; selectedAvatarDataUrl = ''; avatarPreview.removeAttribute('src'); avatarPreviewWrap.hidden = true; });
+async function uploadAvatar(client, user) {
+  const file = avatarInput.files && avatarInput.files[0]; if (!file || !selectedAvatarDataUrl) return user;
+  const extensions = {'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'};
+  const path = user.id + '/' + Date.now() + '.' + extensions[file.type];
+  const uploaded = await client.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type });
+  if (uploaded.error) throw new Error('Account created, but the picture could not be uploaded. Configure the public avatars bucket and its upload policy in Supabase.');
+  const publicData = client.storage.from('avatars').getPublicUrl(uploaded.data.path);
+  const avatarUrl = publicData.data && publicData.data.publicUrl; if (!avatarUrl) throw new Error('No public avatar URL available. Check the Supabase avatars bucket settings.');
+  const updated = await client.auth.updateUser({ data: { avatar_url: avatarUrl } }); if (updated.error) throw updated.error; return updated.data.user || user;
+}
+
 const accountPassword = $('account-password');
 const accountSubmit = $('account-submit');
 const signinTab = $('account-signin-tab');
@@ -45,8 +81,10 @@ function showAccountSession(user) {
   if (!user) {
     signedInPanel.hidden = true;
     accountForm.hidden = false;
+    setHeaderProfile(null);
     return;
   }
+  setHeaderProfile(user);
   const metadata = user.user_metadata || {};
   const profileLines = [
     metadata.username ? '@' + metadata.username : '',
@@ -93,8 +131,13 @@ accountForm.addEventListener('submit', async event => {
         options: { data: profileData }
       });
       if (result.error) throw result.error;
-      if (result.data.session && result.data.user) showAccountSession(result.data.user);
-      else setAccountStatus('Profile created. Check your email for a confirmation link before signing in.');
+      if (result.data.session && result.data.user) {
+        let user = result.data.user;
+        if (avatarInput.files && avatarInput.files[0]) user = await uploadAvatar(client, user);
+        showAccountSession(user);
+      } else {
+        setAccountStatus(avatarInput.files && avatarInput.files[0] ? 'Profile created. Check your email for confirmation, then sign in and select your picture again to upload it.' : 'Profile created. Check your email for a confirmation link before signing in.');
+      }
     } else {
       result = await client.auth.signInWithPassword({ email, password });
       if (result.error) throw result.error;
