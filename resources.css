@@ -75,3 +75,14 @@ header,.breadcrumb{background:#fff}
 
 /* Compact language toggle in the site header. */
 .language-toggle{font:600 12px/1.2 Arial,Helvetica,sans-serif;color:#185079;background:#fff;border:1px solid #9bd4e7;border-radius:7px;padding:9px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0}.language-toggle:hover{background:#e6f5fb;color:#00658a}.language-toggle:focus-visible{outline:3px solid #3885ab;outline-offset:3px}@media(max-width:900px){.language-toggle{padding:8px 10px;font-size:11px}}@media(max-width:650px){.language-toggle{order:2;margin-left:auto}.header-profile{order:2;margin-left:0}header>.button.small{order:2}}
+
+/* Native single-choice controls, presented as profile buttons. */
+.occupation-picker{border:0;padding:0;margin:16px 0 0;min-width:0}
+.occupation-picker legend{font-size:13px;font-weight:600;color:var(--ink);padding:0;margin-bottom:8px}
+.occupation-options{display:flex;flex-wrap:wrap;gap:10px}
+.optional-profile-fields .occupation-option{position:relative;margin:0;cursor:pointer;flex:1 1 110px}
+.optional-profile-fields .occupation-option input{position:absolute;width:1px;height:1px;padding:0;margin:0;border:0;clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+.occupation-option span{display:block;padding:12px 14px;text-align:center;border:1px solid #9bd4e7;border-radius:8px;background:#fff;color:#185079;font-size:13px;font-weight:600}
+.occupation-option:hover span{background:#e6f5fb}
+.occupation-option input:checked+span{background:#007ba7;border-color:#007ba7;color:#fff;box-shadow:0 0 0 1px #007ba7}
+.occupation-option input:focus-visible+span{outline:3px solid #3885ab;outline-offset:3px}
