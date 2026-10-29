@@ -86,3 +86,12 @@ header,.breadcrumb{background:#fff}
 .occupation-option:hover span{background:#e6f5fb}
 .occupation-option input:checked+span{background:#007ba7;border-color:#007ba7;color:#fff;box-shadow:0 0 0 1px #007ba7}
 .occupation-option input:focus-visible+span{outline:3px solid #3885ab;outline-offset:3px}
+
+/* Soft cream-to-blue ombre behind the existing white cards. */
+body{
+  background-color:#fbf7f1;
+  background-image:
+    radial-gradient(ellipse at 100% 35%,rgba(155,212,231,.20),transparent 58%),
+    linear-gradient(155deg,#fbf7f1 0%,#f8f6f1 28%,#f0f5f5 62%,#e3f1f8 100%);
+  background-repeat:no-repeat;
+}
