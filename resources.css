@@ -31,7 +31,7 @@ header,.breadcrumb{background:#fff}
 .account-tabs{display:flex;gap:12px;flex-wrap:wrap}
 .account-tabs button,.account-panel .outline{font:inherit;border:1px solid #185079;border-radius:7px;padding:10px 16px;background:white;color:#185079;cursor:pointer}
 .account-tabs [aria-pressed="true"]{background:#185079;color:white}
-.account-form{padding:0}
+.account-form{padding:0}.optional-profile-fields{display:grid;gap:15px;margin-top:8px;padding-top:18px;border-top:1px solid var(--line)}.optional-profile-fields[hidden]{display:none!important}.optional-profile-fields label{display:block;font-size:13px;font-weight:600;color:var(--ink)}.optional-profile-fields input,.optional-profile-fields textarea{display:block;width:100%;box-sizing:border-box;font:inherit;font-weight:400;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:7px;padding:11px 14px;margin-top:7px}.optional-profile-fields textarea{resize:vertical;line-height:1.5}.profile-fields-intro{font-weight:700;margin:0}.profile-fields-intro span{font-weight:400;color:var(--muted)}.account-profile-summary{white-space:pre-line;overflow-wrap:anywhere}
 .account-form input{padding:11px 14px;margin-top:7px}
 .account-form .button{margin-top:22px}
 .account-help,.account-status{font-size:12px;margin:18px 0 0}
