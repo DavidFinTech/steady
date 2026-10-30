@@ -51,6 +51,14 @@
     "Expected weekly income ($)":"Ingresos semanales previstos ($)","Essential weekly expenses ($)":"Gastos semanales esenciales ($)","Current emergency savings ($)":"Ahorros actuales para emergencias ($)","Tax reserve (%)":"Reserva para impuestos (%)","Income change: ":"Cambio de ingresos: ","Tax percentage is an editable planning assumption, not a tax calculation. No money moves and nothing is saved or sent. ":"El porcentaje de impuestos es una suposición editable para planificar, no un cálculo fiscal. No se mueve dinero ni se guarda o envía nada. ",
     "Try the 2026 tax calculator →":"Prueba la calculadora de impuestos de 2026 →","Reset sample":"Restablecer ejemplo","Available after essentials and tax reserve":"Disponible después de gastos esenciales y reserva de impuestos","Scenario income":"Ingresos del escenario","Tax reserve":"Reserva para impuestos","Savings cover essential expenses for":"Los ahorros cubren los gastos esenciales durante","weeks":"semanas","Consider putting some of the remainder toward your buffer.":"Considera destinar parte del sobrante a tu reserva.","This is a weekly estimate. It does not model debt interest, benefit eligibility, or payment timing within the week.":"Esta es una estimación semanal. No calcula intereses de deudas, elegibilidad para beneficios ni fechas de pago dentro de la semana."
   };
+  Object.assign(translations, {
+    "My next step":"Mi siguiente paso", "Find my next step":"Encontrar mi siguiente paso",
+    "NYC pilot · No account needed · Free planning tools":"Piloto en NYC · Sin cuenta · Herramientas gratuitas",
+    "NO ACCOUNT NEEDED":"NO NECESITAS UNA CUENTA", "Useful support. Less to fill in.":"Apoyo útil. Menos formularios.",
+    "Use every tool without sharing your name, email or password. Your checklist lasts for this visit; print it to keep a copy. Only your language preference is saved in this browser.":"Usa todas las herramientas sin compartir tu nombre, correo ni contraseña. Tu lista dura esta visita; imprímela para conservarla. Solo se guarda tu preferencia de idioma en este navegador.",
+    "Build my next-step checklist ↑":"Crear mi lista de pasos ↑"
+  });
+  Object.entries(translations).forEach(([key,value]) => { translations[key.trim()] = value; });
   const attributes = {
     "Skip to content":"Saltar al contenido","Skip to planner":"Saltar al planificador",
     "Default profile picture":"Foto de perfil predeterminada","Selected profile picture preview":"Vista previa de la foto de perfil seleccionada",
@@ -71,6 +79,7 @@
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     let node;
     while ((node = walker.nextNode())) {
+      if (node.parentElement.closest('[data-native-i18n], script, style, [data-language-toggle], #total, #profit, #federal, #self, #medicare, #monthly, #remaining, #scenario, #reserve, #runway, #changeLabel, #advice, #resultLabel, #error')) continue;
       if (!original.has(node)) original.set(node, node.nodeValue);
       const source = original.get(node);
       const trimmed = source.trim();
@@ -82,11 +91,12 @@
       } else if (!spanish) node.nodeValue = source;
     }
     document.querySelectorAll("input[placeholder],textarea[placeholder],img[alt],a[aria-label],button[aria-label]").forEach(el => {
+      if (el.hasAttribute("data-language-toggle")) return;
       for (const attr of ["placeholder", "alt", "aria-label"]) {
         if (!el.hasAttribute(attr)) continue;
         const key = attr + ":" + el.getAttribute(attr);
-        if (!el.dataset["langOriginal" + attr]) el.dataset["langOriginal" + attr] = el.getAttribute(attr);
-        const originalValue = el.dataset["langOriginal" + attr];
+        if (!el.dataset["langOriginal" + attr.replace(/-/g, "_")]) el.dataset["langOriginal" + attr.replace(/-/g, "_")] = el.getAttribute(attr);
+        const originalValue = el.dataset["langOriginal" + attr.replace(/-/g, "_")];
         const translated = attributes[originalValue] || translations[originalValue];
         if (spanish && translated) el.setAttribute(attr, translated);
         else if (!spanish) el.setAttribute(attr, originalValue);
