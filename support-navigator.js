@@ -50,7 +50,7 @@ if (typeof document !== 'undefined') {
   const root = document.getElementById('next-step');
   if (root) {
     let need = 'budget', region = 'nyc', shown = false, checked = new Set();
-    const t = (en, es) => document.documentElement.lang === 'es' ? es : en;
+    const t = (en, es) => document.documentElement.lang === 'es' ? es : (window.STEADY_TRANSLATIONS?.[en]?.[document.documentElement.lang] || en);
     const pair = value => t(...value);
     function render(focus = false) {
       const path = getSupportPath(need, region);

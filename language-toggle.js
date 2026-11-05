@@ -1,5 +1,7 @@
 (() => {
   const translations = {
+    "Community":"Comunidad",
+    "Planning tools need no account. Your checklist lasts for this visit; print it to keep a copy. Community profiles, posts, and comments are saved and publicly visible. Your language preference is saved in this browser.":"Las herramientas de planificaci\u00f3n no requieren cuenta. Tu lista dura esta visita; impr\u00edmela para conservarla. Los perfiles, publicaciones y comentarios se guardan y son p\u00fablicos. Tu preferencia de idioma se guarda en este navegador.",
     "Skip to content":"Saltar al contenido","Skip to planner":"Saltar al planificador",
     "Tax calculator":"Calculadora de impuestos","Health care":"Atención médica","Legal protection":"Protección legal","Profile / Sign in":"Perfil / Iniciar sesión",
     "Weekly planner ↗":"Planificador semanal ↗","Resource hub":"Centro de recursos","Back to homepage ↗":"Volver al inicio ↗","Back to resources ↗":"Volver a los recursos ↗",
@@ -66,11 +68,15 @@
     "At least 8 characters":"Al menos 8 caracteres"
   };
   const original = new WeakMap();
-  function applyLanguage(spanish) {
-    document.documentElement.lang = spanish ? "es" : "en";
+  function applyLanguage(language) {
+    const spanish = language === "es";
+    const extra = window.STEADY_TRANSLATIONS || {};
+    document.documentElement.lang = language;
     document.title = spanish
       ? (location.pathname.endsWith("planner.html") ? "Planificador semanal — Steady" : "Steady — Recursos para trabajadores independientes")
       : (location.pathname.endsWith("planner.html") ? "Weekly planner — Steady" : "Steady — Resources for independent workers");
+    if (language === 'zh-Hans') document.title = location.pathname.endsWith('planner.html') ? '每周规划 — Steady' : 'Steady — 独立工作者资源';
+    if (language === 'hi') document.title = location.pathname.endsWith('planner.html') ? 'साप्ताहिक योजनाकार — Steady' : 'Steady — स्वतंत्र कामगारों के लिए संसाधन';
     document.querySelectorAll("[data-language-toggle]").forEach(button => {
       button.textContent = spanish ? "English" : "Español";
       button.setAttribute("aria-label", spanish ? "Switch website language to English" : "Cambiar el idioma del sitio web a español");
@@ -79,59 +85,65 @@
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     let node;
     while ((node = walker.nextNode())) {
-      if (node.parentElement.closest('[data-native-i18n], script, style, [data-language-toggle], #total, #profit, #federal, #self, #medicare, #monthly, #remaining, #scenario, #reserve, #runway, #changeLabel, #advice, #resultLabel, #error')) continue;
+      if (node.parentElement.closest('[data-language-selector], [data-native-i18n], script, style, [data-language-toggle], #total, #profit, #federal, #self, #medicare, #monthly, #remaining, #scenario, #reserve, #runway, #changeLabel, #advice, #resultLabel, #error')) continue;
       if (!original.has(node)) original.set(node, node.nodeValue);
       const source = original.get(node);
       const trimmed = source.trim();
       if (!trimmed) continue;
-      const translated = translations[trimmed];
-      if (spanish && translated) {
+      const translated = spanish ? translations[trimmed] : extra[trimmed]?.[language];
+      if (translated) {
         const start = source.match(/^\s*/)[0], end = source.match(/\s*$/)[0];
         node.nodeValue = start + translated + end;
-      } else if (!spanish) node.nodeValue = source;
+      } else node.nodeValue = source;
     }
-    document.querySelectorAll("input[placeholder],textarea[placeholder],img[alt],a[aria-label],button[aria-label]").forEach(el => {
+    document.querySelectorAll("input[placeholder],textarea[placeholder],img[alt],[aria-label]:not([data-language-selector])").forEach(el => {
       if (el.hasAttribute("data-language-toggle")) return;
       for (const attr of ["placeholder", "alt", "aria-label"]) {
         if (!el.hasAttribute(attr)) continue;
         const key = attr + ":" + el.getAttribute(attr);
         if (!el.dataset["langOriginal" + attr.replace(/-/g, "_")]) el.dataset["langOriginal" + attr.replace(/-/g, "_")] = el.getAttribute(attr);
         const originalValue = el.dataset["langOriginal" + attr.replace(/-/g, "_")];
-        const translated = attributes[originalValue] || translations[originalValue];
-        if (spanish && translated) el.setAttribute(attr, translated);
-        else if (!spanish) el.setAttribute(attr, originalValue);
+        const translated = spanish ? (attributes[originalValue] || translations[originalValue]) : extra[originalValue]?.[language];
+        if (translated) el.setAttribute(attr, translated);
+        else el.setAttribute(attr, originalValue);
       }
     });
     document.querySelectorAll("[data-language-toggle]").forEach(button => button.setAttribute("aria-pressed", String(spanish)));
-    try { localStorage.setItem("steady-language", spanish ? "es" : "en"); } catch (_) {}
-    window.dispatchEvent(new CustomEvent("steady-language-change", { detail: { language: spanish ? "es" : "en" } }));
+    try { localStorage.setItem("steady-language", language); } catch (_) {}
+    window.dispatchEvent(new CustomEvent("steady-language-change", { detail: { language } }));
   }
   function init() {
     const header = document.querySelector("header");
-    if (header && !header.querySelector("[data-language-toggle]")) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "language-toggle";
-      button.dataset.languageToggle = "";
-      button.textContent = "Español";
-      button.setAttribute("aria-label", "Cambiar el idioma del sitio web a español");
-      button.addEventListener("click", () => applyLanguage(document.documentElement.lang !== "es"));
-      const profile = header.querySelector(".header-profile");
-      if (profile) header.insertBefore(button, profile);
-      else header.appendChild(button);
-    }
-    let spanish = false;
-    try { spanish = localStorage.getItem("steady-language") === "es"; } catch (_) {}
-    applyLanguage(spanish);
+    const select = document.createElement('select');
+    select.className = 'language-toggle'; select.setAttribute('aria-label','Language / Idioma / 语言 / भाषा');
+    for (const [value,name] of [['en','English'],['es','Español'],['zh-Hans','简体中文'],['hi','हिन्दी']]) { const option=document.createElement('option'); option.value=value; option.textContent=name; select.append(option); }
+    select.setAttribute('data-language-selector','');
+    header?.append(select);
+    select.addEventListener('change',()=>applyLanguage(select.value));
+    let language='en'; try { language=localStorage.getItem('steady-language') || 'en'; } catch (_) {}
+    if (!['en','es','zh-Hans','hi'].includes(language)) language='en';
+    select.value=language; applyLanguage(language);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
-  const observer = new MutationObserver(() => {
-    if (document.documentElement.lang !== "es") return;
-    document.querySelectorAll("#account-status, #account-signed-in h3, #account-profile-summary, #changeLabel, #advice, #resultLabel, #runway").forEach(el => {
-      const text = el.textContent.trim();
-      if (translations[text]) el.textContent = translations[text];
+  const dynamicOriginal = new WeakMap();
+  const dynamicRendered = new WeakMap();
+  function translateDynamic() {
+    const lang = document.documentElement.lang;
+    document.querySelectorAll('#advice, #resultLabel, #runway, #error').forEach(el => {
+      const current = el.textContent;
+      if (current !== dynamicRendered.get(el)) dynamicOriginal.set(el, current);
+      const source = dynamicOriginal.get(el) ?? current;
+      let output = lang === 'es' ? (translations[source] || source) : (window.STEADY_TRANSLATIONS?.[source]?.[lang] || source);
+      if (lang === 'zh-Hans') output = output.replace(/([0-9.]+) weeks/g, '$1 周');
+      if (lang === 'hi') output = output.replace(/([0-9.]+) weeks/g, '$1 सप्ताह');
+      if (lang === 'es') output = output.replace(/([0-9.]+) weeks/g, '$1 semanas');
+      dynamicRendered.set(el, output);
+      if (current !== output) el.textContent = output;
     });
-  });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+  window.addEventListener('steady-language-change', translateDynamic);
+  const observer = new MutationObserver(translateDynamic);
+  observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  translateDynamic();
 })();

@@ -125,3 +125,9 @@ progress{display:block;width:100%;height:6px;margin:8px 0 12px;accent-color:#007
   .content{max-width:none;padding:0}.navigator-layout{display:block}.navigator{margin:0;padding:0}.next-plan{display:none;border:0;background:white;padding:20px}.next-plan.has-plan{display:block}
   .resource-action::after{content:' (' attr(href) ')';font-weight:400;overflow-wrap:anywhere}.checklist label{break-inside:avoid}.next-plan::before{content:'steady — Your next-step checklist';font-size:24px;font-weight:bold}
 }
+
+select.language-toggle{width:auto;max-width:160px}html[lang="hi"] body{line-height:1.8}html[lang="zh-Hans"] h1,html[lang="hi"] h1{letter-spacing:0}
+
+@media print{html[lang="zh-Hans"] .next-plan::before{content:"Steady — 您的下一步清单"}}
+
+@media print{html[lang="hi"] .next-plan::before{content:"Steady — आपके अगले कदमों की सूची"}}
