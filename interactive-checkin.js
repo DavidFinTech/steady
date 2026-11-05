@@ -1,74 +1,72 @@
 (() => {
-  const storageKey = 'steady-next-step';
-  const choices = [...document.querySelectorAll('[data-next-step-choice]')];
-  const result = document.getElementById('next-step-result');
-  const reset = document.getElementById('next-step-reset');
-  const heading = document.getElementById('next-step-heading');
-  const intro = heading.nextElementSibling;
-  const choiceGroup = document.querySelector('.next-step-choices');
-  const copy = {
+  const form = document.getElementById('support-form');
+  const plan = document.getElementById('next-plan');
+  if (!form || !plan) return;
+  const content = {
     en: {
-      eyebrow: 'A QUICK CHECK-IN',
-      heading: 'What would make this week feel steadier?',
-      intro: 'Choose one place to begin. We’ll point you to a useful next step and remember it on this device.',
-      group: 'Choose your priority',
-      reset: 'Choose a different priority',
-      choices: { taxes: 'Plan for taxes', health: 'Find health care', rights: 'Protect my pay' },
-      messages: {
-        taxes: ['YOUR NEXT STEP', 'Give your tax plan a number.', 'Start with your expected income and expenses. You’ll get an annual estimate and a monthly amount to set aside.', '#tax', 'Open the tax calculator'],
-        health: ['YOUR NEXT STEP', 'Find the care path that fits.', 'Compare Marketplace coverage, Medicaid and CHIP, and nearby community health centers in one place.', '#health', 'Explore health options'],
-        rights: ['YOUR NEXT STEP', 'Protect the work you have done.', 'Review payment and classification resources, then keep the records that support your next conversation.', '#legal', 'Review your rights']
-      }
+      eyebrow: 'YOUR NEXT THREE STEPS',
+      labels: { week: 'Plan my week', taxes: 'Prepare for taxes', health: 'Find health coverage', pay: 'Address unpaid work' },
+      plans: {
+        week: ['Make room for an uneven week', ['List expected income and essential expenses for the same week.', 'Open the planner and try a lower-income scenario.', 'Write down one expense or payment date to review.'], 'planner.html#planner', 'Steady weekly planner ↗', 'Local planning tool. No money moves.'],
+        taxes: ['Get your tax records together', ['Gather income records and business expense receipts.', 'Read IRS guidance and note questions about your situation.', 'Confirm the next action with a qualified tax preparer if you need help.'], 'https://www.irs.gov/businesses/small-businesses-self-employed/estimated-taxes', 'IRS estimated tax guidance ↗', 'External provider. Confirm current rules and availability on their website.'],
+        health: ['Find a coverage starting point', ['Check whether you can enroll or update coverage after a life change.', 'Compare plans, costs, and nearby providers.', 'Write down one question to bring to an assister or enrollment helper.'], 'https://www.healthcare.gov/self-employed/coverage/', 'Explore HealthCare.gov ↗', 'External provider. Confirm current rules and availability on their website.'],
+        pay: ['Protect your unpaid work', ['Save your contract, invoice, and payment records in one place.', 'Write down the amount owed and the payment due date.', 'Review the right resource before deciding on your next step.'], 'https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page', 'Explore NYC freelance worker rights ↗', 'External provider. Confirm current rules and availability on their website.']
+      },
+      elsewhere: { week: 'Resources for the United States', taxes: 'Resources for the United States', health: 'Resources for the United States', pay: 'Resources for the United States' },
+      nyc: 'Resources for NYC',
+      progress: 'steps checked',
+      print: 'Print / save PDF',
+      restart: 'Start over',
+      unsaved: 'Your checklist is not saved. Print it before leaving this page.',
+      emptyTitle: 'One priority. A clear next step.',
+      emptyBody: 'Your checklist will appear here, with a useful resource and three actions you can take.',
+      emptyNote: 'No sign-up. No personal details.'
     },
     es: {
-      eyebrow: 'UN MOMENTO RÁPIDO',
-      heading: '¿Qué haría que esta semana se sienta más estable?',
-      intro: 'Elige un punto de partida. Te mostraremos un siguiente paso útil y lo recordaremos en este dispositivo.',
-      group: 'Elige tu prioridad',
-      reset: 'Elegir otra prioridad',
-      choices: { taxes: 'Planificar impuestos', health: 'Encontrar atención médica', rights: 'Proteger mi pago' },
-      messages: {
-        taxes: ['TU SIGUIENTE PASO', 'Dale una cifra a tu plan de impuestos.', 'Comienza con tus ingresos y gastos esperados. Recibirás una estimación anual y un monto mensual para reservar.', '#tax', 'Abrir la calculadora de impuestos'],
-        health: ['TU SIGUIENTE PASO', 'Encuentra la ruta de atención que te conviene.', 'Compara cobertura del Mercado, Medicaid, CHIP y centros de salud comunitarios cercanos en un solo lugar.', '#health', 'Explorar opciones de salud'],
-        rights: ['TU SIGUIENTE PASO', 'Protege el trabajo que ya hiciste.', 'Revisa recursos sobre pago y clasificación laboral, y conserva los registros que te ayudarán en tu próxima conversación.', '#legal', 'Revisar mis derechos']
-      }
+      eyebrow: 'TUS PRÓXIMOS TRES PASOS',
+      labels: { week: 'Planificar mi semana', taxes: 'Prepararme para impuestos', health: 'Encontrar cobertura médica', pay: 'Resolver trabajo sin pagar' },
+      plans: {
+        week: ['Haz espacio para una semana irregular', ['Anota los ingresos esperados y gastos esenciales de la misma semana.', 'Abre el planificador y prueba un escenario con menos ingresos.', 'Anota un gasto o fecha de pago que debas revisar.'], 'planner.html#planner', 'Planificador semanal de Steady ↗', 'Herramienta de planificación local. No mueve dinero.'],
+        taxes: ['Reúne tus documentos fiscales', ['Reúne registros de ingresos y recibos de gastos del negocio.', 'Lee la guía del IRS y anota preguntas sobre tu situación.', 'Confirma el siguiente paso con un preparador de impuestos calificado si necesitas ayuda.'], 'https://www.irs.gov/businesses/small-businesses-self-employed/estimated-taxes', 'Guía de impuestos estimados del IRS ↗', 'Proveedor externo. Confirma las reglas y disponibilidad actuales en su sitio web.'],
+        health: ['Encuentra un punto de partida para cobertura', ['Revisa si puedes inscribirte o actualizar tu cobertura tras un cambio de vida.', 'Compara planes, costos y proveedores cercanos.', 'Anota una pregunta para un asistente de inscripción.'], 'https://www.healthcare.gov/self-employed/coverage/', 'Explorar HealthCare.gov ↗', 'Proveedor externo. Confirma las reglas y disponibilidad actuales en su sitio web.'],
+        pay: ['Protege tu trabajo no pagado', ['Guarda tu contrato, factura y registros de pago en un solo lugar.', 'Anota el monto adeudado y la fecha de pago.', 'Revisa el recurso adecuado antes de decidir tu siguiente paso.'], 'https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page', 'Explorar derechos de freelancers de NYC ↗', 'Proveedor externo. Confirma las reglas y disponibilidad actuales en su sitio web.']
+      },
+      elsewhere: { week: 'Recursos para Estados Unidos', taxes: 'Recursos para Estados Unidos', health: 'Recursos para Estados Unidos', pay: 'Recursos para Estados Unidos' },
+      nyc: 'Recursos para NYC',
+      progress: 'pasos completados',
+      print: 'Imprimir / guardar PDF',
+      restart: 'Empezar de nuevo',
+      unsaved: 'Tu lista no se guarda. Imprímela antes de salir de esta página.',
+      emptyTitle: 'Una prioridad. Un siguiente paso claro.',
+      emptyBody: 'Tu lista aparecerá aquí, con un recurso útil y tres acciones que puedes realizar.',
+      emptyNote: 'Sin registro. Sin datos personales.'
     }
   };
+  let active = null;
   const language = () => document.documentElement.lang === 'es' ? 'es' : 'en';
-  const show = choice => {
-    const item = copy[language()].messages[choice];
-    if (!item) return;
-    choices.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.nextStepChoice === choice)));
-    result.innerHTML = '<span class="eyebrow">' + item[0] + '</span><h3>' + item[1] + '</h3><p>' + item[2] + '</p><a class="button small" href="' + item[3] + '">' + item[4] + ' <span>↗</span></a>';
-    result.hidden = false;
-    reset.hidden = false;
-    try { localStorage.setItem(storageKey, choice); } catch (_) {}
+  const renderEmpty = () => {
+    const t = content[language()];
+    plan.innerHTML = '<h3>' + t.emptyTitle + '</h3><p>' + t.emptyBody + '</p><p class="next-plan-note">' + t.emptyNote + '</p>';
   };
-  const render = () => {
-    const text = copy[language()];
-    const active = choices.find(button => button.getAttribute('aria-pressed') === 'true');
-    document.querySelector('.next-step-checkin > div > .eyebrow').textContent = text.eyebrow;
-    heading.textContent = text.heading;
-    intro.textContent = text.intro;
-    choiceGroup.setAttribute('aria-label', text.group);
-    choices.forEach(button => {
-      const icon = button.querySelector('span').outerHTML;
-      button.innerHTML = icon + text.choices[button.dataset.nextStepChoice];
-    });
-    reset.textContent = text.reset;
-    if (active) show(active.dataset.nextStepChoice);
+  const renderPlan = () => {
+    if (!active) return renderEmpty();
+    const t = content[language()];
+    const priority = form.elements.priority.value;
+    const location = form.elements.location.value;
+    const item = t.plans[priority];
+    const context = location === 'nyc' ? t.nyc : t.elsewhere[priority];
+    plan.innerHTML = '<span class="eyebrow">' + t.eyebrow + '</span><h3>' + item[0] + '</h3><p class="plan-context">' + context + '</p><div class="plan-progress"><span id="plan-progress-text">0 / 3 ' + t.progress + '</span><progress id="plan-progress" value="0" max="3">0 of 3</progress></div><div class="plan-steps">' + item[1].map((step, index) => '<label><input type="checkbox" data-plan-step="' + index + '"><span>' + step + '</span></label>').join('') + '</div><a class="text-link plan-resource" href="' + item[2] + '">' + item[3] + '</a><p class="plan-provider">' + item[4] + '</p><div class="plan-actions"><button type="button" class="outline" id="print-plan">' + t.print + '</button><button type="button" class="reset" id="clear-plan">' + t.restart + '</button></div><p class="next-plan-note">' + t.unsaved + '</p>';
+    const checks = [...plan.querySelectorAll('[data-plan-step]')];
+    const updateProgress = () => {
+      const done = checks.filter(check => check.checked).length;
+      plan.querySelector('#plan-progress-text').textContent = done + ' / 3 ' + t.progress;
+      plan.querySelector('#plan-progress').value = done;
+    };
+    checks.forEach(check => check.addEventListener('change', updateProgress));
+    plan.querySelector('#print-plan').addEventListener('click', () => window.print());
+    plan.querySelector('#clear-plan').addEventListener('click', () => { active = null; form.reset(); renderEmpty(); });
   };
-  choices.forEach(button => button.addEventListener('click', () => show(button.dataset.nextStepChoice)));
-  reset.addEventListener('click', () => {
-    choices.forEach(button => button.setAttribute('aria-pressed', 'false'));
-    result.hidden = true;
-    reset.hidden = true;
-    try { localStorage.removeItem(storageKey); } catch (_) {}
-  });
-  window.addEventListener('steady-language-change', render);
-  try {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) show(saved);
-  } catch (_) {}
-  render();
+  form.addEventListener('submit', event => { event.preventDefault(); active = true; renderPlan(); });
+  window.addEventListener('steady-language-change', renderPlan);
+  renderEmpty();
 })();
