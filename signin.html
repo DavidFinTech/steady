@@ -27,16 +27,38 @@
     <p class="hero-meta" data-i18n="Checking…">Checking…</p>
   </section>
 
-  <section data-view="signed-out" hidden>
+  <section data-view="email" hidden>
     <h1 data-i18n="Join the conversation.">Join the conversation.</h1>
     <ul class="perks">
       <li><i data-icon="question"></i><span data-i18n="Ask a question">Ask a question</span></li>
       <li><i data-icon="spark"></i><span data-i18n="Share what helped">Share what helped</span></li>
       <li><i data-icon="users"></i><span data-i18n="Help someone else">Help someone else</span></li>
     </ul>
-    <a class="pill pill-sun" id="signin-action" href="#" target="_top"><span data-i18n="Continue with ChatGPT">Continue with ChatGPT</span><i data-icon="arrow"></i></a>
-    <p class="hero-meta" data-i18n="You need a ChatGPT account. Your email is never shown.">You need a ChatGPT account. Your email is never shown.</p>
+    <form id="email-form" class="signin-form" novalidate>
+      <label class="visually-hidden" for="email" data-i18n="Your email">Your email</label>
+      <input id="email" type="email" name="email" autocomplete="email" inputmode="email" required dir="ltr" data-i18n-placeholder="Your email" placeholder="Your email">
+      <button class="pill pill-sun" id="send-code" type="submit"><span data-i18n="Send my code">Send my code</span></button>
+      <p class="signin-error" id="email-error" role="alert"></p>
+    </form>
+    <p class="hero-meta" data-i18n="We only use your email to sign you in. It’s never public.">We only use your email to sign you in. It’s never public.</p>
     <p class="signin-alt"><a href="index.html" data-i18n="No account? Every tool still works.">No account? Every tool still works.</a></p>
+  </section>
+
+  <section data-view="code" hidden>
+    <h1 class="signin-small" data-i18n="Check your email.">Check your email.</h1>
+    <p class="hero-sub" id="code-sent"></p>
+    <form id="code-form" class="signin-form">
+      <label class="visually-hidden" for="code" data-i18n="6-digit code">6-digit code</label>
+      <input id="code" class="code-input" type="text" name="code" autocomplete="one-time-code" inputmode="numeric" maxlength="6" required dir="ltr" placeholder="••••••">
+      <button class="pill pill-sun" id="verify-code" type="submit"><span data-i18n="Sign in">Sign in</span></button>
+      <p class="signin-error" id="code-error" role="alert"></p>
+    </form>
+    <p class="hero-meta" data-i18n="Can’t find it? Check spam.">Can’t find it? Check spam.</p>
+    <p class="hero-meta dev-hint" id="dev-hint" data-i18n="Test mode: use code 123456." hidden>Test mode: use code 123456.</p>
+    <div class="signin-links">
+      <button type="button" class="link on-dark" id="resend-code" data-i18n="Send a new code">Send a new code</button>
+      <button type="button" class="link on-dark" id="change-email" data-i18n="Use a different email">Use a different email</button>
+    </div>
   </section>
 
   <section data-view="signed-in" hidden>
@@ -44,15 +66,16 @@
     <h1 id="me-title"></h1>
     <p class="hero-sub" id="me-line"></p>
     <div class="signin-actions">
-      <a class="pill pill-sun" id="continue-action" href="community.html"><span id="continue-label">Go to Community</span><i data-icon="arrow"></i></a>
-      <a class="pill on-dark" id="signout-action" href="#" target="_top"><span data-i18n="Sign out">Sign out</span></a>
+      <a class="pill pill-sun" id="continue-action" href="community.html"><span data-i18n="Go to Community">Go to Community</span><i data-icon="arrow"></i></a>
+      <button type="button" class="pill on-dark" id="sign-out"><span data-i18n="Sign out">Sign out</span></button>
     </div>
+    <p class="signin-error" id="account-error" role="alert"></p>
+    <button type="button" class="link on-dark delete-account" id="delete-account" data-i18n="Delete my account">Delete my account</button>
   </section>
 
   <section data-view="offline" hidden>
     <span class="signin-icon"><i data-icon="user"></i></span>
-    <h1 class="signin-small" data-i18n="Sign-in isn’t available on this copy of the site.">Sign-in isn’t available on this copy of the site.</h1>
-    <p class="hero-sub" data-i18n="It needs the site’s hosted server.">It needs the site’s hosted server.</p>
+    <h1 class="signin-small" data-i18n="Sign-in isn’t available yet.">Sign-in isn’t available yet.</h1>
     <a class="pill pill-sun" href="index.html"><span data-i18n="No account? Every tool still works.">No account? Every tool still works.</span><i data-icon="arrow"></i></a>
   </section>
 </main>
@@ -69,6 +92,8 @@
 <script src="community-i18n.js" defer></script>
 <script src="steady-i18n.js" defer></script>
 <script src="language-picker.js" defer></script>
+<script src="steady-config.js" defer></script>
+<script src="steady-backend.js" defer></script>
 <script src="steady-account.js" defer></script>
 <script src="signin.js" defer></script>
 </body>

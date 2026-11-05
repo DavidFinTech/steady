@@ -174,11 +174,7 @@
     'Ask a question': W('Haz una pregunta', '提问', 'প্রশ্ন করুন', 'سوال پوچھیں', 'सवाल पूछें'),
     'Share what helped': W('Comparte lo que ayudó', '分享有用的经验', 'যা কাজে এসেছে শেয়ার করুন', 'مددگار بات شیئر کریں', 'जो काम आया, साझा करें'),
     'Help someone else': W('Ayuda a alguien', '帮助他人', 'অন্যকে সাহায্য করুন', 'کسی اور کی مدد کریں', 'किसी और की मदद करें'),
-    'Continue with ChatGPT': W('Continuar con ChatGPT', '使用 ChatGPT 继续', 'ChatGPT দিয়ে চালিয়ে যান', 'ChatGPT کے ساتھ جاری رکھیں', 'ChatGPT से जारी रखें'),
-    'You need a ChatGPT account. Your email is never shown.': W('Necesitas una cuenta de ChatGPT. Tu correo nunca se muestra.', '您需要 ChatGPT 账户。您的邮箱绝不会显示。', 'ChatGPT অ্যাকাউন্ট লাগবে। আপনার ইমেল কখনো দেখানো হয় না।', 'ChatGPT اکاؤنٹ درکار ہے۔ آپ کی ای میل کبھی نہیں دکھائی جاتی۔', 'ChatGPT खाता चाहिए। आपका ईमेल कभी नहीं दिखाया जाता।'),
     'No account? Every tool still works.': W('¿Sin cuenta? Todas las herramientas funcionan.', '没有账户？所有工具仍可使用。', 'অ্যাকাউন্ট নেই? সব টুল তবুও চলবে।', 'اکاؤنٹ نہیں؟ تمام ٹولز پھر بھی کام کرتے ہیں۔', 'खाता नहीं? सभी टूल फिर भी काम करते हैं।'),
-    'Sign-in isn’t available on this copy of the site.': W('El inicio de sesión no está disponible en esta copia del sitio.', '此网站副本无法登录。', 'সাইটের এই কপিতে সাইন ইন করা যায় না।', 'سائٹ کی اس کاپی پر سائن ان دستیاب نہیں۔', 'साइट की इस कॉपी पर साइन इन उपलब्ध नहीं है।'),
-    'It needs the site’s hosted server.': W('Necesita el servidor del sitio.', '需要网站的托管服务器。', 'এর জন্য সাইটের হোস্ট করা সার্ভার দরকার।', 'اس کے لیے سائٹ کا ہوسٹڈ سرور درکار ہے۔', 'इसके लिए साइट का होस्टेड सर्वर चाहिए।'),
     'Checking…': W('Comprobando…', '正在检查…', 'যাচাই করা হচ্ছে…', 'جانچ ہو رہی ہے…', 'जाँच हो रही है…'),
     'You’re signed in.': W('Sesión iniciada.', '您已登录。', 'আপনি সাইন ইন করেছেন।', 'آپ سائن ان ہیں۔', 'आप साइन इन हैं।'),
     'Almost there.': W('Ya casi.', '马上就好。', 'প্রায় হয়ে গেছে।', 'بس تھوڑا سا اور۔', 'बस थोड़ा और।'),
@@ -190,9 +186,32 @@
     'Keep personal info private': W('Protege tus datos personales', '保护个人信息', 'ব্যক্তিগত তথ্য গোপন রাখুন', 'ذاتی معلومات نجی رکھیں', 'निजी जानकारी गोपनीय रखें'),
     'No spam or ads': W('Sin spam ni publicidad', '禁止垃圾信息和广告', 'স্প্যাম বা বিজ্ঞাপন নয়', 'اسپام یا اشتہار نہیں', 'स्पैम या विज्ञापन नहीं'),
     'Posts are personal experience, not professional advice. Everything here is public.': W('Las publicaciones son experiencias personales, no asesoría profesional. Todo aquí es público.', '帖子是个人经验，不是专业建议。这里的所有内容都是公开的。', 'পোস্টগুলো ব্যক্তিগত অভিজ্ঞতা, পেশাদার পরামর্শ নয়। এখানকার সবকিছু সর্বজনীন।', 'پوسٹس ذاتی تجربات ہیں، پیشہ ورانہ مشورہ نہیں۔ یہاں سب کچھ عوامی ہے۔', 'पोस्ट निजी अनुभव हैं, पेशेवर सलाह नहीं। यहाँ सब कुछ सार्वजनिक है।'),
-    'The community isn’t available on this copy of the site.': W('La comunidad no está disponible en esta copia del sitio.', '此网站副本无法使用社区。', 'সাইটের এই কপিতে কমিউনিটি নেই।', 'سائٹ کی اس کاپی پر کمیونٹی دستیاب نہیں۔', 'साइट की इस कॉपी पर समुदाय उपलब्ध नहीं है।'),
     'Your avatar': W('Tu avatar', '您的头像', 'আপনার অবতার', 'آپ کا اوتار', 'आपका अवतार'),
     'Optional': W('Opcional', '选填', 'ঐচ্ছিক', 'اختیاری', 'वैकल्पिक'),
+    'Your email': W('Tu correo', '您的邮箱', 'আপনার ইমেল', 'آپ کی ای میل', 'आपका ईमेल'),
+    'Send my code': W('Enviar mi código', '发送验证码', 'আমার কোড পাঠান', 'میرا کوڈ بھیجیں', 'मेरा कोड भेजें'),
+    'We only use your email to sign you in. It’s never public.': W('Solo usamos tu correo para iniciar sesión. Nunca es público.', '您的邮箱仅用于登录，绝不会公开。', 'আপনার ইমেল শুধু সাইন ইনের জন্য ব্যবহার হয়। এটি কখনো সর্বজনীন হয় না।', 'آپ کی ای میل صرف سائن ان کے لیے استعمال ہوتی ہے۔ یہ کبھی عوامی نہیں ہوتی۔', 'आपका ईमेल सिर्फ़ साइन इन के लिए उपयोग होता है। यह कभी सार्वजनिक नहीं होता।'),
+    'Check your email.': W('Revisa tu correo.', '请查看邮箱。', 'আপনার ইমেল দেখুন।', 'اپنی ای میل دیکھیں۔', 'अपना ईमेल देखें।'),
+    'We sent a code to {email}.': W('Enviamos un código a {email}.', '验证码已发送至 {email}。', '{email}-এ একটি কোড পাঠানো হয়েছে।', '{email} پر کوڈ بھیجا گیا ہے۔', '{email} पर कोड भेजा गया है।'),
+    '6-digit code': W('Código de 6 dígitos', '6 位验证码', '৬ সংখ্যার কোড', '6 ہندسوں کا کوڈ', '6 अंकों का कोड'),
+    'Can’t find it? Check spam.': W('¿No lo encuentras? Revisa el correo no deseado.', '找不到？请查看垃圾邮件。', 'খুঁজে পাচ্ছেন না? স্প্যাম দেখুন।', 'نہیں مل رہا؟ اسپام دیکھیں۔', 'नहीं मिल रहा? स्पैम देखें।'),
+    'Send a new code': W('Enviar otro código', '重新发送验证码', 'নতুন কোড পাঠান', 'نیا کوڈ بھیجیں', 'नया कोड भेजें'),
+    'Use a different email': W('Usar otro correo', '使用其他邮箱', 'অন্য ইমেল ব্যবহার করুন', 'دوسری ای میل استعمال کریں', 'दूसरा ईमेल उपयोग करें'),
+    'That code isn’t right or has expired.': W('Ese código es incorrecto o venció.', '验证码不正确或已过期。', 'কোডটি সঠিক নয় বা মেয়াদ শেষ।', 'یہ کوڈ درست نہیں یا اس کی مدت ختم ہو گئی۔', 'यह कोड सही नहीं है या समाप्त हो गया है।'),
+    'Too many tries. Wait a minute and try again.': W('Demasiados intentos. Espera un minuto e inténtalo de nuevo.', '尝试次数过多。请稍等一分钟后重试。', 'অনেকবার চেষ্টা হয়েছে। এক মিনিট পরে আবার চেষ্টা করুন।', 'بہت زیادہ کوششیں۔ ایک منٹ بعد دوبارہ کوشش کریں۔', 'बहुत अधिक प्रयास। एक मिनट बाद फिर कोशिश करें।'),
+    'Couldn’t send the code. Try again in a minute.': W('No se pudo enviar el código. Inténtalo en un minuto.', '无法发送验证码。请一分钟后重试。', 'কোড পাঠানো যায়নি। এক মিনিট পরে চেষ্টা করুন।', 'کوڈ نہیں بھیجا جا سکا۔ ایک منٹ بعد کوشش کریں۔', 'कोड नहीं भेजा जा सका। एक मिनट बाद कोशिश करें।'),
+    'Enter a valid email.': W('Escribe un correo válido.', '请输入有效的邮箱。', 'সঠিক ইমেল লিখুন।', 'درست ای میل درج کریں۔', 'सही ईमेल लिखें।'),
+    'Test mode: use code 123456.': W('Modo de prueba: usa el código 123456.', '测试模式：请使用验证码 123456。', 'পরীক্ষা মোড: কোড 123456 ব্যবহার করুন।', 'ٹیسٹ موڈ: کوڈ 123456 استعمال کریں۔', 'टेस्ट मोड: कोड 123456 का उपयोग करें।'),
+    'Delete my account': W('Eliminar mi cuenta', '删除我的账户', 'আমার অ্যাকাউন্ট মুছুন', 'میرا اکاؤنٹ حذف کریں', 'मेरा खाता हटाएँ'),
+    'Delete your account and everything you posted? This can’t be undone.': W('¿Eliminar tu cuenta y todo lo que publicaste? No se puede deshacer.', '要删除您的账户和发布的所有内容吗？此操作无法撤销。', 'আপনার অ্যাকাউন্ট ও সব পোস্ট মুছবেন? এটি ফেরানো যাবে না।', 'کیا اپنا اکاؤنٹ اور تمام پوسٹس حذف کریں؟ یہ واپس نہیں ہو سکتا۔', 'क्या अपना खाता और सभी पोस्ट हटाएँ? इसे वापस नहीं किया जा सकता।'),
+    'Sign-in isn’t available yet.': W('El inicio de sesión aún no está disponible.', '登录功能暂不可用。', 'সাইন ইন এখনো চালু হয়নি।', 'سائن ان ابھی دستیاب نہیں۔', 'साइन इन अभी उपलब्ध नहीं है।'),
+    'The community isn’t available yet.': W('La comunidad aún no está disponible.', '社区暂不可用。', 'কমিউনিটি এখনো চালু হয়নি।', 'کمیونٹی ابھی دستیاب نہیں۔', 'समुदाय अभी उपलब्ध नहीं है।'),
+    Reports: W('Reportes', '举报', 'রিপোর্ট', 'رپورٹس', 'रिपोर्ट'),
+    Hide: W('Ocultar', '隐藏', 'লুকান', 'چھپائیں', 'छिपाएँ'),
+    Restore: W('Restaurar', '恢复', 'ফিরিয়ে আনুন', 'بحال کریں', 'बहाल करें'),
+    Dismiss: W('Descartar', '忽略', 'বাদ দিন', 'خارج کریں', 'खारिज करें'),
+    Hidden: W('Oculto', '已隐藏', 'লুকানো', 'چھپا ہوا', 'छिपा हुआ'),
+    'No open reports.': W('No hay reportes abiertos.', '没有待处理的举报。', 'কোনো খোলা রিপোর্ট নেই।', 'کوئی کھلی رپورٹ نہیں۔', 'कोई खुली रिपोर्ट नहीं।'),
     'Try the tax calculator': W('Probar la calculadora de impuestos', '试用税务计算器', 'কর ক্যালকুলেটর ব্যবহার করুন', 'ٹیکس کیلکولیٹر آزمائیں', 'कर कैलकुलेटर आज़माएँ')
   };
 
@@ -214,6 +233,7 @@
     const pageTitle = document.body.dataset.title;
     if (pageTitle) document.title = `Steady — ${t(pageTitle)}`;
     document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
     document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     try { localStorage.setItem('steady-language', language); } catch (_) { /* private browsing */ }
     window.dispatchEvent(new CustomEvent('steady-language-change', { detail: { language } }));

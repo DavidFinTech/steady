@@ -311,6 +311,35 @@ html[lang="ur"] .chooser-card h3{line-height:1.8}
 .avatar.big{width:84px;height:84px;font-size:42px}
 .avatar.huge{width:112px;height:112px;margin-bottom:20px;background:rgba(255,255,255,.12);font-size:58px}
 
+.signin-form{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:400px}
+.signin-form input{width:100%;min-height:56px;padding:12px 22px;border:1.5px solid rgba(255,255,255,.28);border-radius:99px;background:rgba(255,255,255,.1);color:#fff;font-size:18px;text-align:center;outline:0;transition:border-color .2s,background .2s,box-shadow .2s}
+.signin-form input::placeholder{color:#a9c4d3}
+.signin-form input:focus{border-color:var(--sun);background:rgba(255,255,255,.14);box-shadow:0 0 0 3px rgba(246,176,79,.25)}
+.signin-form .pill{width:100%;justify-content:center;cursor:pointer}
+.signin-form .pill:disabled{opacity:.6;cursor:default}
+.signin-form .code-input{min-height:74px;font-size:36px;font-weight:700;letter-spacing:.3em;font-variant-numeric:tabular-nums}
+#code-form{margin-top:30px}
+.signin-error{min-height:0;margin:2px 0 0;color:#ffb8ab;font-size:15px;font-weight:500}
+.signin-error:empty{display:none}
+.signin-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;margin-top:20px}
+.link.on-dark{min-height:40px;color:#d5e6f0}
+.link.on-dark:disabled{opacity:.6;cursor:default}
+.link.on-dark:hover:not(:disabled){color:#fff}
+.delete-account{margin-top:34px;font-size:13px}
+.dev-hint{padding:5px 12px;border-radius:99px;background:rgba(246,176,79,.2);color:var(--sun-2)}
+.hero .hero-meta+.hero-meta{margin-top:10px}
+#email-form+.hero-meta{margin-top:18px}
+.signin button.pill.on-dark{background:transparent;cursor:pointer}
+
+/* Moderator tools */
+.mod-panel{margin-bottom:18px;padding:0 20px 8px;border-radius:20px;background:var(--sun-soft,#fdf0db)}
+.mod-item{padding:14px 0;border-top:1px solid rgba(13,34,53,.12)}
+.mod-item a{text-decoration:none}
+.mod-item p{margin:6px 0 0;color:var(--muted)}
+.mod-item .post-actions{margin-top:6px}
+.topic-tag.is-hidden{background:#ffd9d2;color:#8e2c1d;margin-inline-start:8px}
+.post-meta .topic-tag.is-hidden{margin-inline-start:0}
+
 /* Community */
 .community-hero{min-height:0;padding:clamp(64px,10vw,120px) 24px}
 .community-hero h1{max-width:1000px;font-size:clamp(40px,6.4vw,84px);line-height:1.05}

@@ -1,8 +1,9 @@
-// Shows who is signed in, on every page. Sign-in itself is handled by the site's host.
+// Shows who is signed in, on every page.
 (() => {
   const t = text => window.STEADY.t(text);
-  const here = /\/signin(\.html)?$/.test(location.pathname) ? '/community.html' : location.pathname + location.search;
-  const state = { checked: false, available: false, signedIn: false, me: null };
+  const page = location.pathname.split('/').pop() || 'index.html';
+  const here = page.startsWith('signin') ? 'community.html' : page + location.search;
+  const state = { checked: false, available: false, signedIn: false, me: null, isModerator: false };
   window.STEADY.account = state;
 
   function paint() {
@@ -20,13 +21,17 @@
     paint();
     window.dispatchEvent(new CustomEvent('steady-account-change'));
   };
+  window.STEADY.refreshAccount = async () => {
+    const backend = window.STEADY_BACKEND;
+    if (backend.mode === 'none') return window.STEADY.setAccount({ available: false, signedIn: false, me: null, isModerator: false });
+    try {
+      const data = await backend.me();
+      window.STEADY.setAccount({ available: true, signedIn: Boolean(data.signedIn), me: data.me || null, isModerator: Boolean(data.isModerator) });
+    } catch (_) {
+      window.STEADY.setAccount({ available: false, signedIn: false, me: null, isModerator: false });
+    }
+  };
   window.addEventListener('steady-language-change', paint);
   paint();
-  fetch('/api/community?sort=new')
-    .then(async response => {
-      if (!response.ok) throw new Error();
-      const data = await response.json();
-      window.STEADY.setAccount({ available: true, signedIn: Boolean(data.signedIn), me: data.me || null });
-    })
-    .catch(() => window.STEADY.setAccount({ available: false, signedIn: false, me: null }));
+  window.STEADY.refreshAccount();
 })();

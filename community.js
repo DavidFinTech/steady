@@ -5,7 +5,7 @@
   const t = text => window.STEADY.t(text);
   const TOPICS = { all: ['All conversations', 'chat'], general: ['General', 'users'], money: ['Money & budgeting', 'coin'], taxes: ['Taxes', 'receipt'], health: ['Health & coverage', 'heart'], work: ['Work & rights', 'scale'] };
   const AVATARS = ['✳', '🌿', '☀', '🌻', '🌊', '🪴'];
-  const ERRORS = { signin: 'Sign in to join the conversation.', profile: 'Create your profile first.', handle: 'Use 3–24 lowercase letters, numbers, or underscores.', taken: 'That username is taken. Try another.', invalid: 'Please complete all fields with valid values.', slow: 'Please wait a moment before posting again.', forbidden: 'You can only change your own content.', missing: 'This post is no longer available.', unavailable: 'Unable to connect. Please try again.' };
+  const ERRORS = { offline: 'The community isn’t available yet.', signin: 'Sign in to join the conversation.', profile: 'Create your profile first.', handle: 'Use 3–24 lowercase letters, numbers, or underscores.', taken: 'That username is taken. Try another.', invalid: 'Please complete all fields with valid values.', slow: 'Please wait a moment before posting again.', forbidden: 'You can only change your own content.', missing: 'This post is no longer available.', unavailable: 'Unable to connect. Please try again.' };
   const url = new URL(location.href);
   let postId = url.searchParams.get('post') || '', handle = url.searchParams.get('profile') || '', topic = 'all', sort = 'new';
   let data = { posts: [], comments: [], signedIn: false }, editing = null, offline = false, failed = false;
@@ -13,15 +13,18 @@
 
   const date = n => new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'medium' }).format(new Date(n));
   const status = text => { $('#status').textContent = text ? t(text) : ''; };
+  const backend = window.STEADY_BACKEND;
   async function mutate(body) {
-    const response = await fetch('/api/community', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    const result = await response.json();
-    if (!response.ok) throw new Error(t(ERRORS[result.error] || ERRORS.unavailable));
-    return result;
+    try {
+      return await backend.action(body);
+    } catch (error) {
+      throw new Error(t(ERRORS[error.code] || ERRORS.unavailable));
+    }
   }
   function needsAccount() {
     if (!data.signedIn) {
-      location.href = `signin.html?return_to=${encodeURIComponent(location.pathname + location.search)}`;
+      const page = location.pathname.split('/').pop() || 'community.html';
+      location.href = `signin.html?return_to=${encodeURIComponent(page + location.search)}`;
       return true;
     }
     if (!data.me) { openProfile(); return true; }
@@ -31,22 +34,17 @@
     status('Loading…');
     offline = failed = false;
     try {
-      const query = new URLSearchParams({ sort });
-      if (topic !== 'all') query.set('topic', topic);
-      if (postId) query.set('post', postId);
-      if (handle) query.set('profile', handle);
-      const response = await fetch(`/api/community?${query}`);
-      if (response.status === 404) offline = true;
-      if (!response.ok) throw new Error();
-      data = await response.json();
-      window.STEADY.setAccount?.({ available: true, signedIn: Boolean(data.signedIn), me: data.me || null });
+      data = await backend.list({ sort, topic: topic === 'all' ? '' : topic, post: postId, profile: handle });
+      window.STEADY.setAccount?.({ available: true, signedIn: Boolean(data.signedIn), me: data.me || null, isModerator: Boolean(data.isModerator) });
       status('');
-    } catch (_) {
+    } catch (error) {
       failed = true;
+      offline = error.code === 'offline';
       status('');
       data = { posts: [], comments: [], signedIn: false };
     }
     render();
+    renderModeration();
     if (wantsSetup && data.signedIn && !data.me) { wantsSetup = false; openProfile(); }
   }
 
@@ -62,7 +60,7 @@
       ? `<button type="button" class="quiet" data-edit="${e(post.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete="${e(post.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button>`
       : `<button type="button" class="quiet" data-report="${e(post.id)}">${icon('flag')}<span>${e(t('Report'))}</span></button>`;
     return `<article class="post-card">
-      <div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(post.handle)}"><span class="avatar">${e(post.avatar)}</span><b>@${e(post.handle)}</b></a><span>${e(date(post.created))}</span><span class="topic-tag">${e(t(TOPICS[post.topic]?.[0] || 'General'))}</span></div>
+      <div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(post.handle)}"><span class="avatar">${e(post.avatar)}</span><b>@${e(post.handle)}</b></a><span>${e(date(post.created))}</span><span class="topic-tag">${e(t(TOPICS[post.topic]?.[0] || 'General'))}</span>${post.hidden ? `<span class="topic-tag is-hidden">${e(t('Hidden'))}</span>` : ''}</div>
       <h2><a href="?post=${encodeURIComponent(post.id)}">${e(post.title)}</a></h2>
       <p class="post-body">${e(body)}</p>
       <div class="post-actions">
@@ -83,7 +81,7 @@
     const back = postId || handle ? `<a class="pill back" href="community.html">${icon('back')}<span>${e(t('All conversations'))}</span></a>` : '';
     let feed;
     if (failed) {
-      feed = `<div class="empty"><span class="empty-icon">${icon('chat')}</span><h2>${e(t(offline ? 'The community isn’t available on this copy of the site.' : 'Unable to connect. Please try again.'))}</h2>${offline ? `<p>${e(t('It needs the site’s hosted server.'))}</p>` : `<button type="button" class="button" id="retry">${e(t('Try again'))}</button>`}</div>`;
+      feed = `<div class="empty"><span class="empty-icon">${icon('chat')}</span><h2>${e(t(offline ? 'The community isn’t available yet.' : 'Unable to connect. Please try again.'))}</h2>${offline ? '' : `<button type="button" class="button" id="retry">${e(t('Try again'))}</button>`}</div>`;
     } else if (data.posts.length) {
       feed = data.posts.map(postCard).join('');
     } else if (handle) {
@@ -98,6 +96,16 @@
         ${(data.comments || []).map(comment => `<article class="comment"><div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(comment.handle)}"><span class="avatar">${e(comment.avatar)}</span><b>@${e(comment.handle)}</b></a><span>${e(date(comment.created))}</span></div><p class="comment-body">${e(comment.body)}</p>${comment.mine ? `<div class="post-actions"><button type="button" class="quiet" data-edit-comment="${e(comment.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete-comment="${e(comment.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button></div>` : ''}</article>`).join('')}
       </section>`);
     }
+  }
+
+  async function renderModeration() {
+    const panel = $('#mod-panel');
+    if (!data.isModerator) { panel.innerHTML = ''; return; }
+    let reports;
+    try { reports = await backend.queue(); } catch (_) { panel.innerHTML = ''; return; }
+    panel.innerHTML = `<details class="mod-panel" ${reports.length ? 'open' : ''}><summary><span>${e(t('Reports'))} <b class="num">${reports.length}</b></span></summary>
+      ${reports.length ? reports.map(report => `<div class="mod-item"><a href="?post=${encodeURIComponent(report.postId)}"><b>${e(report.title)}</b></a>${report.hidden ? `<span class="topic-tag is-hidden">${e(t('Hidden'))}</span>` : ''}<p>${e(report.reason)}</p><div class="post-actions"><button type="button" class="quiet" data-moderate="${e(report.postId)}" data-to="${report.hidden ? '' : '1'}">${e(t(report.hidden ? 'Restore' : 'Hide'))}</button><button type="button" class="quiet" data-resolve="${e(report.id)}">${e(t('Dismiss'))}</button></div></div>`).join('') : `<p class="fine">${e(t('No open reports.'))}</p>`}
+    </details>`;
   }
 
   const field = (name, label, value = '', tag = 'input', max = 160, required = true) =>
@@ -118,13 +126,13 @@
     const current = me.avatar || AVATARS[0];
     dialog(data.me ? 'Edit profile' : 'Create profile',
       `<fieldset class="picker"><legend>${e(t('Your avatar'))}</legend><div class="avatar-grid">${AVATARS.map(avatar => `<label><input type="radio" name="avatar" value="${avatar}" ${avatar === current ? 'checked' : ''}><span>${avatar}</span></label>`).join('')}</div></fieldset>`
-      + field('handle', 'Username', me.handle || '', 'input', 24)
-      + `<small class="hint">${e(t('Use 3–24 lowercase letters, numbers, or underscores.'))}</small>`
+      + (data.me ? '' : field('handle', 'Username', '', 'input', 24)
+      + `<small class="hint">${e(t('Use 3–24 lowercase letters, numbers, or underscores.'))}</small>`)
       + field('bio', 'About you', me.bio || '', 'textarea', 280, false)
       + `<small class="hint">${e(t('Optional'))} · ${e(t('Profiles, posts, and comments are public. Your sign-in email is never displayed.'))}</small>`,
       async fields => {
-        await mutate({ action: 'profile', ...fields });
-        handle = fields.handle.toLowerCase();
+        await mutate({ action: 'profile', isNew: !data.me, ...fields });
+        handle = (fields.handle || data.me.handle).toLowerCase();
         postId = '';
         history.replaceState(null, '', `?profile=${encodeURIComponent(handle)}`);
       });
@@ -137,7 +145,7 @@
       + `<fieldset class="picker"><legend>${e(t('Topics'))}</legend><div class="topic-grid">${Object.entries(TOPICS).filter(([key]) => key !== 'all').map(([key, [label, name]]) => `<label><input type="radio" name="topic" value="${key}" ${key === start ? 'checked' : ''}><span>${icon(name)}${e(t(label))}</span></label>`).join('')}</div></fieldset>`
       + field('body', 'Your post', '', 'textarea', 6000),
       async fields => {
-        const result = await mutate({ action: 'post', ...fields });
+        const result = await mutate({ action: 'post', title: fields.title, body: fields.body, topic: fields.topic });
         postId = result.id; handle = '';
         history.replaceState(null, '', `?post=${encodeURIComponent(result.id)}`);
       }, 'Create a post');
@@ -158,6 +166,14 @@
       return load();
     }
     try {
+      if (button.dataset.moderate) {
+        await backend.moderate(button.dataset.moderate, Boolean(button.dataset.to));
+        return await load();
+      }
+      if (button.dataset.resolve) {
+        await backend.resolve(button.dataset.resolve);
+        return await load();
+      }
       if (button.dataset.vote) {
         if (needsAccount()) return;
         button.disabled = true;
@@ -173,15 +189,15 @@
       }
       if (button.dataset.edit) {
         const post = data.posts.find(item => item.id === button.dataset.edit);
-        dialog('Edit', field('title', 'Title', post.title) + field('body', 'Your post', post.body, 'textarea', 6000), fields => mutate({ action: 'edit', id: post.id, ...fields }));
+        dialog('Edit', field('title', 'Title', post.title) + field('body', 'Your post', post.body, 'textarea', 6000), fields => mutate({ action: 'edit', id: post.id, title: fields.title, body: fields.body }));
       }
       if (button.dataset.editComment) {
         const comment = data.comments.find(item => item.id === button.dataset.editComment);
-        dialog('Edit', field('body', 'Add a comment', comment.body, 'textarea', 2000), fields => mutate({ action: 'editComment', id: comment.id, ...fields }));
+        dialog('Edit', field('body', 'Add a comment', comment.body, 'textarea', 2000), fields => mutate({ action: 'editComment', id: comment.id, body: fields.body }));
       }
       if (button.dataset.report) {
         if (needsAccount()) return;
-        dialog('Report', `<p class="hint">${e(t('Reports are recorded for the site team. Review is not immediate.'))}</p>` + field('reason', 'Reason', '', 'textarea', 500), async fields => { await mutate({ action: 'report', id: button.dataset.report, ...fields }); }, 'Report');
+        dialog('Report', `<p class="hint">${e(t('Reports are recorded for the site team. Review is not immediate.'))}</p>` + field('reason', 'Reason', '', 'textarea', 500), async fields => { await mutate({ action: 'report', id: button.dataset.report, reason: fields.reason }); }, 'Report');
       }
     } catch (error) {
       $('#status').textContent = error.message;
@@ -217,6 +233,6 @@
       submit.disabled = false;
     }
   });
-  window.addEventListener('steady-language-change', render);
+  window.addEventListener('steady-language-change', () => { render(); renderModeration(); });
   load();
 })();

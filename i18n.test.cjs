@@ -8,7 +8,7 @@ for (const [key, value] of Object.entries(DICTIONARY)) for (const code of codes)
 const used = new Set();
 for (const file of ['index.html', 'planner.html', 'signin.html', 'community.html']) {
   const html = fs.readFileSync(file, 'utf8');
-  for (const match of html.matchAll(/data-(?:i18n(?:-aria)?|title)="([^"]+)"/g)) used.add(match[1].replace(/&amp;/g, '&'));
+  for (const match of html.matchAll(/data-(?:i18n(?:-aria|-placeholder)?|title)="([^"]+)"/g)) used.add(match[1].replace(/&amp;/g, '&'));
 }
 for (const path of Object.values(STEADY_PATHS)) {
   used.add(path.title); used.add(path.source); path.steps.forEach(step => used.add(step));
