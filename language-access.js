@@ -17,13 +17,25 @@
       note: 'Inglés y español están integrados en Steady. Las otras opciones abren una vista traducida automáticamente; confirma los detalles fiscales, de salud y legales con la fuente original.'
     }
   };
+  const selectedLanguage = () => {
+    const translatedTo = new URLSearchParams(location.search).get('_x_tr_tl');
+    if (translatedTo) return translatedTo;
+    return document.documentElement.lang === 'es' ? 'es' : 'en';
+  };
   const render = () => {
     const language = document.documentElement.lang === 'es' ? 'es' : 'en';
+    const selected = selectedLanguage();
     const text = copy[language];
     title.textContent = text.title;
     description.textContent = text.description;
     note.textContent = text.note;
-    localButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.localLanguage === language)));
+    panel.querySelectorAll('.language-tile').forEach(tile => {
+      const code = tile.dataset.localLanguage || tile.dataset.translateLanguage;
+      const active = code === selected;
+      tile.classList.toggle('is-selected', active);
+      if (tile.tagName === 'BUTTON') tile.setAttribute('aria-pressed', String(active));
+      else tile.toggleAttribute('aria-current', active);
+    });
   };
   localButtons.forEach(button => button.addEventListener('click', () => {
     const target = button.dataset.localLanguage;
