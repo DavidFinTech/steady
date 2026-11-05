@@ -64,7 +64,7 @@
       ? (location.pathname.endsWith("planner.html") ? "Planificador semanal — Steady" : "Steady — Recursos para trabajadores independientes")
       : (location.pathname.endsWith("planner.html") ? "Weekly planner — Steady" : "Steady — Resources for independent workers");
     document.querySelectorAll("[data-language-toggle]").forEach(button => {
-      button.textContent = spanish ? "English" : "Español";
+      button.textContent = spanish ? "🇺🇸 English" : "🌎 Español";
       button.setAttribute("aria-label", spanish ? "Switch website language to English" : "Cambiar el idioma del sitio web a español");
       button.setAttribute("aria-pressed", String(spanish));
     });
