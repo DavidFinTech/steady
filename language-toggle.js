@@ -110,8 +110,11 @@
       if (profile) header.insertBefore(button, profile);
       else header.appendChild(button);
     }
-    let spanish = false;
-    try { spanish = localStorage.getItem("steady-language") === "es"; } catch (_) {}
+    const requestedLanguage = new URLSearchParams(location.search).get("lang");
+    let spanish = requestedLanguage === "es";
+    if (requestedLanguage !== "es" && requestedLanguage !== "en") {
+      try { spanish = localStorage.getItem("steady-language") === "es"; } catch (_) {}
+    }
     applyLanguage(spanish);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
