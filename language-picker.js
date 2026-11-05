@@ -1,8 +1,8 @@
 // Flag-and-name language menu. It drives the page's existing <select>, so the
 // translation code on every page keeps working unchanged.
 (() => {
-  // Spanish has no single home flag. To use Mexico's flag, change es: 'es' to es: 'mx'.
-  const FLAG_FOR_LANGUAGE = { en: 'us', es: 'es', 'zh-Hans': 'cn', hi: 'in' };
+  // Spanish has no single home flag. To use Spain's flag, change es: 'mx' to es: 'es'.
+  const FLAG_FOR_LANGUAGE = { en: 'us', es: 'mx', 'zh-Hans': 'cn', hi: 'in' };
 
   const star = (cx, cy, r, fill) => {
     const points = Array.from({ length: 10 }, (_, i) => {
