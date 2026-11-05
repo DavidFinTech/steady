@@ -1,33 +1,222 @@
-(()=>{
-const $=s=>document.querySelector(s), e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let lang='en';try{lang=localStorage.getItem('steady-language')||'en'}catch{};if(!['en','es','hi','zh-Hans','bn','ur'].includes(lang))lang='en';
-const t=s=>window.COMMUNITY_I18N[s]?.[lang]||s;
-const topicNames={all:'All conversations',general:'General',money:'Money & budgeting',taxes:'Taxes',health:'Health & coverage',work:'Work & rights'};
-const url=new URL(location.href);let postId=url.searchParams.get('post')||'',handle=url.searchParams.get('profile')||'',topic='all',sort='new',data={posts:[],comments:[],signedIn:false},editing=null;
-function date(n){return new Intl.DateTimeFormat(lang,{dateStyle:'medium'}).format(new Date(n))}
-function status(s){$('#status').textContent=t(s)}
-const errors={signin:'Sign in to join the conversation.',profile:'Create your profile first.',handle:'Use 3–24 lowercase letters, numbers, or underscores.',taken:'That username is taken. Try another.',invalid:'Please complete all fields with valid values.',slow:'Please wait a moment before posting again.',forbidden:'You can only change your own content.',missing:'This post is no longer available.',unavailable:'Unable to connect. Please try again.'};
-async function mutate(body){const r=await fetch('/api/community',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const result=await r.json();if(!r.ok)throw new Error(t(errors[result.error]||errors.unavailable));return result}
-function auth(){if(!data.signedIn){location.href='/signin-with-chatgpt?return_to='+encodeURIComponent(location.pathname+location.search);return false}if(!data.me){openProfile();return false}return true}
-function localize(){document.documentElement.lang=lang;document.documentElement.dir=lang==='ur'?'rtl':'ltr';document.title=t('Community')+' — Steady';document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));$('#language').value=lang;$('#topics').innerHTML=Object.entries(topicNames).map(([k,v])=>`<button data-topic="${k}" class="${topic===k?'active':''}">${e(t(v))}</button>`).join('');$('#new-sort').setAttribute('aria-pressed',String(sort==='new'));$('#top-sort').setAttribute('aria-pressed',String(sort==='top'))}
-async function load(){status('Loading…');try{const q=new URLSearchParams({sort});if(topic!=='all')q.set('topic',topic);if(postId)q.set('post',postId);if(handle)q.set('profile',handle);const r=await fetch('/api/community?'+q);if(!r.ok)throw Error();data=await r.json();render();status('')}catch{status('Unable to connect. Please try again.');$('#feed').innerHTML=`<button id="retry">${e(t('Try again'))}</button>`}}
-function render(){localize();$('#account-nav').innerHTML=data.signedIn?`<button id="my-account">${e(data.me?'@'+data.me.handle:t('Create profile'))}</button><a href="/signout-with-chatgpt?return_to=%2Fcommunity.html" target="_top">${e(t('Sign out'))}</a>`:`<a class="button small" href="/signin-with-chatgpt?return_to=%2Fcommunity.html" target="_top">${e(t('Sign in'))}</a>`;
-const p=data.profile;$('#profile-card').innerHTML=handle?(p?`<div class="profile-card"><span class="avatar">${e(p.avatar)}</span><h2>@${e(p.handle)}</h2><p>${e(p.bio)}</p><small>${e(t('Joined'))} ${e(date(p.created))}</small>${data.me?.handle===handle?` <button id="edit-profile">${e(t('Edit profile'))}</button>`:''}</div>`:`<p>${e(t('Profile not found.'))}</p>`):'';
-$('#feed').innerHTML=(postId||handle?`<p><a href="community.html">← ${e(t('All conversations'))}</a></p>`:'')+(data.posts.length?data.posts.map(p=>`<article class="post"><div class="votes"><button data-vote="1" data-id="${e(p.id)}" aria-label="${e(t('Upvote'))}" aria-pressed="${p.myVote===1}">↑</button><b>${p.score}</b><button data-vote="-1" data-id="${e(p.id)}" aria-label="${e(t('Downvote'))}" aria-pressed="${p.myVote===-1}">↓</button></div><div class="post-main"><div class="post-meta"><span class="avatar">${e(p.avatar)}</span><a href="?profile=${encodeURIComponent(p.handle)}">@${e(p.handle)}</a><span>· ${e(date(p.created))}</span><span class="tag">${e(t(topicNames[p.topic]))}</span></div><h2><a href="?post=${e(p.id)}">${e(p.title)}</a></h2><p class="post-body">${e(postId?p.body:p.body.slice(0,350)+(p.body.length>350?'…':''))}</p><div class="post-actions"><a href="?post=${e(p.id)}">${p.comments} ${e(t('Comments'))}</a>${p.mine?`<button data-edit="${e(p.id)}">${e(t('Edit'))}</button><button data-delete="${e(p.id)}">${e(t('Delete'))}</button>`:`<button data-report="${e(p.id)}">${e(t('Report'))}</button>`}</div></div></article>`).join(''):`<div class="empty"><h2>${e(t(postId?'This post is no longer available.':'Start a conversation.'))}</h2><p>${e(t('Share a question or something that helped you.'))}</p></div>`);
-if(postId&&data.posts.length)$('#feed').insertAdjacentHTML('beforeend',`<section class="comments"><h2>${e(t('Comments'))}</h2><form id="comment-form"><label for="comment">${e(t('Add a comment'))}</label><textarea id="comment" required maxlength="2000"></textarea><button class="button" type="submit">${e(t('Post comment'))}</button></form>${data.comments.map(c=>`<article class="comment"><div class="post-meta"><span>${e(c.avatar)}</span><a href="?profile=${encodeURIComponent(c.handle)}">@${e(c.handle)}</a> · ${e(date(c.created))}</div><p class="comment-body">${e(c.body)}</p>${c.mine?`<button data-edit-comment="${e(c.id)}">${e(t('Edit'))}</button> <button data-delete-comment="${e(c.id)}">${e(t('Delete'))}</button>`:''}</article>`).join('')}</section>`)}
-function field(name,label,value='',type='input',max=160){return `<label for="f-${name}">${e(t(label))}</label><${type} id="f-${name}" name="${name}" maxlength="${max}" ${name==='bio'?'':'required'} ${type==='input'?`value="${e(value)}"`:''}>${type==='textarea'?e(value):''}${type==='input'?'':`</${type}>`}`}
-function dialog(title,fields,save){$('#dialog-title').textContent=t(title);$('#fields').innerHTML=fields;$('#form-error').textContent='';editing=save;$('#editor').showModal()}
-function openProfile(){if(!data.signedIn){auth();return}const p=data.me||{};dialog('Edit profile',`<p>${e(t('Profiles, posts, and comments are public. Your sign-in email is never displayed.'))}</p>`+field('handle','Username',p.handle||'','input',24)+`<small>${e(t('Use 3–24 lowercase letters, numbers, or underscores.'))}</small>`+field('bio','About you',p.bio||'','textarea',280)+`<label for="f-avatar">${e(t('Avatar'))}</label><select id="f-avatar" name="avatar">${['✳','🌿','☀','🌻','🌊','🪴'].map(a=>`<option ${a===p.avatar?'selected':''}>${a}</option>`).join('')}</select>`,async f=>{await mutate({action:'profile',...f});handle=f.handle.toLowerCase();postId='';history.replaceState(null,'','?profile='+encodeURIComponent(handle))})}
-$('#language').onchange=()=>{lang=$('#language').value;try{localStorage.setItem('steady-language',lang)}catch{};render()};$('#compose').onclick=()=>{if(!auth())return;dialog('Create a post',field('title','Title')+`<label for="f-topic">${e(t('Topics'))}</label><select id="f-topic" name="topic">${Object.entries(topicNames).filter(([k])=>k!=='all').map(([k,v])=>`<option value="${k}">${e(t(v))}</option>`).join('')}</select>`+field('body','Your post','','textarea',6000),async f=>{const r=await mutate({action:'post',...f});postId=r.id;handle='';history.replaceState(null,'','?post='+r.id)})};
-$('#profile-open').onclick=()=>{if(data.me)location.href='?profile='+encodeURIComponent(data.me.handle);else openProfile()};$('#close-editor').onclick=()=>$('#editor').close();$('#editor-form').onsubmit=async ev=>{ev.preventDefault();const button=ev.submitter;button.disabled=true;try{await editing(Object.fromEntries(new FormData(ev.target)));$('#editor').close();await load()}catch(e){$('#form-error').textContent=e.message}finally{button.disabled=false}};
-$('#new-sort').onclick=()=>{sort='new';load()};$('#top-sort').onclick=()=>{sort='top';load()};
-document.addEventListener('click',async ev=>{const b=ev.target.closest('button');if(!b)return;
-if(b.id==='my-account'||b.id==='edit-profile'){openProfile();return}if(b.id==='retry'){load();return}if(b.dataset.topic){topic=b.dataset.topic;postId='';handle='';history.replaceState(null,'','community.html');load();return}
-try{if(b.dataset.vote){if(!auth())return;b.disabled=true;const p=data.posts.find(p=>p.id===b.dataset.id),value=Number(b.dataset.vote);await mutate({action:'vote',id:p.id,value:p.myVote===value?0:value});await load()}
-if(b.dataset.delete||b.dataset.deleteComment){if(!confirm(t('Delete this permanently?')))return;await mutate({action:b.dataset.delete?'delete':'deleteComment',id:b.dataset.delete||b.dataset.deleteComment});await load()}
-if(b.dataset.edit){const p=data.posts.find(p=>p.id===b.dataset.edit);dialog('Edit',field('title','Title',p.title)+field('body','Your post',p.body,'textarea',6000),f=>mutate({action:'edit',id:p.id,...f}))}
-if(b.dataset.editComment){const c=data.comments.find(c=>c.id===b.dataset.editComment);dialog('Edit',field('body','Add a comment',c.body,'textarea',2000),f=>mutate({action:'editComment',id:c.id,...f}))}
-if(b.dataset.report){if(!auth())return;dialog('Report',`<p>${e(t('Reports are recorded for the site team. Review is not immediate.'))}</p>`+field('reason','Reason','','textarea',500),async f=>{await mutate({action:'report',id:b.dataset.report,...f})})}
-}catch(e){$('#status').textContent=e.message}finally{b.disabled=false}});
-document.addEventListener('submit',async ev=>{if(ev.target.id!=='comment-form')return;ev.preventDefault();if(!auth())return;ev.submitter.disabled=true;try{await mutate({action:'comment',id:postId,body:$('#comment').value});await load()}catch(e){$('#status').textContent=e.message;ev.submitter.disabled=false}});
-localize();load();})();
+(() => {
+  const $ = selector => document.querySelector(selector);
+  const icon = name => window.steadyIcon(name);
+  const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const t = text => window.STEADY.t(text);
+  const TOPICS = { all: ['All conversations', 'chat'], general: ['General', 'users'], money: ['Money & budgeting', 'coin'], taxes: ['Taxes', 'receipt'], health: ['Health & coverage', 'heart'], work: ['Work & rights', 'scale'] };
+  const AVATARS = ['✳', '🌿', '☀', '🌻', '🌊', '🪴'];
+  const ERRORS = { signin: 'Sign in to join the conversation.', profile: 'Create your profile first.', handle: 'Use 3–24 lowercase letters, numbers, or underscores.', taken: 'That username is taken. Try another.', invalid: 'Please complete all fields with valid values.', slow: 'Please wait a moment before posting again.', forbidden: 'You can only change your own content.', missing: 'This post is no longer available.', unavailable: 'Unable to connect. Please try again.' };
+  const url = new URL(location.href);
+  let postId = url.searchParams.get('post') || '', handle = url.searchParams.get('profile') || '', topic = 'all', sort = 'new';
+  let data = { posts: [], comments: [], signedIn: false }, editing = null, offline = false, failed = false;
+  let wantsSetup = url.searchParams.get('setup') === '1';
+
+  const date = n => new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'medium' }).format(new Date(n));
+  const status = text => { $('#status').textContent = text ? t(text) : ''; };
+  async function mutate(body) {
+    const response = await fetch('/api/community', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const result = await response.json();
+    if (!response.ok) throw new Error(t(ERRORS[result.error] || ERRORS.unavailable));
+    return result;
+  }
+  function needsAccount() {
+    if (!data.signedIn) {
+      location.href = `signin.html?return_to=${encodeURIComponent(location.pathname + location.search)}`;
+      return true;
+    }
+    if (!data.me) { openProfile(); return true; }
+    return false;
+  }
+  async function load() {
+    status('Loading…');
+    offline = failed = false;
+    try {
+      const query = new URLSearchParams({ sort });
+      if (topic !== 'all') query.set('topic', topic);
+      if (postId) query.set('post', postId);
+      if (handle) query.set('profile', handle);
+      const response = await fetch(`/api/community?${query}`);
+      if (response.status === 404) offline = true;
+      if (!response.ok) throw new Error();
+      data = await response.json();
+      window.STEADY.setAccount?.({ available: true, signedIn: Boolean(data.signedIn), me: data.me || null });
+      status('');
+    } catch (_) {
+      failed = true;
+      status('');
+      data = { posts: [], comments: [], signedIn: false };
+    }
+    render();
+    if (wantsSetup && data.signedIn && !data.me) { wantsSetup = false; openProfile(); }
+  }
+
+  function renderTopics() {
+    $('#topics').innerHTML = Object.entries(TOPICS).map(([key, [label, name]]) => `<button type="button" data-topic="${key}" aria-pressed="${topic === key}">${icon(name)}<span>${e(t(label))}</span></button>`).join('');
+    $('#new-sort').setAttribute('aria-pressed', String(sort === 'new'));
+    $('#top-sort').setAttribute('aria-pressed', String(sort === 'top'));
+    $('#browse-tools').hidden = Boolean(postId || handle);
+  }
+  function postCard(post) {
+    const body = postId ? post.body : post.body.slice(0, 220) + (post.body.length > 220 ? '…' : '');
+    const owner = post.mine
+      ? `<button type="button" class="quiet" data-edit="${e(post.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete="${e(post.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button>`
+      : `<button type="button" class="quiet" data-report="${e(post.id)}">${icon('flag')}<span>${e(t('Report'))}</span></button>`;
+    return `<article class="post-card">
+      <div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(post.handle)}"><span class="avatar">${e(post.avatar)}</span><b>@${e(post.handle)}</b></a><span>${e(date(post.created))}</span><span class="topic-tag">${e(t(TOPICS[post.topic]?.[0] || 'General'))}</span></div>
+      <h2><a href="?post=${encodeURIComponent(post.id)}">${e(post.title)}</a></h2>
+      <p class="post-body">${e(body)}</p>
+      <div class="post-actions">
+        <div class="vote"><button type="button" data-vote="1" data-id="${e(post.id)}" aria-label="${e(t('Upvote'))}" aria-pressed="${post.myVote === 1}">${icon('up')}</button><b class="num">${Number(post.score) || 0}</b><button type="button" data-vote="-1" data-id="${e(post.id)}" aria-label="${e(t('Downvote'))}" aria-pressed="${post.myVote === -1}">${icon('down')}</button></div>
+        <a class="quiet" href="?post=${encodeURIComponent(post.id)}">${icon('chat')}<span><span class="num">${Number(post.comments) || 0}</span> ${e(t('Comments'))}</span></a>
+        <span class="post-owner">${owner}</span>
+      </div>
+    </article>`;
+  }
+  function render() {
+    renderTopics();
+    const profile = data.profile;
+    $('#profile-card').innerHTML = handle
+      ? (profile
+        ? `<div class="profile-card"><span class="avatar big">${e(profile.avatar)}</span><h2>@${e(profile.handle)}</h2>${profile.bio ? `<p>${e(profile.bio)}</p>` : ''}<small>${e(t('Joined'))} ${e(date(profile.created))}</small>${data.me?.handle === handle ? `<button type="button" class="pill" id="edit-profile">${icon('pencil')}<span>${e(t('Edit profile'))}</span></button>` : ''}</div>`
+        : `<p class="empty-line">${e(t('Profile not found.'))}</p>`)
+      : '';
+    const back = postId || handle ? `<a class="pill back" href="community.html">${icon('back')}<span>${e(t('All conversations'))}</span></a>` : '';
+    let feed;
+    if (failed) {
+      feed = `<div class="empty"><span class="empty-icon">${icon('chat')}</span><h2>${e(t(offline ? 'The community isn’t available on this copy of the site.' : 'Unable to connect. Please try again.'))}</h2>${offline ? `<p>${e(t('It needs the site’s hosted server.'))}</p>` : `<button type="button" class="button" id="retry">${e(t('Try again'))}</button>`}</div>`;
+    } else if (data.posts.length) {
+      feed = data.posts.map(postCard).join('');
+    } else if (handle) {
+      feed = '';
+    } else {
+      feed = `<div class="empty"><span class="empty-icon">${icon('question')}</span><h2>${e(t(postId ? 'This post is no longer available.' : 'Start a conversation.'))}</h2>${postId ? '' : `<button type="button" class="button" data-compose>${e(t('Ask a question'))}</button>`}</div>`;
+    }
+    $('#feed').innerHTML = back + feed;
+    if (postId && data.posts.length) {
+      $('#feed').insertAdjacentHTML('beforeend', `<section class="comments"><h2>${e(t('Comments'))}</h2>
+        <form id="comment-form"><label class="visually-hidden" for="comment">${e(t('Add a comment'))}</label><textarea id="comment" required maxlength="2000" placeholder="${e(t('Add a comment'))}"></textarea><button class="button" type="submit">${e(t('Post comment'))}</button></form>
+        ${(data.comments || []).map(comment => `<article class="comment"><div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(comment.handle)}"><span class="avatar">${e(comment.avatar)}</span><b>@${e(comment.handle)}</b></a><span>${e(date(comment.created))}</span></div><p class="comment-body">${e(comment.body)}</p>${comment.mine ? `<div class="post-actions"><button type="button" class="quiet" data-edit-comment="${e(comment.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete-comment="${e(comment.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button></div>` : ''}</article>`).join('')}
+      </section>`);
+    }
+  }
+
+  const field = (name, label, value = '', tag = 'input', max = 160, required = true) =>
+    `<label for="f-${name}">${e(t(label))}</label>${tag === 'input'
+      ? `<input id="f-${name}" name="${name}" maxlength="${max}" ${required ? 'required' : ''} value="${e(value)}">`
+      : `<textarea id="f-${name}" name="${name}" maxlength="${max}" ${required ? 'required' : ''}>${e(value)}</textarea>`}`;
+  function dialog(title, fields, save, submitLabel = 'Save') {
+    $('#dialog-title').textContent = t(title);
+    $('#fields').innerHTML = fields;
+    $('#form-error').textContent = '';
+    $('#editor-submit').textContent = t(submitLabel);
+    editing = save;
+    $('#editor').showModal();
+  }
+  function openProfile() {
+    if (!data.signedIn) { needsAccount(); return; }
+    const me = data.me || {};
+    const current = me.avatar || AVATARS[0];
+    dialog(data.me ? 'Edit profile' : 'Create profile',
+      `<fieldset class="picker"><legend>${e(t('Your avatar'))}</legend><div class="avatar-grid">${AVATARS.map(avatar => `<label><input type="radio" name="avatar" value="${avatar}" ${avatar === current ? 'checked' : ''}><span>${avatar}</span></label>`).join('')}</div></fieldset>`
+      + field('handle', 'Username', me.handle || '', 'input', 24)
+      + `<small class="hint">${e(t('Use 3–24 lowercase letters, numbers, or underscores.'))}</small>`
+      + field('bio', 'About you', me.bio || '', 'textarea', 280, false)
+      + `<small class="hint">${e(t('Optional'))} · ${e(t('Profiles, posts, and comments are public. Your sign-in email is never displayed.'))}</small>`,
+      async fields => {
+        await mutate({ action: 'profile', ...fields });
+        handle = fields.handle.toLowerCase();
+        postId = '';
+        history.replaceState(null, '', `?profile=${encodeURIComponent(handle)}`);
+      });
+  }
+  function openCompose() {
+    if (needsAccount()) return;
+    const start = topic !== 'all' ? topic : 'general';
+    dialog('Ask a question',
+      field('title', 'Title')
+      + `<fieldset class="picker"><legend>${e(t('Topics'))}</legend><div class="topic-grid">${Object.entries(TOPICS).filter(([key]) => key !== 'all').map(([key, [label, name]]) => `<label><input type="radio" name="topic" value="${key}" ${key === start ? 'checked' : ''}><span>${icon(name)}${e(t(label))}</span></label>`).join('')}</div></fieldset>`
+      + field('body', 'Your post', '', 'textarea', 6000),
+      async fields => {
+        const result = await mutate({ action: 'post', ...fields });
+        postId = result.id; handle = '';
+        history.replaceState(null, '', `?post=${encodeURIComponent(result.id)}`);
+      }, 'Create a post');
+  }
+
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('button');
+    if (!button) return;
+    if (button.id === 'compose' || 'compose' in button.dataset) return openCompose();
+    if (button.id === 'edit-profile') return openProfile();
+    if (button.id === 'retry') return load();
+    if (button.id === 'new-sort') { sort = 'new'; return load(); }
+    if (button.id === 'top-sort') { sort = 'top'; return load(); }
+    if (button.id === 'close-editor') return $('#editor').close();
+    if (button.dataset.topic) {
+      topic = button.dataset.topic; postId = ''; handle = '';
+      history.replaceState(null, '', 'community.html');
+      return load();
+    }
+    try {
+      if (button.dataset.vote) {
+        if (needsAccount()) return;
+        button.disabled = true;
+        const post = data.posts.find(item => item.id === button.dataset.id);
+        const value = Number(button.dataset.vote);
+        await mutate({ action: 'vote', id: post.id, value: post.myVote === value ? 0 : value });
+        await load();
+      }
+      if (button.dataset.delete || button.dataset.deleteComment) {
+        if (!confirm(t('Delete this permanently?'))) return;
+        await mutate({ action: button.dataset.delete ? 'delete' : 'deleteComment', id: button.dataset.delete || button.dataset.deleteComment });
+        await load();
+      }
+      if (button.dataset.edit) {
+        const post = data.posts.find(item => item.id === button.dataset.edit);
+        dialog('Edit', field('title', 'Title', post.title) + field('body', 'Your post', post.body, 'textarea', 6000), fields => mutate({ action: 'edit', id: post.id, ...fields }));
+      }
+      if (button.dataset.editComment) {
+        const comment = data.comments.find(item => item.id === button.dataset.editComment);
+        dialog('Edit', field('body', 'Add a comment', comment.body, 'textarea', 2000), fields => mutate({ action: 'editComment', id: comment.id, ...fields }));
+      }
+      if (button.dataset.report) {
+        if (needsAccount()) return;
+        dialog('Report', `<p class="hint">${e(t('Reports are recorded for the site team. Review is not immediate.'))}</p>` + field('reason', 'Reason', '', 'textarea', 500), async fields => { await mutate({ action: 'report', id: button.dataset.report, ...fields }); }, 'Report');
+      }
+    } catch (error) {
+      $('#status').textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+  $('#editor-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const submit = $('#editor-submit');
+    submit.disabled = true;
+    try {
+      await editing(Object.fromEntries(new FormData(event.target)));
+      $('#editor').close();
+      await load();
+    } catch (error) {
+      $('#form-error').textContent = error.message;
+    } finally {
+      submit.disabled = false;
+    }
+  });
+  document.addEventListener('submit', async event => {
+    if (event.target.id !== 'comment-form') return;
+    event.preventDefault();
+    if (needsAccount()) return;
+    const submit = event.target.querySelector('[type="submit"]');
+    submit.disabled = true;
+    try {
+      await mutate({ action: 'comment', id: postId, body: $('#comment').value });
+      await load();
+    } catch (error) {
+      $('#status').textContent = error.message;
+      submit.disabled = false;
+    }
+  });
+  window.addEventListener('steady-language-change', render);
+  load();
+})();

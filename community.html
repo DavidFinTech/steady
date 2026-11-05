@@ -1,1 +1,82 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Community — Steady</title><link rel="stylesheet" href="steady.css"><link rel="stylesheet" href="community.css"><link rel="stylesheet" href="steady.css"></head><body><header class="topbar"><a class="logo" href="index.html">steady<span>✳</span></a><nav class="topnav"><a href="index.html" data-t="Resources"></a><a href="planner.html" data-t="Weekly planner"></a><a href="community.html" data-t="Community" aria-current="page"></a></nav><select id="language" aria-label="Language / Idioma / 语言 / भाषा"><option value="en">English</option><option value="es">Español</option><option value="zh-Hans">简体中文</option><option value="bn">বাংলা</option><option value="ur">اردو</option><option value="hi">हिन्दी</option></select><div id="account-nav"></div></header><main class="community-shell"><section class="community-hero"><h1 data-t="You don’t have to figure it out alone."></h1></section><div class="community-grid"><aside class="community-sidebar"><h2 data-t="Topics"></h2><div id="topics"></div><div class="community-note"><b data-t="A little kindness goes a long way."></b><p data-t="Be respectful. Protect personal information. No spam or promotion. Community posts are personal experiences, not professional advice."></p><p data-t="Profiles, posts, and comments are public. Your sign-in email is never displayed."></p></div></aside><section aria-label="Community feed"><div id="status" role="status" aria-live="polite"></div><div id="profile-card"></div><div class="feed-tools"><div><button id="new-sort" data-t="New"></button><button id="top-sort" data-t="Top"></button></div><button class="button" id="compose" data-t="Create a post"></button></div><div id="feed"></div></section><aside class="community-right"><div class="community-note"><button id="profile-open" data-t="My profile"></button></div></aside></div></main><dialog id="editor"><form id="editor-form"><div class="dialog-head"><h2 id="dialog-title"></h2><button type="button" id="close-editor" data-t="Close"></button></div><div id="fields"></div><p id="form-error" role="alert"></p><button class="button" type="submit" data-t="Save"></button></form></dialog><nav class="tabbar"><a href="index.html"><i data-icon="heart"></i><span data-t="Resources"></span></a><a href="planner.html"><i data-icon="calendar"></i><span data-t="Weekly planner"></span></a><a href="community.html" class="is-active" aria-current="page"><i data-icon="chat"></i><span data-t="Community"></span></a></nav><footer class="foot"><a class="logo" href="index.html">steady<span>✳</span></a><p data-t="Your work changes. Your support stays."></p></footer><script src="steady-icons.js"></script><script src="community-i18n.js"></script><script src="community.js"></script><script src="language-picker.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b2238">
+<title>Steady — Community</title>
+<link rel="stylesheet" href="steady.css">
+</head>
+<body data-title="Community">
+<a class="skip" href="#main" data-i18n="Skip to content">Skip to content</a>
+<header class="topbar">
+  <a class="logo" href="index.html">steady<span>✳</span></a>
+  <nav class="topnav" data-i18n-aria="Main navigation" aria-label="Main navigation">
+    <a href="index.html#tax" data-i18n="Taxes">Taxes</a>
+    <a href="index.html#health" data-i18n="Health">Health</a>
+    <a href="index.html#legal" data-i18n="Rights">Rights</a>
+    <a href="planner.html" data-i18n="Planner">Planner</a>
+    <a href="community.html" class="is-active" aria-current="page" data-i18n="Community">Community</a>
+  </nav>
+  <div class="lang-slot"></div>
+  <a class="account-link" href="signin.html" data-account-link><i data-icon="user"></i><span>Sign in</span></a>
+</header>
+
+<main id="main">
+  <section class="hero community-hero" id="browse-tools">
+    <h1 data-i18n="You don’t have to figure it out alone.">You don’t have to figure it out alone.</h1>
+    <button type="button" class="pill pill-sun" id="compose"><i data-icon="question"></i><span data-i18n="Ask a question">Ask a question</span></button>
+  </section>
+  <div class="community">
+    <div class="community-tools">
+      <div class="topics" id="topics" role="group" data-i18n-aria="Topics" aria-label="Topics"></div>
+      <div class="segmented">
+        <button type="button" id="new-sort" aria-pressed="true" data-i18n="New">New</button>
+        <button type="button" id="top-sort" aria-pressed="false" data-i18n="Top">Top</button>
+      </div>
+    </div>
+    <div id="status" role="status" aria-live="polite"></div>
+    <div id="profile-card"></div>
+    <div id="feed"></div>
+    <details class="rules">
+      <summary><span data-i18n="Community rules">Community rules</span></summary>
+      <div class="rule-chips">
+        <span class="chip"><i data-icon="heart"></i><span data-i18n="Be kind">Be kind</span></span>
+        <span class="chip"><i data-icon="shield"></i><span data-i18n="Keep personal info private">Keep personal info private</span></span>
+        <span class="chip"><i data-icon="flag"></i><span data-i18n="No spam or ads">No spam or ads</span></span>
+      </div>
+      <p class="fine" data-i18n="Posts are personal experience, not professional advice. Everything here is public.">Posts are personal experience, not professional advice. Everything here is public.</p>
+    </details>
+  </div>
+</main>
+
+<dialog id="editor">
+  <form id="editor-form">
+    <div class="dialog-head"><h2 id="dialog-title"></h2><button type="button" class="link" id="close-editor" data-i18n="Close">Close</button></div>
+    <div id="fields"></div>
+    <p id="form-error" role="alert"></p>
+    <button class="button" id="editor-submit" type="submit" data-i18n="Save">Save</button>
+  </form>
+</dialog>
+
+<footer class="foot">
+  <a class="logo" href="index.html">steady<span>✳</span></a>
+  <p class="foot-line" data-i18n="Your work changes. Your support stays.">Your work changes. Your support stays.</p>
+</footer>
+
+<nav class="tabbar" data-i18n-aria="Main navigation" aria-label="Main navigation">
+  <a href="index.html#tax"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></a>
+  <a href="index.html#health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
+  <a href="index.html#legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
+  <a href="planner.html"><i data-icon="calendar"></i><span data-i18n="Planner">Planner</span></a>
+  <a href="community.html" class="is-active" aria-current="page"><i data-icon="chat"></i><span data-i18n="Community">Community</span></a>
+</nav>
+
+<script src="steady-icons.js" defer></script>
+<script src="community-i18n.js" defer></script>
+<script src="steady-i18n.js" defer></script>
+<script src="language-picker.js" defer></script>
+<script src="steady-account.js" defer></script>
+<script src="community.js" defer></script>
+</body>
+</html>

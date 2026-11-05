@@ -170,6 +170,29 @@
       'یہ ایک تخمینہ ہے۔ ٹیکس % آپ کا اپنا اندازہ ہے۔ کچھ محفوظ یا بھیجا نہیں جاتا۔',
       'यह एक अनुमान है। कर % आपका अपना अंदाज़ा है। कुछ भी सहेजा या भेजा नहीं जाता।'
     ),
+    'Join the conversation.': W('Únete a la conversación.', '加入讨论。', 'আলোচনায় যোগ দিন।', 'گفتگو میں شامل ہوں۔', 'चर्चा में शामिल हों।'),
+    'Ask a question': W('Haz una pregunta', '提问', 'প্রশ্ন করুন', 'سوال پوچھیں', 'सवाल पूछें'),
+    'Share what helped': W('Comparte lo que ayudó', '分享有用的经验', 'যা কাজে এসেছে শেয়ার করুন', 'مددگار بات شیئر کریں', 'जो काम आया, साझा करें'),
+    'Help someone else': W('Ayuda a alguien', '帮助他人', 'অন্যকে সাহায্য করুন', 'کسی اور کی مدد کریں', 'किसी और की मदद करें'),
+    'Continue with ChatGPT': W('Continuar con ChatGPT', '使用 ChatGPT 继续', 'ChatGPT দিয়ে চালিয়ে যান', 'ChatGPT کے ساتھ جاری رکھیں', 'ChatGPT से जारी रखें'),
+    'You need a ChatGPT account. Your email is never shown.': W('Necesitas una cuenta de ChatGPT. Tu correo nunca se muestra.', '您需要 ChatGPT 账户。您的邮箱绝不会显示。', 'ChatGPT অ্যাকাউন্ট লাগবে। আপনার ইমেল কখনো দেখানো হয় না।', 'ChatGPT اکاؤنٹ درکار ہے۔ آپ کی ای میل کبھی نہیں دکھائی جاتی۔', 'ChatGPT खाता चाहिए। आपका ईमेल कभी नहीं दिखाया जाता।'),
+    'No account? Every tool still works.': W('¿Sin cuenta? Todas las herramientas funcionan.', '没有账户？所有工具仍可使用。', 'অ্যাকাউন্ট নেই? সব টুল তবুও চলবে।', 'اکاؤنٹ نہیں؟ تمام ٹولز پھر بھی کام کرتے ہیں۔', 'खाता नहीं? सभी टूल फिर भी काम करते हैं।'),
+    'Sign-in isn’t available on this copy of the site.': W('El inicio de sesión no está disponible en esta copia del sitio.', '此网站副本无法登录。', 'সাইটের এই কপিতে সাইন ইন করা যায় না।', 'سائٹ کی اس کاپی پر سائن ان دستیاب نہیں۔', 'साइट की इस कॉपी पर साइन इन उपलब्ध नहीं है।'),
+    'It needs the site’s hosted server.': W('Necesita el servidor del sitio.', '需要网站的托管服务器。', 'এর জন্য সাইটের হোস্ট করা সার্ভার দরকার।', 'اس کے لیے سائٹ کا ہوسٹڈ سرور درکار ہے۔', 'इसके लिए साइट का होस्टेड सर्वर चाहिए।'),
+    'Checking…': W('Comprobando…', '正在检查…', 'যাচাই করা হচ্ছে…', 'جانچ ہو رہی ہے…', 'जाँच हो रही है…'),
+    'You’re signed in.': W('Sesión iniciada.', '您已登录。', 'আপনি সাইন ইন করেছেন।', 'آپ سائن ان ہیں۔', 'आप साइन इन हैं।'),
+    'Almost there.': W('Ya casi.', '马上就好。', 'প্রায় হয়ে গেছে।', 'بس تھوڑا سا اور۔', 'बस थोड़ा और।'),
+    'Go to Community': W('Ir a la comunidad', '前往社区', 'কমিউনিটিতে যান', 'کمیونٹی پر جائیں', 'समुदाय पर जाएँ'),
+    'Pick a username': W('Elige un nombre de usuario', '选择用户名', 'একটি ব্যবহারকারীর নাম বেছে নিন', 'صارف نام چنیں', 'यूज़रनेम चुनें'),
+    'Sign out': W('Cerrar sesión', '退出登录', 'সাইন আউট', 'سائن آؤٹ', 'साइन आउट'),
+    'Community rules': W('Normas de la comunidad', '社区规则', 'কমিউনিটির নিয়ম', 'کمیونٹی کے اصول', 'समुदाय के नियम'),
+    'Be kind': W('Sé amable', '友善待人', 'সদয় থাকুন', 'مہربان رہیں', 'दयालु रहें'),
+    'Keep personal info private': W('Protege tus datos personales', '保护个人信息', 'ব্যক্তিগত তথ্য গোপন রাখুন', 'ذاتی معلومات نجی رکھیں', 'निजी जानकारी गोपनीय रखें'),
+    'No spam or ads': W('Sin spam ni publicidad', '禁止垃圾信息和广告', 'স্প্যাম বা বিজ্ঞাপন নয়', 'اسپام یا اشتہار نہیں', 'स्पैम या विज्ञापन नहीं'),
+    'Posts are personal experience, not professional advice. Everything here is public.': W('Las publicaciones son experiencias personales, no asesoría profesional. Todo aquí es público.', '帖子是个人经验，不是专业建议。这里的所有内容都是公开的。', 'পোস্টগুলো ব্যক্তিগত অভিজ্ঞতা, পেশাদার পরামর্শ নয়। এখানকার সবকিছু সর্বজনীন।', 'پوسٹس ذاتی تجربات ہیں، پیشہ ورانہ مشورہ نہیں۔ یہاں سب کچھ عوامی ہے۔', 'पोस्ट निजी अनुभव हैं, पेशेवर सलाह नहीं। यहाँ सब कुछ सार्वजनिक है।'),
+    'The community isn’t available on this copy of the site.': W('La comunidad no está disponible en esta copia del sitio.', '此网站副本无法使用社区。', 'সাইটের এই কপিতে কমিউনিটি নেই।', 'سائٹ کی اس کاپی پر کمیونٹی دستیاب نہیں۔', 'साइट की इस कॉपी पर समुदाय उपलब्ध नहीं है।'),
+    'Your avatar': W('Tu avatar', '您的头像', 'আপনার অবতার', 'آپ کا اوتار', 'आपका अवतार'),
+    'Optional': W('Opcional', '选填', 'ঐচ্ছিক', 'اختیاری', 'वैकल्पिक'),
     'Try the tax calculator': W('Probar la calculadora de impuestos', '试用税务计算器', 'কর ক্যালকুলেটর ব্যবহার করুন', 'ٹیکس کیلکولیٹر آزمائیں', 'कर कैलकुलेटर आज़माएँ')
   };
 
@@ -180,7 +203,7 @@
   const t = text => {
     const language = document.documentElement.lang;
     if (language === 'en') return text;
-    const value = DICTIONARY[text]?.[language];
+    const value = DICTIONARY[text]?.[language] || window.COMMUNITY_I18N?.[text]?.[language];
     if (!value) missing.add(text);
     return value || text;
   };

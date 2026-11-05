@@ -14,6 +14,15 @@
     chat: '<path d="M4 5h16v11H9l-5 4z"/>',
     print: '<path d="M7 8V3h10v5M5 17H3V9h18v8h-2"/><path d="M7 14h10v7H7z"/>',
     phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+    question: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .7c0 1.7-2.5 2.2-2.5 4M12 17.2v.1"/>',
+    spark: '<path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/>',
+    up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+    down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+    flag: '<path d="M6 21V4h12l-2.5 4.5L18 13H6"/>',
+    pencil: '<path d="M4 20l1-4L16 5l3 3L8 19z"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3M6.5 7l1 13h9l1-13"/>',
+    back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
     arrow: '<path d="M7 17L17 7M9 7h8v8"/>'
   };
   window.steadyIcon = name => `<svg class="ico ico-${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ''}</svg>`;

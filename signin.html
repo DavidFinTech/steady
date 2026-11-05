@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b2238">
+<title>Steady — Sign in</title>
+<link rel="stylesheet" href="steady.css">
+</head>
+<body data-title="Sign in">
+<a class="skip" href="#main" data-i18n="Skip to content">Skip to content</a>
+<header class="topbar">
+  <a class="logo" href="index.html">steady<span>✳</span></a>
+  <nav class="topnav" data-i18n-aria="Main navigation" aria-label="Main navigation">
+    <a href="index.html#tax" data-i18n="Taxes">Taxes</a>
+    <a href="index.html#health" data-i18n="Health">Health</a>
+    <a href="index.html#legal" data-i18n="Rights">Rights</a>
+    <a href="planner.html" data-i18n="Planner">Planner</a>
+    <a href="community.html" data-i18n="Community">Community</a>
+  </nav>
+  <div class="lang-slot"></div>
+  <a class="account-link" href="signin.html" data-account-link aria-current="page"><i data-icon="user"></i><span>Sign in</span></a>
+</header>
+
+<main id="main" class="hero signin">
+  <section data-view="checking" aria-live="polite">
+    <p class="hero-meta" data-i18n="Checking…">Checking…</p>
+  </section>
+
+  <section data-view="signed-out" hidden>
+    <h1 data-i18n="Join the conversation.">Join the conversation.</h1>
+    <ul class="perks">
+      <li><i data-icon="question"></i><span data-i18n="Ask a question">Ask a question</span></li>
+      <li><i data-icon="spark"></i><span data-i18n="Share what helped">Share what helped</span></li>
+      <li><i data-icon="users"></i><span data-i18n="Help someone else">Help someone else</span></li>
+    </ul>
+    <a class="pill pill-sun" id="signin-action" href="#" target="_top"><span data-i18n="Continue with ChatGPT">Continue with ChatGPT</span><i data-icon="arrow"></i></a>
+    <p class="hero-meta" data-i18n="You need a ChatGPT account. Your email is never shown.">You need a ChatGPT account. Your email is never shown.</p>
+    <p class="signin-alt"><a href="index.html" data-i18n="No account? Every tool still works.">No account? Every tool still works.</a></p>
+  </section>
+
+  <section data-view="signed-in" hidden>
+    <span class="avatar huge" id="me-avatar" aria-hidden="true"></span>
+    <h1 id="me-title"></h1>
+    <p class="hero-sub" id="me-line"></p>
+    <div class="signin-actions">
+      <a class="pill pill-sun" id="continue-action" href="community.html"><span id="continue-label">Go to Community</span><i data-icon="arrow"></i></a>
+      <a class="pill on-dark" id="signout-action" href="#" target="_top"><span data-i18n="Sign out">Sign out</span></a>
+    </div>
+  </section>
+
+  <section data-view="offline" hidden>
+    <span class="signin-icon"><i data-icon="user"></i></span>
+    <h1 class="signin-small" data-i18n="Sign-in isn’t available on this copy of the site.">Sign-in isn’t available on this copy of the site.</h1>
+    <p class="hero-sub" data-i18n="It needs the site’s hosted server.">It needs the site’s hosted server.</p>
+    <a class="pill pill-sun" href="index.html"><span data-i18n="No account? Every tool still works.">No account? Every tool still works.</span><i data-icon="arrow"></i></a>
+  </section>
+</main>
+
+<nav class="tabbar" data-i18n-aria="Main navigation" aria-label="Main navigation">
+  <a href="index.html#tax"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></a>
+  <a href="index.html#health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
+  <a href="index.html#legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
+  <a href="planner.html"><i data-icon="calendar"></i><span data-i18n="Planner">Planner</span></a>
+  <a href="community.html"><i data-icon="chat"></i><span data-i18n="Community">Community</span></a>
+</nav>
+
+<script src="steady-icons.js" defer></script>
+<script src="community-i18n.js" defer></script>
+<script src="steady-i18n.js" defer></script>
+<script src="language-picker.js" defer></script>
+<script src="steady-account.js" defer></script>
+<script src="signin.js" defer></script>
+</body>
+</html>
