@@ -52,6 +52,19 @@ if (typeof document !== 'undefined') {
     let need = 'budget', region = 'nyc', shown = false, checked = new Set();
     const t = (en, es) => document.documentElement.lang === 'es' ? es : (window.STEADY_TRANSLATIONS?.[en]?.[document.documentElement.lang] || en);
     const pair = value => t(...value);
+    function celebrate() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const plan = root.querySelector('#next-plan');
+      for (let i = 0; i < 14; i++) {
+        const star = document.createElement('span');
+        star.className = 'plan-burst'; star.textContent = '✳'; star.setAttribute('aria-hidden', 'true');
+        const angle = (i / 14) * Math.PI * 2;
+        star.style.setProperty('--x', Math.cos(angle) * (70 + Math.random() * 90) + 'px');
+        star.style.setProperty('--y', Math.sin(angle) * (50 + Math.random() * 70) + 'px');
+        plan.append(star);
+        star.addEventListener('animationend', () => star.remove());
+      }
+    }
     function render(focus = false) {
       const path = getSupportPath(need, region);
       root.innerHTML = `
@@ -65,7 +78,7 @@ if (typeof document !== 'undefined') {
       <button class="button" type="submit">${t('Build my checklist →', 'Crear mi lista →')}</button></form>
       <div class="next-plan ${shown?'has-plan':''}" id="next-plan" tabindex="-1" aria-labelledby="plan-title">
       ${shown ? `<span class="eyebrow">${t('YOUR NEXT THREE STEPS', 'TUS PRÓXIMOS TRES PASOS')}</span><h3 id="plan-title">${pair(path.title)}</h3><p class="plan-location">${region==='nyc'?t('Resources for NYC', 'Recursos para NYC'):t('National starting points', 'Puntos de partida nacionales')}</p>
-      <div class="plan-progress"><span id="completion" role="status">${checked.size} / 3 ${t('steps checked', 'pasos marcados')}</span><progress value="${checked.size}" max="3" aria-label="${t('Checklist progress','Progreso de la lista')}"></progress></div>
+      <div class="plan-progress"><span id="completion" role="status">${checked.size} / 3 ${t('steps checked', 'pasos marcados')}</span><progress value="${checked.size}" max="3" aria-label="${t('Checklist progress','Progreso de la lista')}"></progress></div><p class="plan-done" id="plan-done" role="status" ${checked.size===3?'':'hidden'}>${t('All three steps checked. Nice work.','Los tres pasos marcados. ¡Buen trabajo!')}</p>
       <div class="checklist">${path.steps.map((step,i)=>`<label><input type="checkbox" data-step="${i}" ${checked.has(i)?'checked':''}><span>${pair(step)}</span></label>`).join('')}</div>
       <a class="resource-action" href="${path.url}">${pair(path.source)} ↗</a><p class="fine">${need==='budget'?t('Local planning tool. No money moves.', 'Herramienta de planificación. No mueve dinero.'):t('External provider. Confirm current rules and availability on their website.', 'Proveedor externo. Confirma las reglas y disponibilidad actuales en su sitio web.')}</p>
       <div class="plan-actions"><button type="button" class="button small" id="print-plan">${t('Print / save PDF', 'Imprimir / guardar PDF')}</button><button type="button" class="reset" id="clear-plan">${t('Start over', 'Empezar de nuevo')}</button></div><p class="fine">${t('Your checklist is not saved. Print it before leaving this page.', 'Tu lista no se guarda. Imprímela antes de salir de esta página.')}</p>` : `<span class="plan-star" aria-hidden="true">✳</span><h3 id="plan-title">${t('One priority. A clear next step.', 'Una prioridad. Un siguiente paso claro.')}</h3><p>${t('Your checklist will appear here, with a useful resource and three actions you can take.', 'Tu lista aparecerá aquí, con un recurso útil y tres acciones que puedes realizar.')}</p><span class="privacy-chip">${t('No sign-up. No personal details.', 'Sin cuenta. Sin datos personales.')}</span>`}
@@ -77,10 +90,21 @@ if (typeof document !== 'undefined') {
         if (nextNeed !== need || nextRegion !== region) checked.clear();
         need = nextNeed; region = nextRegion; shown = true; render(true);
       });
+      const liveUpdate = control => {
+        const nextNeed = root.querySelector('[name="need"]:checked').value;
+        const nextRegion = root.querySelector('#support-location').value;
+        checked.clear(); need = nextNeed; region = nextRegion; shown = true; render();
+        root.querySelector(control.id ? '#' + control.id : `[name="need"][value="${nextNeed}"]`).focus();
+      };
+      root.querySelectorAll('[name="need"], #support-location').forEach(control => control.addEventListener('change', () => liveUpdate(control)));
       root.querySelectorAll('[data-step]').forEach(box => box.addEventListener('change', () => {
         const i = Number(box.dataset.step); box.checked ? checked.add(i) : checked.delete(i);
         root.querySelector('#completion').textContent = `${checked.size} / 3 ${t('steps checked','pasos marcados')}`;
         root.querySelector('progress').value = checked.size;
+        const done = root.querySelector('#plan-done');
+        const wasDone = !done.hidden;
+        done.hidden = checked.size !== 3;
+        if (!wasDone && !done.hidden) celebrate();
       }));
       root.querySelector('#print-plan')?.addEventListener('click', () => window.print());
       root.querySelector('#clear-plan')?.addEventListener('click', () => { shown=false; checked.clear(); render(); root.querySelector('[name="need"]:checked').focus(); });
@@ -89,6 +113,9 @@ if (typeof document !== 'undefined') {
     window.addEventListener('steady-language-change', () => {
       render();
     });
+    window.steadyNavigator = {
+      choose(nextNeed) { need = nextNeed; shown = true; checked.clear(); render(true); root.scrollIntoView(); }
+    };
     render();
   }
 }

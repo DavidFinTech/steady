@@ -878,3 +878,6 @@ window.STEADY_TRANSLATIONS = {
     "zh-Hans": "规划工具无需账户。清单仅在本次访问期间保留，可打印保存。社区资料、帖子和评论会保存并公开显示。语言偏好保存在此浏览器中。"
   }
 };
+Object.assign(window.STEADY_TRANSLATIONS, {
+  "All three steps checked. Nice work.": { "zh-Hans": "三个步骤都已完成。做得好！", "hi": "तीनों चरण पूरे हुए। बहुत बढ़िया!" }
+});
