@@ -39,9 +39,8 @@
   };
   localButtons.forEach(button => button.addEventListener('click', () => {
     const target = button.dataset.localLanguage;
-    if (target === (document.documentElement.lang === 'es' ? 'es' : 'en')) return;
-    const toggle = document.querySelector('[data-language-toggle]');
-    if (toggle) toggle.click();
+    const destination = originalPageUrl() + '?lang=' + target;
+    location.assign(destination);
   }));
   const originalPageUrl = () => {
     if (location.hostname === 'raw-githack-com.translate.goog') {
