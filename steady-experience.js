@@ -1,265 +1,83 @@
-// Interactive layer: everything here is added on top of the page, so the site
-// still works if this script does not load.
+// Shared interactions: choosers, breakdown bars, header progress and reveals.
 (() => {
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const $ = id => document.getElementById(id);
-  const money = n => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const t = text => window.STEADY.t(text);
+  const arrow = () => window.steadyIcon('arrow');
 
-  const STRINGS = {
-    "What's on your mind?": { es: '¿Qué tienes en mente?', 'zh-Hans': '您现在最关心什么？', hi: 'आपके मन में क्या है?' },
-    'Plan my week': { es: 'Planificar mi semana', 'zh-Hans': '规划我的一周', hi: 'मेरे सप्ताह की योजना' },
-    'Prepare for taxes': { es: 'Prepararme para impuestos', 'zh-Hans': '准备报税', hi: 'करों की तैयारी' },
-    'Find health coverage': { es: 'Buscar cobertura médica', 'zh-Hans': '寻找医疗保险', hi: 'स्वास्थ्य कवरेज खोजें' },
-    'Address unpaid work': { es: 'Consultar un pago pendiente', 'zh-Hans': '处理未付款工作', hi: 'अवैतनिक काम का समाधान' },
-    'WHERE YOUR REVENUE GOES': { es: 'A DÓNDE VAN TUS INGRESOS', 'zh-Hans': '您的收入去向', hi: 'आपकी आमदनी कहाँ जाती है' },
-    'Business expenses': { es: 'Gastos del negocio', 'zh-Hans': '业务支出', hi: 'व्यावसायिक खर्च' },
-    'Federal income tax': { es: 'Impuesto federal sobre la renta', 'zh-Hans': '联邦所得税', hi: 'संघीय आयकर' },
-    'Self-employment tax': { es: 'Impuesto por trabajo autónomo', 'zh-Hans': '自雇税', hi: 'स्व-रोज़गार कर' },
-    'Additional Medicare tax': { es: 'Impuesto adicional de Medicare', 'zh-Hans': '附加医疗保险税', hi: 'अतिरिक्त मेडिकेयर कर' },
-    'Left after federal tax': { es: 'Queda tras impuestos federales', 'zh-Hans': '缴纳联邦税后剩余', hi: 'संघीय कर के बाद शेष' },
-    'About {n}% of your revenue goes to these federal taxes.': {
-      es: 'Cerca del {n}% de tus ingresos se destina a estos impuestos federales.',
-      'zh-Hans': '您的收入中约有 {n}% 用于这些联邦税。',
-      hi: 'आपकी आमदनी का लगभग {n}% इन संघीय करों में जाता है।'
-    },
-    'WHERE THIS WEEK GOES': { es: 'A DÓNDE VA ESTA SEMANA', 'zh-Hans': '本周资金去向', hi: 'इस सप्ताह का पैसा कहाँ जाता है' },
-    Essentials: { es: 'Gastos esenciales', 'zh-Hans': '基本开支', hi: 'ज़रूरी खर्च' },
-    'Tax reserve': { es: 'Reserva para impuestos', 'zh-Hans': '税款储备', hi: 'कर आरक्षित' },
-    Available: { es: 'Disponible', 'zh-Hans': '可用金额', hi: 'उपलब्ध' },
-    Shortfall: { es: 'Déficit', 'zh-Hans': '缺口', hi: 'कमी' }
-  };
-  const t = text => {
-    const language = document.documentElement.lang;
-    return language === 'en' ? text : STRINGS[text]?.[language] || text;
-  };
-
-  function renderShare(host, title, segments, note = '') {
+  window.STEADY.renderShare = (host, segments) => {
     const total = segments.reduce((sum, segment) => sum + segment.value, 0);
     const visible = segments.filter(segment => segment.value > 0);
-    const percent = value => (total ? Math.round((value / total) * 100) : 0);
     host.hidden = !total;
     if (!total) return;
-    host.querySelector('.share-title').textContent = t(title);
-    host.querySelector('.share-bar').innerHTML = visible
-      .map(segment => `<i class="${segment.tone}" style="flex-grow:${segment.value}"></i>`)
-      .join('');
-    host.querySelector('.share-legend').innerHTML = visible
-      .map(segment => `<li><i class="${segment.tone}"></i><span>${t(segment.label)}</span><b>${percent(segment.value)}%</b></li>`)
-      .join('');
-    host.querySelector('.share-note').textContent = note;
-    host.querySelector('.share-note').hidden = !note;
-  }
-  function createShare() {
-    const host = document.createElement('div');
-    host.className = 'share';
-    host.setAttribute('data-native-i18n', '');
-    host.innerHTML = '<span class="eyebrow share-title"></span><div class="share-bar" aria-hidden="true"></div><ul class="share-legend"></ul><p class="share-note fine"></p>';
-    return host;
-  }
+    host.querySelector('.share-bar').innerHTML = visible.map(s => `<i class="${s.tone}" style="flex-grow:${s.value}"></i>`).join('');
+    host.querySelector('.share-legend').innerHTML = visible.map(s => `<li><i class="${s.tone}"></i><span>${t(s.label)}</span><b class="num">${Math.round((s.value / total) * 100)}%</b></li>`).join('');
+  };
 
-  // Header: reading progress and the current section.
-  const header = document.querySelector('header');
-  if (header) {
-    const bar = document.createElement('span');
-    bar.className = 'scroll-progress';
-    bar.setAttribute('aria-hidden', 'true');
-    header.append(bar);
+  const CHOOSERS = {
+    health: [
+      { icon: 'shield', label: 'Insurance', title: 'Compare plans', line: 'Your income may lower the price.', cta: 'HealthCare.gov', url: 'https://www.healthcare.gov/self-employed/coverage/' },
+      { icon: 'coin', label: 'Low-cost', title: 'Medicaid & CHIP', line: 'Your state decides who qualifies.', cta: 'See your options', url: 'https://www.healthcare.gov/medicaid-chip/' },
+      { icon: 'pin', label: 'Near me', title: 'Find a health center', line: 'Fees may depend on your income.', cta: 'Find a center', url: 'https://findahealthcenter.hrsa.gov/' }
+    ],
+    legal: [
+      { icon: 'coin', label: "I wasn't paid", title: 'NYC freelance protections', line: 'Check if the law covers your work.', cta: 'See your rights', url: 'https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page' },
+      { icon: 'badge', label: 'Am I an employee?', title: 'Employee or contractor?', line: "A job title or 1099 doesn't settle it.", cta: 'Find out more', url: 'https://www.usa.gov/job-misclassification' },
+      { icon: 'scale', label: 'I need legal help', title: 'Civil legal aid', line: 'Local groups help people who qualify.', cta: 'Find legal aid', url: 'https://www.lsc.gov/about-lsc/what-legal-aid/i-need-legal-help' }
+    ]
+  };
+  document.querySelectorAll('[data-chooser]').forEach(host => {
+    const options = CHOOSERS[host.dataset.chooser];
+    let active = 0;
+    host.innerHTML = '<div class="chooser-tabs" role="group"></div><div class="chooser-panel" aria-live="polite"></div>';
+    const tabs = host.querySelector('.chooser-tabs');
+    const panel = host.querySelector('.chooser-panel');
+    const draw = () => {
+      tabs.innerHTML = options.map((option, i) => `<button type="button" aria-pressed="${i === active}" data-i="${i}">${window.steadyIcon(option.icon)}<span>${t(option.label)}</span></button>`).join('');
+      const option = options[active];
+      panel.innerHTML = `<div class="chooser-card"><span class="chooser-icon">${window.steadyIcon(option.icon)}</span><h3>${t(option.title)}</h3><p>${t(option.line)}</p><a class="pill" href="${option.url}"><span>${t(option.cta)}</span>${arrow()}</a></div>`;
+    };
+    tabs.addEventListener('click', event => {
+      const button = event.target.closest('[data-i]');
+      if (!button) return;
+      active = Number(button.dataset.i);
+      draw();
+      tabs.querySelector(`[data-i="${active}"]`).focus();
+    });
+    window.addEventListener('steady-language-change', draw);
+    draw();
+  });
+
+  const header = document.querySelector('.topbar');
+  const bar = document.querySelector('.scroll-progress');
+  if (header && bar) {
     let queued = false;
     const paint = () => {
       queued = false;
       const room = document.documentElement.scrollHeight - innerHeight;
       bar.style.transform = `scaleX(${room > 0 ? Math.min(1, scrollY / room) : 0})`;
-      header.classList.toggle('is-scrolled', scrollY > 12);
     };
-    addEventListener('scroll', () => {
-      if (!queued) { queued = true; requestAnimationFrame(paint); }
-    }, { passive: true });
+    addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(paint); } }, { passive: true });
     paint();
   }
-  const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
-  if (navLinks.length && 'IntersectionObserver' in window) {
-    const watcher = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
+
+  const links = [...document.querySelectorAll('a[data-section]')];
+  if ('IntersectionObserver' in window) {
+    if (links.length) {
+      const watcher = new IntersectionObserver(entries => entries.forEach(entry => {
+        links.filter(link => link.dataset.section === entry.target.id).forEach(link => link.classList.toggle('is-active', entry.isIntersecting));
+      }), { rootMargin: '-40% 0px -55% 0px' });
+      new Set(links.map(link => link.dataset.section)).forEach(id => {
+        const section = document.getElementById(id);
+        if (section) watcher.observe(section);
+      });
+    }
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('can-reveal');
+      const revealer = new IntersectionObserver((entries, observer) => entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        navLinks.forEach(link => link.classList.toggle('is-active', link.hash === `#${entry.target.id}`));
-      });
-    }, { rootMargin: '-35% 0px -60% 0px' });
-    navLinks.forEach(link => {
-      const section = document.querySelector(link.hash);
-      if (section) watcher.observe(section);
-    });
-  }
-
-  // Hero: shortcuts into the checklist, and a card that follows the pointer.
-  const actions = document.querySelector('.hero-actions');
-  if (actions) {
-    const shortcuts = document.createElement('div');
-    shortcuts.className = 'hero-shortcuts';
-    shortcuts.setAttribute('data-native-i18n', '');
-    const needs = [['budget', 'Plan my week'], ['tax', 'Prepare for taxes'], ['health', 'Find health coverage'], ['pay', 'Address unpaid work']];
-    const draw = () => {
-      shortcuts.innerHTML = `<span class="hero-shortcuts-label">${t("What's on your mind?")}</span><div>${needs
-        .map(([need, label]) => `<button type="button" data-need="${need}">${t(label)}</button>`)
-        .join('')}</div>`;
-    };
-    draw();
-    shortcuts.addEventListener('click', event => {
-      const need = event.target.closest('[data-need]')?.dataset.need;
-      if (need) window.steadyNavigator?.choose(need);
-    });
-    addEventListener('steady-language-change', draw);
-    actions.after(shortcuts);
-  }
-  const heroArt = document.querySelector('.hero-art');
-  const hero = document.querySelector('.hero');
-  if (heroArt && hero && !reducedMotion && matchMedia('(hover: hover)').matches) {
-    hero.addEventListener('pointermove', event => {
-      const box = hero.getBoundingClientRect();
-      heroArt.style.setProperty('--tilt-x', ((event.clientX - box.left) / box.width - 0.5).toFixed(3));
-      heroArt.style.setProperty('--tilt-y', ((event.clientY - box.top) / box.height - 0.5).toFixed(3));
-    });
-    hero.addEventListener('pointerleave', () => {
-      heroArt.style.setProperty('--tilt-x', 0);
-      heroArt.style.setProperty('--tilt-y', 0);
-    });
-  }
-
-  // Cards: a soft light that follows the pointer.
-  if (matchMedia('(hover: hover)').matches) {
-    document.addEventListener('pointermove', event => {
-      const card = event.target.closest?.('.cards article, .jump-grid > a');
-      if (!card) return;
-      const box = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${event.clientX - box.left}px`);
-      card.style.setProperty('--my', `${event.clientY - box.top}px`);
-    }, { passive: true });
-  }
-
-  const fillRange = range => {
-    const span = Number(range.max) - Number(range.min);
-    range.style.setProperty('--fill', `${((Number(range.value) - Number(range.min)) / span) * 100}%`);
-  };
-
-  // Tax calculator: sliders, a counting total and a picture of the split.
-  const form = $('tax-form');
-  if (form && typeof estimateTax === 'function') {
-    const total = $('total');
-    const display = document.createElement('div');
-    display.className = 'total total-display';
-    display.setAttribute('aria-hidden', 'true');
-    total.classList.add('visually-hidden');
-    total.after(display);
-    const share = createShare();
-    document.querySelector('.result-caption').after(share);
-
-    const sliders = [['revenue', 250000, 1000], ['costs', 100000, 500]].map(([id, max, step]) => {
-      const input = $(id);
-      const label = form.querySelector(`label[for="${id}"]`);
-      label.id = `${id}-label`;
-      const range = document.createElement('input');
-      range.type = 'range';
-      range.className = 'money-range';
-      range.min = 0; range.max = max; range.step = step;
-      range.value = input.value;
-      range.setAttribute('aria-labelledby', label.id);
-      input.parentElement.after(range);
-      fillRange(range);
-      range.addEventListener('input', () => {
-        input.value = range.value;
-        fillRange(range);
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-      });
-      input.addEventListener('input', () => {
-        range.value = Math.min(max, Number(input.value) || 0);
-        fillRange(range);
-      });
-      return { input, range, max };
-    });
-
-    let shownTotal = null;
-    let frame = 0;
-    const animateTotal = target => {
-      cancelAnimationFrame(frame);
-      if (reducedMotion || shownTotal === null) {
-        shownTotal = target;
-        display.textContent = money(target);
-        return;
-      }
-      const from = shownTotal;
-      const start = performance.now();
-      const step = now => {
-        const progress = Math.min(1, (now - start) / 420);
-        shownTotal = from + (target - from) * (1 - (1 - progress) ** 3);
-        display.textContent = money(shownTotal);
-        if (progress < 1) frame = requestAnimationFrame(step);
-      };
-      frame = requestAnimationFrame(step);
-    };
-    const refresh = () => {
-      let result = null;
-      if (form.checkValidity()) {
-        try {
-          result = estimateTax(Number(form.elements.revenue.value), Number(form.elements.costs.value), form.elements.filing.value);
-        } catch (_) { /* the calculator shows its own error */ }
-      }
-      if (!result) {
-        cancelAnimationFrame(frame);
-        shownTotal = null;
-        display.textContent = '—';
-        share.hidden = true;
-        return;
-      }
-      animateTotal(result.total);
-      const revenue = Number(form.elements.revenue.value);
-      const expenses = Math.min(Number(form.elements.costs.value), revenue);
-      const note = revenue
-        ? t('About {n}% of your revenue goes to these federal taxes.').replace('{n}', Math.round((result.total / revenue) * 100))
-        : '';
-      renderShare(share, 'WHERE YOUR REVENUE GOES', [
-        { label: 'Business expenses', value: expenses, tone: 'tone-expense' },
-        { label: 'Federal income tax', value: result.federal, tone: 'tone-federal' },
-        { label: 'Self-employment tax', value: result.self, tone: 'tone-self' },
-        { label: 'Additional Medicare tax', value: result.medicare, tone: 'tone-medicare' },
-        { label: 'Left after federal tax', value: Math.max(0, revenue - expenses - result.total), tone: 'tone-left' }
-      ], note);
-    };
-    form.addEventListener('input', refresh);
-    form.addEventListener('submit', refresh);
-    form.addEventListener('reset', () => setTimeout(() => {
-      sliders.forEach(({ input, range, max }) => {
-        range.value = Math.min(max, Number(input.value) || 0);
-        fillRange(range);
-      });
-      refresh();
-    }, 0));
-    addEventListener('steady-language-change', refresh);
-    refresh();
-  }
-
-  // Weekly planner: a picture of the week, and a clear shortfall state.
-  const remaining = $('remaining');
-  if (remaining && $('income')) {
-    const share = createShare();
-    remaining.after(share);
-    const refresh = () => {
-      const income = Math.max(0, Number($('income').value) || 0);
-      const expenses = Math.max(0, Number($('expenses').value) || 0);
-      const taxRate = Math.min(60, Math.max(0, Number($('tax').value) || 0));
-      const scenario = income * (1 + Number($('change').value) / 100);
-      const reserve = (scenario * taxRate) / 100;
-      const left = scenario - expenses - reserve;
-      remaining.classList.toggle('is-short', left < 0);
-      renderShare(share, 'WHERE THIS WEEK GOES', [
-        { label: 'Essentials', value: expenses, tone: 'tone-expense' },
-        { label: 'Tax reserve', value: reserve, tone: 'tone-federal' },
-        { label: 'Available', value: Math.max(0, left), tone: 'tone-left' },
-        { label: 'Shortfall', value: Math.max(0, -left), tone: 'tone-short' }
-      ]);
-      fillRange($('change'));
-    };
-    ['income', 'expenses', 'savings', 'tax', 'change'].forEach(id => $(id).addEventListener('input', refresh));
-    $('reset').addEventListener('click', refresh);
-    addEventListener('steady-language-change', refresh);
-    refresh();
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }), { threshold: 0.08 });
+      document.querySelectorAll('.reveal').forEach(el => revealer.observe(el));
+    }
   }
 })();

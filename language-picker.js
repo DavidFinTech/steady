@@ -2,7 +2,7 @@
 // translation code on every page keeps working unchanged.
 (() => {
   // Spanish has no single home flag. To use Spain's flag, change es: 'mx' to es: 'es'.
-  const FLAG_FOR_LANGUAGE = { en: 'us', es: 'mx', 'zh-Hans': 'cn', hi: 'in' };
+  const FLAG_FOR_LANGUAGE = { en: 'us', es: 'mx', 'zh-Hans': 'cn', hi: 'in', bn: 'bd', ur: 'pk' };
 
   const star = (cx, cy, r, fill) => {
     const points = Array.from({ length: 10 }, (_, i) => {
@@ -23,6 +23,8 @@
     es: '<rect width="24" height="16" fill="#aa151b"/><rect y="4" width="24" height="8" fill="#f1bf00"/>',
     mx: '<rect width="8" height="16" fill="#006847"/><rect x="8" width="8" height="16" fill="#fff"/><rect x="16" width="8" height="16" fill="#ce1126"/><circle cx="12" cy="8" r="1.8" fill="#8c6a2f"/>',
     cn: `<rect width="24" height="16" fill="#de2910"/>${star(4.2, 4.2, 2.9, '#ffde00')}${star(8.4, 1.7, 1, '#ffde00')}${star(10.2, 3.4, 1, '#ffde00')}${star(10.2, 5.8, 1, '#ffde00')}${star(8.4, 7.5, 1, '#ffde00')}`,
+    bd: '<rect width="24" height="16" fill="#006a4e"/><circle cx="10.8" cy="8" r="4.8" fill="#f42a41"/>',
+    pk: `<rect width="24" height="16" fill="#01411c"/><rect width="6" height="16" fill="#fff"/><circle cx="15" cy="8" r="4.2" fill="#fff"/><circle cx="16.2" cy="7.2" r="3.7" fill="#01411c"/>${star(18.2, 5.6, 1.4, '#fff')}`,
     in: `<rect width="24" height="5.34" fill="#ff9933"/><rect y="5.33" width="24" height="5.34" fill="#fff"/><rect y="10.66" width="24" height="5.34" fill="#138808"/><circle cx="12" cy="8" r="2.2" fill="none" stroke="#000080" stroke-width=".4"/>${chakraSpokes}`
   };
   const flagSvg = language => `<svg class="flag" viewBox="0 0 24 16" width="24" height="16" aria-hidden="true" focusable="false">${FLAGS[FLAG_FOR_LANGUAGE[language]] || ''}</svg>`;

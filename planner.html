@@ -1,1 +1,91 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Weekly planner — Steady</title><meta name="theme-color" content="#123a58"><link rel="stylesheet" href="resources.css"><link rel="stylesheet" href="steady-redesign.css"></head><body><a class="skip" href="#planner">Skip to planner</a><header><a class="logo" href="index.html">steady<span>✳</span></a><nav aria-label="Main navigation"><a href="index.html">Resource hub</a><a href="index.html#next-step">My next step</a><a href="community.html">Community</a><a href="/signin-with-chatgpt?return_to=%2Fcommunity.html" target="_top">Sign in</a></nav><a class="button small" href="index.html">Back to homepage ↗</a></header><main class="content weekly-page"><section class="weekly-section" id="planner"><div class="wrap"><div class="eyebrow">YOUR WEEKLY PLANNER</div><h1>What does your week look like?</h1><p>Adjust this sample budget to see how an income change affects your buffer.</p><div class="planner"><div><div class="fields"><label>Expected weekly income ($)<input id="income" type="number" min="0" max="100000" value="850"></label><label>Essential weekly expenses ($)<input id="expenses" type="number" min="0" max="100000" value="550"></label><label>Current emergency savings ($)<input id="savings" type="number" min="0" max="1000000" value="400"></label><label>Tax reserve (%)<input id="tax" type="number" min="0" max="60" value="20"></label></div><label style="margin-top:22px">Income change: <b id="changeLabel">0%</b><input id="change" type="range" min="-50" max="50" step="5" value="0"></label><p class="small">Tax percentage is an editable planning assumption, not a tax calculation. No money moves and nothing is saved or sent. <a href="index.html#tax">Try the 2026 tax calculator →</a></p><button class="button" id="reset">Reset sample</button></div><div class="result" aria-live="polite"><div id="resultLabel">Available after essentials and tax reserve</div><div class="amount" id="remaining">$130</div><div class="mini row"><span>Scenario income</span><b id="scenario">$850</b></div><div class="mini row"><span>Tax reserve</span><b id="reserve">$170</b></div><div class="mini row"><span>Savings cover essential expenses for</span><b id="runway">0.7 weeks</b></div><p id="advice">Consider putting some of the remainder toward your buffer.</p><p class="small">This is a weekly estimate. It does not model debt interest, benefit eligibility, or payment timing within the week.</p></div></div></div></section></main><footer><a class="logo" href="index.html">steady<span>✳</span></a><p>Your work changes. Your support stays.</p><a href="index.html">Back to resources ↗</a></footer><script src="weekly-planner.js"></script><script src="additional-languages.js"></script><script src="language-toggle.js" defer></script><script src="language-picker.js" defer></script><script src="steady-experience.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b2238">
+<title>Steady — Weekly planner</title>
+<link rel="stylesheet" href="steady.css">
+</head>
+<body data-title="Weekly planner">
+<a class="skip" href="#planner" data-i18n="Skip to content">Skip to content</a>
+<header class="topbar">
+  <a class="logo" href="index.html">steady<span>✳</span></a>
+  <nav class="topnav" data-i18n-aria="Main navigation" aria-label="Main navigation">
+    <a href="index.html#tax" data-i18n="Taxes">Taxes</a>
+    <a href="index.html#health" data-i18n="Health">Health</a>
+    <a href="index.html#legal" data-i18n="Rights">Rights</a>
+    <a href="planner.html" class="is-active" aria-current="page" data-i18n="Planner">Planner</a>
+    <a href="community.html" data-i18n="Community">Community</a>
+    <a href="/signin-with-chatgpt?return_to=%2Fcommunity.html" target="_top" data-i18n="Sign in">Sign in</a>
+  </nav>
+  <div class="lang-slot"></div>
+  <span class="scroll-progress" aria-hidden="true"></span>
+</header>
+
+<main class="band dark weekly" id="planner">
+  <h1 class="display" data-i18n="Your week.">Your week.</h1>
+  <div class="tax">
+    <div class="tax-answer">
+      <span class="tax-label" id="resultLabel"></span>
+      <div class="tax-number"><span id="remaining" class="num" aria-live="polite">$130</span></div>
+    </div>
+    <div class="what-if">
+      <label for="change"><span data-i18n="What if income changes?">What if income changes?</span> <b id="changeLabel" class="num">0%</b></label>
+      <input id="change" type="range" min="-50" max="50" step="5" value="0">
+    </div>
+    <div class="share" id="week-share"><div class="share-bar" aria-hidden="true"></div><ul class="share-legend"></ul></div>
+    <div class="sliders four">
+      <div class="slider">
+        <label for="income" data-i18n="Income">Income</label>
+        <div class="money-field"><span>$</span><input id="income" type="number" inputmode="numeric" min="0" max="100000" value="850" dir="ltr"></div>
+        <input type="range" data-for="income" min="0" max="3000" step="10" value="850" aria-labelledby="income-range-label">
+        <span id="income-range-label" class="visually-hidden" data-i18n="Income">Income</span>
+      </div>
+      <div class="slider">
+        <label for="expenses" data-i18n="Essentials">Essentials</label>
+        <div class="money-field"><span>$</span><input id="expenses" type="number" inputmode="numeric" min="0" max="100000" value="550" dir="ltr"></div>
+        <input type="range" data-for="expenses" min="0" max="3000" step="10" value="550" aria-labelledby="expenses-range-label">
+        <span id="expenses-range-label" class="visually-hidden" data-i18n="Essentials">Essentials</span>
+      </div>
+      <div class="slider">
+        <label for="savings" data-i18n="Savings">Savings</label>
+        <div class="money-field"><span>$</span><input id="savings" type="number" inputmode="numeric" min="0" max="1000000" value="400" dir="ltr"></div>
+        <input type="range" data-for="savings" min="0" max="10000" step="50" value="400" aria-labelledby="savings-range-label">
+        <span id="savings-range-label" class="visually-hidden" data-i18n="Savings">Savings</span>
+      </div>
+      <div class="slider">
+        <label for="tax" data-i18n="Tax reserve %">Tax reserve %</label>
+        <div class="money-field"><span>%</span><input id="tax" type="number" inputmode="numeric" min="0" max="60" value="20" dir="ltr"></div>
+        <input type="range" data-for="tax" min="0" max="60" step="1" value="20" aria-labelledby="tax-range-label">
+        <span id="tax-range-label" class="visually-hidden" data-i18n="Tax reserve %">Tax reserve %</span>
+      </div>
+    </div>
+    <dl class="rows">
+      <div><dt data-i18n="This week’s income">This week’s income</dt><dd id="scenario" class="num"></dd></div>
+      <div><dt data-i18n="Tax reserve">Tax reserve</dt><dd id="reserve" class="num"></dd></div>
+      <div><dt data-i18n="Savings last">Savings last</dt><dd id="runway" class="num"></dd></div>
+    </dl>
+    <div class="tax-foot">
+      <button type="button" class="pill" id="reset"><span data-i18n="Reset">Reset</span></button>
+      <a class="pill" href="index.html#tax"><span data-i18n="Try the tax calculator">Try the tax calculator</span><i data-icon="arrow"></i></a>
+    </div>
+    <p class="fine" data-i18n="An estimate. Tax % is your own guess. Nothing is saved or sent.">An estimate. Tax % is your own guess. Nothing is saved or sent.</p>
+  </div>
+</main>
+
+<nav class="tabbar" data-i18n-aria="Main navigation" aria-label="Main navigation">
+  <a href="index.html#tax"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></a>
+  <a href="index.html#health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
+  <a href="index.html#legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
+  <a href="planner.html" class="is-active" aria-current="page"><i data-icon="calendar"></i><span data-i18n="Planner">Planner</span></a>
+  <a href="community.html"><i data-icon="chat"></i><span data-i18n="Community">Community</span></a>
+</nav>
+
+<script src="steady-icons.js" defer></script>
+<script src="steady-i18n.js" defer></script>
+<script src="language-picker.js" defer></script>
+<script src="steady-experience.js" defer></script>
+<script src="weekly-planner.js" defer></script>
+</body>
+</html>
