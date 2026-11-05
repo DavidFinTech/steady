@@ -31,9 +31,15 @@
     const toggle = document.querySelector('[data-language-toggle]');
     if (toggle) toggle.click();
   }));
+  const originalPageUrl = () => {
+    if (location.hostname === 'raw-githack-com.translate.goog') {
+      return 'https://raw.githack.com' + location.pathname;
+    }
+    return location.origin + location.pathname;
+  };
   panel.querySelectorAll('[data-translate-language]').forEach(link => {
     const target = link.dataset.translateLanguage;
-    const source = encodeURIComponent(location.href.split('#')[0]);
+    const source = encodeURIComponent(originalPageUrl());
     link.href = 'https://translate.google.com/translate?sl=auto&tl=' + target + '&u=' + source;
   });
   window.addEventListener('steady-language-change', render);
