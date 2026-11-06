@@ -64,6 +64,74 @@
     paintSwing();
   }
 
+  // Take-home comparer
+  const compare = $('compare-tool');
+  if (compare) {
+    const gigs = [
+      { name: 'Gig A', type: 'w2', hourly: 20, hours: 30, weeklyCosts: 20 },
+      { name: 'Gig B', type: '1099', hourly: 28, hours: 30, weeklyCosts: 120 }
+    ];
+    const FIELDS = [
+      { key: 'hourly', label: 'Pay per hour, with tips', prefix: '$', max: 80, step: 0.5 },
+      { key: 'hours', label: 'Hours per week', prefix: '', max: 60, step: 1 },
+      { key: 'weeklyCosts', label: 'Weekly costs', prefix: '$', max: 500, step: 5, hint: 'Gas, phone, gear, commute' }
+    ];
+    const results = () => gigs.map(gig => window.estimateTakeHome(gig));
+    function drawCompare() {
+      compare.querySelector('.compare-grid').innerHTML = gigs.map((gig, g) => `<article class="compare-card">
+        <h3>${e(t(gig.name))}</h3>
+        <div class="segmented on-dark compare-type" role="group" data-i18n-group>
+          <button type="button" data-gig="${g}" data-type="w2" aria-pressed="${gig.type === 'w2'}">${e(t('W-2 (taxes withheld)'))}</button>
+          <button type="button" data-gig="${g}" data-type="1099" aria-pressed="${gig.type === '1099'}">${e(t('1099 (you pay taxes)'))}</button>
+        </div>
+        ${FIELDS.map(field => `<div class="slider compact"><label for="gig-${g}-${field.key}">${e(t(field.label))}</label>${field.hint ? `<small>${e(t(field.hint))}</small>` : ''}<div class="money-field">${field.prefix ? `<span>${field.prefix}</span>` : ''}<input id="gig-${g}-${field.key}" type="number" inputmode="decimal" min="0" step="${field.step}" value="${gig[field.key]}" data-gig="${g}" data-field="${field.key}" dir="ltr"></div><input type="range" min="0" max="${field.max}" step="${field.step}" value="${Math.min(gig[field.key], field.max)}" data-gig="${g}" data-range="${field.key}" aria-label="${e(t(field.label))}"></div>`).join('')}
+        <div class="compare-result"><div class="compare-amount num" id="gig-${g}-hour"></div><span>${e(t('take-home an hour'))}</span><p class="tax-sub" id="gig-${g}-week"></p><dl class="rows"><div><dt>${e(t('Estimated taxes'))}</dt><dd class="num" id="gig-${g}-tax"></dd></div></dl></div>
+      </article>`).join('');
+      compare.querySelectorAll('input[type="range"]').forEach(fill);
+      paintCompare();
+    }
+    function paintCompare() {
+      const [first, second] = results();
+      [first, second].forEach((result, g) => {
+        const money2Week = money(result ? result.weekly : 0);
+        $(`gig-${g}-hour`).textContent = result ? money2(result.perHour) : '—';
+        $(`gig-${g}-week`).textContent = result ? t('{amount} a week').replace('{amount}', money2Week) : '—';
+        $(`gig-${g}-tax`).textContent = result ? money(result.taxes / 52) : '—';
+      });
+      compare.querySelectorAll('.compare-card').forEach((card, g) => {
+        const other = g === 0 ? second : first, own = g === 0 ? first : second;
+        card.classList.toggle('is-best', Boolean(own && other && own.perHour - other.perHour >= 0.005));
+      });
+      const verdict = $('compare-verdict');
+      if (!first || !second) { verdict.textContent = ''; return; }
+      const gap = Math.abs(first.perHour - second.perHour);
+      if (gap < 0.25) { verdict.textContent = t('They take home about the same'); return; }
+      const winner = first.perHour > second.perHour ? gigs[0] : gigs[1];
+      verdict.textContent = t('{name} takes home {amount} more an hour').replace('{name}', t(winner.name)).replace('{amount}', money2(gap));
+    }
+    compare.addEventListener('click', event => {
+      const button = event.target.closest('[data-type]');
+      if (!button) return;
+      gigs[Number(button.dataset.gig)].type = button.dataset.type;
+      compare.querySelectorAll(`[data-gig="${button.dataset.gig}"][data-type]`).forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      paintCompare();
+    });
+    compare.addEventListener('input', event => {
+      const target = event.target;
+      const g = Number(target.dataset.gig);
+      const key = target.dataset.field || target.dataset.range;
+      if (!key) return;
+      const value = target.value === '' ? NaN : Number(target.value);
+      gigs[g][key] = Number.isNaN(value) ? NaN : value;
+      if (target.dataset.range) compare.querySelector(`[data-gig="${g}"][data-field="${key}"]`).value = target.value;
+      else if (!Number.isNaN(value)) compare.querySelector(`[data-gig="${g}"][data-range="${key}"]`).value = value;
+      fill(compare.querySelector(`[data-gig="${g}"][data-range="${key}"]`));
+      paintCompare();
+    });
+    window.addEventListener('steady-language-change', drawCompare);
+    drawCompare();
+  }
+
   // Next estimated tax payment. A weekend due date moves to the next weekday.
   function nextDueDate(today = new Date()) {
     const year = today.getFullYear();

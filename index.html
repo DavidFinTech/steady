@@ -62,8 +62,9 @@
     <div class="reveal">
       <h2 class="display" data-i18n="Uneven income. Steadier plan.">Uneven income. Steadier plan.</h2>
     </div>
-    <div class="tabs on-dark reveal" data-tabs="money" role="group">
+    <div class="tabs four on-dark reveal" data-tabs="money" role="group">
       <button type="button" data-tab="swings" aria-pressed="true"><i data-icon="calendar"></i><span data-i18n="Income swings">Income swings</span></button>
+      <button type="button" data-tab="compare" aria-pressed="false"><i data-icon="scale"></i><span data-i18n="Compare gigs">Compare gigs</span></button>
       <button type="button" data-tab="taxes" aria-pressed="false"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></button>
       <button type="button" data-tab="short" aria-pressed="false"><i data-icon="coin"></i><span data-i18n="Short on money">Short on money</span></button>
     </div>
@@ -84,6 +85,13 @@
         <a class="pill" href="planner.html"><span data-i18n="Open the planner">Open the planner</span><i data-icon="arrow"></i></a>
         <button type="button" class="pill" data-need="budget" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button>
       </div>
+      <p class="fine" data-i18n="Stays on your device.">Stays on your device.</p>
+    </div>
+    <div data-panel-of="money" data-panel="compare" class="compare" id="compare-tool" hidden>
+      <p class="compare-verdict" id="compare-verdict" aria-live="polite"></p>
+      <div class="compare-grid"></div>
+      <p class="fine" data-i18n="W-2 jobs usually include workers’ comp and unemployment coverage. Count that too.">W-2 jobs usually include workers’ comp and unemployment coverage. Count that too.</p>
+      <p class="fine" data-i18n="A 2026 federal estimate, filing single, as if this were your only work all year. Leaves out state and city tax, credits and QBI. Not tax advice.">A 2026 federal estimate, filing single, as if this were your only work all year. Leaves out state and city tax, credits and QBI. Not tax advice.</p>
       <p class="fine" data-i18n="Stays on your device.">Stays on your device.</p>
     </div>
     <div data-panel-of="money" data-panel="taxes" hidden>
@@ -286,6 +294,7 @@
 <script src="steady-experience.js" defer></script>
 <script src="support-navigator.js" defer></script>
 <script src="resource-tax-calculator.js" defer></script>
+<script src="steady-compare.js" defer></script>
 <script src="steady-tools.js" defer></script>
 </body>
 </html>

@@ -395,6 +395,22 @@
     'Freelance pay depends on your contract': W('El pago freelance depende de tu contrato', '自由职业报酬取决于合同', 'ফ্রিল্যান্স পেমেন্ট আপনার চুক্তির ওপর নির্ভর করে', 'فری لانس ادائیگی آپ کے معاہدے پر منحصر ہے', 'फ्रीलांस भुगतान आपके अनुबंध पर निर्भर करता है'),
     'Check whether a payment is late and what you could seek.': W('Revisa si un pago está atrasado y qué podrías reclamar.', '查看付款是否逾期以及您可以要求什么。', 'পেমেন্ট দেরি হয়েছে কিনা ও কী দাবি করতে পারেন দেখুন।', 'دیکھیں کہ ادائیگی لیٹ ہے یا نہیں اور آپ کیا مانگ سکتے ہیں۔', 'देखें कि भुगतान देर से है या नहीं और आप क्या माँग सकते हैं।'),
     'Check a late payment': W('Revisar un pago atrasado', '核对逾期付款', 'দেরি হওয়া পেমেন্ট যাচাই করুন', 'لیٹ ادائیگی جانچیں', 'देर से हुआ भुगतान जाँचें'),
+    'Compare gigs': W('Comparar trabajos', '比较工作', 'কাজ তুলনা করুন', 'کام کا موازنہ', 'काम की तुलना'),
+    'Gig A': W('Trabajo A', '工作 A', 'কাজ A', 'کام A', 'काम A'),
+    'Gig B': W('Trabajo B', '工作 B', 'কাজ B', 'کام B', 'काम B'),
+    'W-2 (taxes withheld)': W('W-2 (con retención)', 'W-2（代扣税款）', 'W-2 (কর কাটা হয়)', 'W-2 (ٹیکس کٹتا ہے)', 'W-2 (कर कटता है)'),
+    '1099 (you pay taxes)': W('1099 (tú pagas impuestos)', '1099（自行缴税）', '1099 (আপনি কর দেন)', '1099 (ٹیکس آپ دیتے ہیں)', '1099 (कर आप देते हैं)'),
+    'Pay per hour, with tips': W('Pago por hora, con propinas', '每小时报酬（含小费）', 'প্রতি ঘণ্টার পেমেন্ট, টিপসহ', 'فی گھنٹہ ادائیگی، ٹپ سمیت', 'प्रति घंटा भुगतान, टिप सहित'),
+    'Hours per week': W('Horas por semana', '每周小时数', 'প্রতি সপ্তাহের ঘণ্টা', 'ہفتہ وار گھنٹے', 'प्रति सप्ताह घंटे'),
+    'Weekly costs': W('Gastos semanales', '每周开支', 'সাপ্তাহিক খরচ', 'ہفتہ وار اخراجات', 'साप्ताहिक खर्च'),
+    'Gas, phone, gear, commute': W('Gasolina, teléfono, equipo, transporte', '油费、手机、装备、通勤', 'গ্যাস, ফোন, সরঞ্জাম, যাতায়াত', 'گیس، فون، سامان، آمد و رفت', 'गैस, फ़ोन, सामान, आना-जाना'),
+    'take-home an hour': W('netos por hora', '每小时到手', 'প্রতি ঘণ্টায় হাতে আসে', 'فی گھنٹہ ہاتھ میں', 'प्रति घंटा हाथ में'),
+    '{amount} a week': W('{amount} a la semana', '每周 {amount}', 'প্রতি সপ্তাহে {amount}', 'ہفتہ وار {amount}', 'हर सप्ताह {amount}'),
+    'Estimated taxes': W('Impuestos estimados', '预估税款', 'আনুমানিক কর', 'تخمینی ٹیکس', 'अनुमानित कर'),
+    '{name} takes home {amount} more an hour': W('{name} deja {amount} más por hora', '{name} 每小时多到手 {amount}', '{name}-এ প্রতি ঘণ্টায় {amount} বেশি হাতে আসে', '{name} میں فی گھنٹہ {amount} زیادہ ہاتھ میں آتے ہیں', '{name} में प्रति घंटा {amount} ज़्यादा हाथ में आते हैं'),
+    'They take home about the same': W('Dejan casi lo mismo', '两者到手金额差不多', 'দুটোতেই প্রায় সমান হাতে আসে', 'دونوں میں تقریباً برابر ہاتھ آتا ہے', 'दोनों में लगभग बराबर हाथ आता है'),
+    'W-2 jobs usually include workers’ comp and unemployment coverage. Count that too.': W('Los trabajos W-2 suelen incluir compensación laboral y seguro de desempleo. Tenlo en cuenta.', 'W-2 工作通常包含工伤赔偿和失业保险，也请考虑这一点。', 'W-2 কাজে সাধারণত ওয়ার্কার্স কমপ ও বেকারভাতার সুবিধা থাকে। এটিও বিবেচনা করুন।', 'W-2 نوکریوں میں عموماً ورکرز کمپ اور بے روزگاری کوریج شامل ہوتی ہے۔ اسے بھی شمار کریں۔', 'W-2 नौकरियों में आमतौर पर वर्कर्स कॉम्प और बेरोज़गारी कवरेज होता है। इसे भी गिनें।'),
+    'A 2026 federal estimate, filing single, as if this were your only work all year. Leaves out state and city tax, credits and QBI. Not tax advice.': W('Estimación federal de 2026, como soltero/a, como si fuera tu único trabajo todo el año. No incluye impuestos estatales y municipales, créditos ni QBI. No es asesoría fiscal.', '2026 年联邦税估算，按单身申报，并假设这是您全年唯一的工作。不含州税和市税、税收抵免及 QBI。并非税务建议。', '২০২৬ সালের ফেডারেল অনুমান, অবিবাহিত হিসেবে, ধরে নেওয়া এটিই সারা বছরের একমাত্র কাজ। রাজ্য ও শহরের কর, ক্রেডিট এবং QBI ধরা হয়নি। কর পরামর্শ নয়।', '2026 کا وفاقی تخمینہ، غیر شادی شدہ کے طور پر، یہ مان کر کہ یہ سال بھر کا واحد کام ہے۔ ریاستی و شہری ٹیکس، کریڈٹ اور QBI شامل نہیں۔ ٹیکس مشورہ نہیں۔', '2026 का संघीय अनुमान, अविवाहित के रूप में, यह मानकर कि यह पूरे साल का एकमात्र काम है। राज्य व शहर कर, क्रेडिट और QBI शामिल नहीं। कर सलाह नहीं।'),
     'Try the tax calculator': W('Probar la calculadora de impuestos', '试用税务计算器', 'কর ক্যালকুলেটর ব্যবহার করুন', 'ٹیکس کیلکولیٹر آزمائیں', 'कर कैलकुलेटर आज़माएँ')
   };
 

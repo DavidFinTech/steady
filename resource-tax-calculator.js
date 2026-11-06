@@ -7,13 +7,17 @@ function estimateTax(revenue, expenses, filing) {
   const joint = filing === 'joint';
   const medicare = Math.max(0, earnings - (joint ? 250000 : 200000)) * .009;
   const taxable = Math.max(0, profit - self / 2 - (joint ? 32200 : 16100));
+  const federal = federalIncomeTax(taxable, joint);
+  return {profit, self, medicare, federal, total: self + medicare + federal};
+}
+function federalIncomeTax(taxable, joint) {
   const limits = joint ? [24800,100800,211400,403550,512450,768700,Infinity] : [12400,50400,105700,201775,256225,640600,Infinity];
   const rates = [.1,.12,.22,.24,.32,.35,.37];
   let federal = 0, previous = 0;
   limits.forEach((limit,i) => { federal += Math.max(0, Math.min(taxable,limit)-previous)*rates[i]; previous=limit; });
-  return {profit, self, medicare, federal, total: self + medicare + federal};
+  return federal;
 }
-if (typeof module !== 'undefined') module.exports = { estimateTax };
+if (typeof module !== 'undefined') module.exports = { estimateTax, federalIncomeTax };
 if (typeof document !== 'undefined') {
   const form = document.getElementById('tax-form');
   if (form) {
