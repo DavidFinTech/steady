@@ -384,7 +384,7 @@ html[dir="rtl"] .slider.light input[type="range"]::-webkit-slider-runnable-track
 .pay-kinds{margin-bottom:20px}
 .coverage-inputs.even{grid-template-columns:1fr 1fr}
 .pay-tool .slider.light{background:var(--soft);box-shadow:none}
-.pay-hint{margin:10px 0 0;text-align:start;max-width:none}
+.pay-hint{margin:10px auto 0;text-align:center}
 .pay-answer{margin-top:14px;padding:26px 24px 18px;border-radius:26px;background:var(--soft);transition:background .3s}
 .pay-answer.is-short{background:#fde8e3}
 .pay-answer.is-ok{background:var(--sage-soft,#e4f1ea)}

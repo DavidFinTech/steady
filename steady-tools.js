@@ -247,12 +247,13 @@
   const payTool = $('pay-tool');
   if (payTool) {
     let kind = 'delivery';
-    const hours = $('trip-hours'), hoursRange = $('trip-hours-range'), pay = $('pay-before-tips');
+    const hours = $('trip-hours'), hoursRange = $('trip-hours-range'), pay = $('pay-before-tips'), payRange = $('pay-range');
     const hoursText = value => Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 });
     function paintPay() {
       payTool.querySelectorAll('[data-pay-kind]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.payKind === kind)));
       payTool.querySelectorAll('[data-pay-view]').forEach(view => { view.hidden = view.dataset.payView !== kind; });
       fill(hoursRange);
+      fill(payRange);
       const answer = $('pay-answer');
       const result = hours.value === '' || pay.value === '' ? null : checkDeliveryPay(Number(hours.value), Number(pay.value));
       answer.hidden = !result;
@@ -280,7 +281,8 @@
     });
     hours.addEventListener('input', () => { hoursRange.value = Math.min(Number(hoursRange.max), Number(hours.value) || 0); paintPay(); });
     hoursRange.addEventListener('input', () => { hours.value = hoursRange.value; paintPay(); });
-    pay.addEventListener('input', paintPay);
+    pay.addEventListener('input', () => { payRange.value = Math.min(Number(payRange.max), Number(pay.value) || 0); paintPay(); });
+    payRange.addEventListener('input', () => { pay.value = payRange.value; paintPay(); });
     window.addEventListener('steady-language-change', paintPay);
     paintPay();
   }

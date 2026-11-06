@@ -172,8 +172,9 @@
       <div data-pay-view="delivery">
         <div class="coverage-inputs even">
           <div class="slider light"><label for="trip-hours" data-i18n="Trip hours this pay period">Trip hours this pay period</label><div class="money-field"><input id="trip-hours" type="number" inputmode="decimal" min="0" step="0.25" value="10" dir="ltr"></div><input type="range" id="trip-hours-range" min="0" max="80" step="0.25" value="10" aria-labelledby="trip-hours-label"><span id="trip-hours-label" class="visually-hidden" data-i18n="Trip hours this pay period">Trip hours this pay period</span></div>
-          <div class="slider light"><label for="pay-before-tips" data-i18n="Pay before tips">Pay before tips</label><div class="money-field"><span>$</span><input id="pay-before-tips" type="number" inputmode="decimal" min="0" step="0.01" value="180" dir="ltr"></div><p class="fine pay-hint" data-i18n="Count trip time only, not waiting between orders.">Count trip time only, not waiting between orders.</p></div>
+          <div class="slider light"><label for="pay-before-tips" data-i18n="Pay before tips">Pay before tips</label><div class="money-field"><span>$</span><input id="pay-before-tips" type="number" inputmode="decimal" min="0" step="0.01" value="180" dir="ltr"></div><input type="range" id="pay-range" min="0" max="2500" step="1" value="180" aria-labelledby="pay-range-label"><span id="pay-range-label" class="visually-hidden" data-i18n="Pay before tips">Pay before tips</span></div>
         </div>
+        <p class="fine pay-hint" data-i18n="Count trip time only, not waiting between orders.">Count trip time only, not waiting between orders.</p>
         <div class="pay-answer" id="pay-answer" aria-live="polite">
           <span class="tax-label" id="pay-label"></span>
           <div class="pay-number num" id="pay-amount"></div>
