@@ -8,11 +8,12 @@
 
   function paint() {
     document.querySelectorAll('[data-account-link]').forEach(link => {
-      link.href = `signin.html?return_to=${encodeURIComponent(here)}`;
-      link.querySelector('span').textContent = state.signedIn ? (state.me ? `@${state.me.handle}` : t('Pick a username')) : t('Sign in');
+      link.href = state.signedIn && !state.me ? `signin.html?return_to=${encodeURIComponent(here)}` : 'profile.html';
+      link.querySelector('span').textContent = state.signedIn ? (state.me ? `@${state.me.handle}` : t('Pick a username')) : t('My profile');
       link.classList.toggle('is-signed-in', state.signedIn);
       const icon = link.querySelector('i');
-      if (state.signedIn && state.me?.avatar) { icon.textContent = state.me.avatar; icon.classList.add('as-avatar'); }
+      const avatar = state.signedIn && state.me?.avatar ? state.me.avatar : window.STEADY_AVATAR.load()?.character;
+      if (avatar) { icon.innerHTML = window.STEADY_AVATAR.html(avatar); icon.classList.add('as-avatar'); }
       else { icon.innerHTML = window.steadyIcon('user'); icon.classList.remove('as-avatar'); }
     });
   }

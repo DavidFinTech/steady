@@ -47,7 +47,7 @@
     if (!account.signedIn) return show('email');
     show('signed-in');
     const avatar = $('me-avatar');
-    avatar.textContent = account.me?.avatar || '';
+    avatar.innerHTML = window.STEADY_AVATAR.html(account.me?.avatar || '');
     avatar.hidden = !account.me;
     $('me-title').textContent = account.me ? `@${account.me.handle}` : t('Almost there.');
     $('me-line').textContent = t(account.me ? 'You’re signed in.' : 'Pick a username');

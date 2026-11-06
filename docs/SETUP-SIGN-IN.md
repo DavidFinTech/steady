@@ -45,3 +45,15 @@ Moderators see a **Reports** panel on the Community page, where they can hide or
 ## Testing without any accounts
 Run `python3 dev-server.py`, open `http://localhost:4173`, and sign in with any email and the
 code `123456`. Use `mod@example.com` to test moderator tools. It uses fake data and sends no email.
+
+## Profile characters (Janiel-Mii branch only)
+
+This branch stores a character code in `profiles.avatar`, and `supabase/schema.sql` here allows those codes.
+Give this site its own free Supabase project. The other two versions can't draw characters, so sharing a project
+would show them the raw code. If this project already ran an older copy of the schema, run:
+
+```sql
+alter table public.profiles drop constraint profiles_avatar_check;
+alter table public.profiles add constraint profiles_avatar_check
+  check (avatar in ('✳', '🌿', '☀', '🌻', '🌊', '🪴') or avatar ~ '^c1\.[0-9a-z]{25}$');
+```

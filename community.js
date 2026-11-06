@@ -60,7 +60,7 @@
       ? `<button type="button" class="quiet" data-edit="${e(post.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete="${e(post.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button>`
       : `<button type="button" class="quiet" data-report="${e(post.id)}">${icon('flag')}<span>${e(t('Report'))}</span></button>`;
     return `<article class="post-card">
-      <div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(post.handle)}"><span class="avatar">${e(post.avatar)}</span><b>@${e(post.handle)}</b></a><span>${e(date(post.created))}</span><span class="topic-tag">${e(t(TOPICS[post.topic]?.[0] || 'General'))}</span>${post.hidden ? `<span class="topic-tag is-hidden">${e(t('Hidden'))}</span>` : ''}</div>
+      <div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(post.handle)}"><span class="avatar">${window.STEADY_AVATAR.html(post.avatar)}</span><b>@${e(post.handle)}</b></a><span>${e(date(post.created))}</span><span class="topic-tag">${e(t(TOPICS[post.topic]?.[0] || 'General'))}</span>${post.hidden ? `<span class="topic-tag is-hidden">${e(t('Hidden'))}</span>` : ''}</div>
       <h2><a href="?post=${encodeURIComponent(post.id)}">${e(post.title)}</a></h2>
       <p class="post-body">${e(body)}</p>
       <div class="post-actions">
@@ -75,7 +75,7 @@
     const profile = data.profile;
     $('#profile-card').innerHTML = handle
       ? (profile
-        ? `<div class="profile-card"><span class="avatar big">${e(profile.avatar)}</span><h2>@${e(profile.handle)}</h2>${profile.bio ? `<p>${e(profile.bio)}</p>` : ''}<small>${e(t('Joined'))} ${e(date(profile.created))}</small>${data.me?.handle === handle ? `<button type="button" class="pill" id="edit-profile">${icon('pencil')}<span>${e(t('Edit profile'))}</span></button>` : ''}</div>`
+        ? `<div class="profile-card"><span class="avatar big">${window.STEADY_AVATAR.html(profile.avatar)}</span><h2>@${e(profile.handle)}</h2>${window.STEADY_AVATAR.workLabel(profile.avatar) ? `<span class="work-chip">${e(t(window.STEADY_AVATAR.workLabel(profile.avatar)))}</span>` : ''}${profile.bio ? `<p>${e(profile.bio)}</p>` : ''}<small>${e(t('Joined'))} ${e(date(profile.created))}</small>${data.me?.handle === handle ? `<button type="button" class="pill" id="edit-profile">${icon('pencil')}<span>${e(t('Edit profile'))}</span></button>` : ''}</div>`
         : `<p class="empty-line">${e(t('Profile not found.'))}</p>`)
       : '';
     const back = postId || handle ? `<a class="pill back" href="community.html">${icon('back')}<span>${e(t('All conversations'))}</span></a>` : '';
@@ -93,7 +93,7 @@
     if (postId && data.posts.length) {
       $('#feed').insertAdjacentHTML('beforeend', `<section class="comments"><h2>${e(t('Comments'))}</h2>
         <form id="comment-form"><label class="visually-hidden" for="comment">${e(t('Add a comment'))}</label><textarea id="comment" required maxlength="2000" placeholder="${e(t('Add a comment'))}"></textarea><button class="button" type="submit">${e(t('Post comment'))}</button></form>
-        ${(data.comments || []).map(comment => `<article class="comment"><div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(comment.handle)}"><span class="avatar">${e(comment.avatar)}</span><b>@${e(comment.handle)}</b></a><span>${e(date(comment.created))}</span></div><p class="comment-body">${e(comment.body)}</p>${comment.mine ? `<div class="post-actions"><button type="button" class="quiet" data-edit-comment="${e(comment.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete-comment="${e(comment.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button></div>` : ''}</article>`).join('')}
+        ${(data.comments || []).map(comment => `<article class="comment"><div class="post-meta"><a class="author" href="?profile=${encodeURIComponent(comment.handle)}"><span class="avatar">${window.STEADY_AVATAR.html(comment.avatar)}</span><b>@${e(comment.handle)}</b></a><span>${e(date(comment.created))}</span></div><p class="comment-body">${e(comment.body)}</p>${comment.mine ? `<div class="post-actions"><button type="button" class="quiet" data-edit-comment="${e(comment.id)}">${icon('pencil')}<span>${e(t('Edit'))}</span></button><button type="button" class="quiet" data-delete-comment="${e(comment.id)}">${icon('trash')}<span>${e(t('Delete'))}</span></button></div>` : ''}</article>`).join('')}
       </section>`);
     }
   }
@@ -123,9 +123,11 @@
   function openProfile() {
     if (!data.signedIn) { needsAccount(); return; }
     const me = data.me || {};
-    const current = me.avatar || AVATARS[0];
+    const mine = window.STEADY_AVATAR.load()?.character;
+    const current = me.avatar || mine || AVATARS[0];
+    const choices = [...new Set([mine, window.STEADY_AVATAR.isCharacter(me.avatar) ? me.avatar : null].filter(Boolean)), ...AVATARS];
     dialog(data.me ? 'Edit profile' : 'Create profile',
-      `<fieldset class="picker"><legend>${e(t('Your avatar'))}</legend><div class="avatar-grid">${AVATARS.map(avatar => `<label><input type="radio" name="avatar" value="${avatar}" ${avatar === current ? 'checked' : ''}><span>${avatar}</span></label>`).join('')}</div></fieldset>`
+      `<fieldset class="picker"><legend>${e(t('Your avatar'))}</legend><div class="avatar-grid">${choices.map(avatar => `<label><input type="radio" name="avatar" value="${e(avatar)}" ${avatar === current ? 'checked' : ''}><span>${window.STEADY_AVATAR.html(avatar)}</span></label>`).join('')}</div><a class="hint" href="profile.html">${e(t('Design your character'))}</a></fieldset>`
       + (data.me ? '' : field('handle', 'Username', '', 'input', 24)
       + `<small class="hint">${e(t('Use 3–24 lowercase letters, numbers, or underscores.'))}</small>`)
       + field('bio', 'About you', me.bio || '', 'textarea', 280, false)

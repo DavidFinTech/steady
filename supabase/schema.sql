@@ -6,7 +6,7 @@ create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   handle text not null unique check (handle ~ '^[a-z0-9_]{3,24}$'),
   bio text not null default '' check (char_length(bio) <= 280),
-  avatar text not null default '✳' check (avatar in ('✳', '🌿', '☀', '🌻', '🌊', '🪴')),
+  avatar text not null default '✳' check (avatar in ('✳', '🌿', '☀', '🌻', '🌊', '🪴') or avatar ~ '^c1\.[0-9a-z]{25}$'),
   created_at timestamptz not null default now()
 );
 

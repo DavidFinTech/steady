@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#185079">
+<title>Steady — My profile</title>
+<link rel="stylesheet" href="steady.css">
+</head>
+<body data-title="My profile">
+<a class="skip" href="#main" data-i18n="Skip to content">Skip to content</a>
+<header class="topbar">
+  <a class="logo" href="index.html">steady<span>✳</span></a>
+  <nav class="topnav" data-i18n-aria="Main navigation" aria-label="Main navigation">
+    <a href="index.html#money" data-i18n="Finances">Finances</a>
+    <a href="index.html#legal" data-i18n="Legal Rights">Legal Rights</a>
+    <a href="index.html#health" data-i18n="Healthcare">Healthcare</a>
+    <a href="planner.html" data-i18n="Planner">Planner</a>
+    <a href="community.html" data-i18n="Community">Community</a>
+  </nav>
+  <div class="lang-slot"></div>
+  <a class="account-link" href="profile.html" data-account-link aria-current="page"><i data-icon="user"></i><span>My profile</span></a>
+</header>
+
+<main id="main" class="maker">
+  <h1 class="maker-title" data-i18n="Make it yours.">Make it yours.</h1>
+  <div class="maker-layout">
+    <aside class="me-card">
+      <div class="me-portrait avatar-live" id="me-portrait"></div>
+      <strong id="me-name"></strong>
+      <span class="work-chip" id="me-work" hidden></span>
+      <p id="me-bio" hidden></p>
+      <div class="maker-actions">
+        <button type="button" class="pill pill-sun" id="shuffle"><span data-i18n="Shuffle">Shuffle</span></button>
+        <button type="button" class="pill" id="undo" disabled><span data-i18n="Undo">Undo</span></button>
+      </div>
+      <p class="me-status" id="me-status" role="status" aria-live="polite"></p>
+    </aside>
+    <section class="maker-panel">
+      <div class="maker-tabs" id="maker-tabs" role="group" data-i18n-aria="Your character" aria-label="Your character"></div>
+      <div id="maker-options"></div>
+      <div class="maker-foot">
+        <button type="button" class="link" id="start-over" data-i18n="Start over">Start over</button>
+        <button type="button" class="link" id="download" data-i18n="Download picture">Download picture</button>
+        <a class="link" id="account-settings" href="signin.html" data-i18n="Account" hidden>Account</a>
+      </div>
+      <button type="button" class="pill pill-sun" id="save-account" hidden><span data-i18n="Save to my profile">Save to my profile</span></button>
+      <p class="fine" id="account-note"><span data-i18n="Stays on your device.">Stays on your device.</span> <a href="signin.html" data-i18n="Sign in to show it in Community.">Sign in to show it in Community.</a></p>
+    </section>
+  </div>
+</main>
+
+<nav class="tabbar" data-i18n-aria="Main navigation" aria-label="Main navigation">
+  <a href="index.html#money"><i data-icon="coin"></i><span data-i18n="Finances">Finances</span></a>
+  <a href="index.html#legal"><i data-icon="scale"></i><span data-i18n="Legal Rights">Legal Rights</span></a>
+  <a href="index.html#health"><i data-icon="heart"></i><span data-i18n="Healthcare">Healthcare</span></a>
+  <a href="planner.html"><i data-icon="calendar"></i><span data-i18n="Planner">Planner</span></a>
+  <a href="community.html"><i data-icon="chat"></i><span data-i18n="Community">Community</span></a>
+</nav>
+
+<script src="steady-icons.js" defer></script>
+<script src="community-i18n.js" defer></script>
+<script src="steady-i18n.js" defer></script>
+<script src="language-picker.js" defer></script>
+<script src="steady-config.js" defer></script>
+<script src="steady-backend.js" defer></script>
+<script src="steady-avatar.js" defer></script>
+<script src="steady-account.js" defer></script>
+<script src="profile.js" defer></script>
+</body>
+</html>
