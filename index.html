@@ -13,9 +13,9 @@
 <header class="topbar">
   <a class="logo" href="index.html">steady<span>✳</span></a>
   <nav class="topnav" data-i18n-aria="Main navigation" aria-label="Main navigation">
-    <a href="#money" data-section="money" data-i18n="Money">Money</a>
-    <a href="#legal" data-section="legal" data-i18n="Rights">Rights</a>
-    <a href="#health" data-section="health" data-i18n="Health">Health</a>
+    <a href="#money" data-section="money" data-i18n="Finances">Finances</a>
+    <a href="#legal" data-section="legal" data-i18n="Legal Rights">Legal Rights</a>
+    <a href="#health" data-section="health" data-i18n="Healthcare">Healthcare</a>
     <a href="planner.html" data-i18n="Planner">Planner</a>
     <a href="community.html" data-i18n="Community">Community</a>
   </nav>
@@ -28,11 +28,11 @@
   <section class="hero hero-home">
     <div class="hero-main">
     <h1><span data-i18n="A little more clarity.">A little more clarity.</span> <em data-i18n="A lot more support.">A lot more support.</em></h1>
-    <h2 class="hero-ask" data-i18n="What do you need today?">What do you need today?</h2>
+    <h2 class="hero-ask" data-i18n="How can we help you today?">How can we help you today?</h2>
     <div class="tiles three">
-      <a class="tile" href="#money"><i data-icon="coin"></i><span data-i18n="Money">Money</span></a>
-      <a class="tile" href="#legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
-      <a class="tile" href="#health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
+      <a class="tile" href="#money"><i data-icon="coin"></i><span data-i18n="Finances">Finances</span></a>
+      <a class="tile" href="#legal"><i data-icon="scale"></i><span data-i18n="Legal Rights">Legal Rights</span></a>
+      <a class="tile" href="#health"><i data-icon="heart"></i><span data-i18n="Healthcare">Healthcare</span></a>
     </div>
     <p class="hero-meta" data-i18n="Free. No account needed.">Free. No account needed.</p>
     </div>
@@ -76,9 +76,9 @@
       <h2 class="display" data-i18n="Uneven income. Steadier plan.">Uneven income. Steadier plan.</h2>
     </div>
     <div class="tabs on-dark reveal" data-tabs="money" role="group">
-      <button type="button" data-tab="swings" aria-pressed="true"><i data-icon="calendar"></i><span data-i18n="Income swings">Income swings</span></button>
+      <button type="button" data-tab="swings" aria-pressed="true"><i data-icon="calendar"></i><span data-i18n="Variable income">Variable income</span></button>
       <button type="button" data-tab="taxes" aria-pressed="false"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></button>
-      <button type="button" data-tab="short" aria-pressed="false"><i data-icon="coin"></i><span data-i18n="Short on money">Short on money</span></button>
+      <button type="button" data-tab="short" aria-pressed="false"><i data-icon="coin"></i><span data-i18n="Financial hardship">Financial hardship</span></button>
     </div>
     <div data-panel-of="money" data-panel="swings" class="tax" id="swing-tool">
       <div class="tax-answer">
@@ -138,7 +138,7 @@
       </div>
       <div class="share" id="tax-share"><div class="share-bar" aria-hidden="true"></div><ul class="share-legend"></ul></div>
       <details class="math">
-        <summary><span data-i18n="See the math">See the math</span></summary>
+        <summary><span data-i18n="View the calculation">View the calculation</span></summary>
         <dl class="rows">
           <div><dt data-i18n="Profit">Profit</dt><dd id="profit" class="num">—</dd></div>
           <div><dt data-i18n="Income tax">Income tax</dt><dd id="federal" class="num">—</dd></div>
@@ -163,7 +163,7 @@
 
   <section class="band" id="legal">
     <h2 class="display reveal" data-i18n="Your work has value.">Your work has value.</h2>
-    <p class="lede reveal" data-i18n="Tell us what happened.">Tell us what happened.</p>
+    <p class="lede reveal" data-i18n="Describe your situation.">Describe your situation.</p>
     <div class="finder reveal" id="rights-finder"></div>
     <div class="tax-foot reveal"><button type="button" class="pill" data-need="pay" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button></div>
   </section>
@@ -172,8 +172,8 @@
     <h2 class="display reveal" data-i18n="Care, connected.">Care, connected.</h2>
     <div class="tabs reveal" data-tabs="health" role="group">
       <button type="button" data-tab="coverage" aria-pressed="true"><i data-icon="shield"></i><span data-i18n="Find coverage">Find coverage</span></button>
-      <button type="button" data-tab="care" aria-pressed="false"><i data-icon="heart"></i><span data-i18n="Care now">Care now</span></button>
-      <button type="button" data-tab="injury" aria-pressed="false"><i data-icon="scale"></i><span data-i18n="Hurt at work">Hurt at work</span></button>
+      <button type="button" data-tab="care" aria-pressed="false"><i data-icon="heart"></i><span data-i18n="Medical care">Medical care</span></button>
+      <button type="button" data-tab="injury" aria-pressed="false"><i data-icon="scale"></i><span data-i18n="Workplace injury">Workplace injury</span></button>
     </div>
     <div data-panel-of="health" data-panel="coverage" class="coverage" id="coverage-tool">
       <div class="coverage-inputs">
@@ -192,13 +192,13 @@
 
   <section class="band sun" id="help">
     <i class="sun-icon" data-icon="phone"></i>
-    <h2 class="display reveal" data-i18n="Need help right now?">Need help right now?</h2>
+    <h2 class="display reveal" data-i18n="Need immediate assistance?">Need immediate assistance?</h2>
     <p class="lede" data-i18n="Food. Housing. Bills.">Food. Housing. Bills.</p>
     <a class="pill pill-strong" href="https://www.211.org/"><span data-i18n="Find help through 211">Find help through 211</span><i data-icon="arrow"></i></a>
   </section>
 
   <section class="band faq" id="faq">
-    <h2 class="display small reveal" data-i18n="Good to know.">Good to know.</h2>
+    <h2 class="display small reveal" data-i18n="Key information.">Key information.</h2>
     <details><summary><span data-i18n="Do you decide if I qualify?">Do you decide if I qualify?</span></summary><p data-i18n="No. Each program decides.">No. Each program decides.</p></details>
     <details><summary><span data-i18n="Do you save my numbers?">Do you save my numbers?</span></summary><p data-i18n="No. They stay on this page.">No. They stay on this page.</p></details>
     <details><summary><span data-i18n="My income changes. Now what?">My income changes. Now what?</span></summary><p data-i18n="Use your best yearly guess. Update it as work changes.">Use your best yearly guess. Update it as work changes.</p></details>
@@ -233,9 +233,9 @@
 </footer>
 
 <nav class="tabbar" data-i18n-aria="Main navigation" aria-label="Main navigation">
-  <a href="#money" data-section="money"><i data-icon="coin"></i><span data-i18n="Money">Money</span></a>
-  <a href="#legal" data-section="legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
-  <a href="#health" data-section="health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
+  <a href="#money" data-section="money"><i data-icon="coin"></i><span data-i18n="Finances">Finances</span></a>
+  <a href="#legal" data-section="legal"><i data-icon="scale"></i><span data-i18n="Legal Rights">Legal Rights</span></a>
+  <a href="#health" data-section="health"><i data-icon="heart"></i><span data-i18n="Healthcare">Healthcare</span></a>
   <a href="planner.html"><i data-icon="calendar"></i><span data-i18n="Planner">Planner</span></a>
   <a href="community.html"><i data-icon="chat"></i><span data-i18n="Community">Community</span></a>
 </nav>

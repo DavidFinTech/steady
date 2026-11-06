@@ -19,14 +19,14 @@
     $('changeLabel').textContent = `${change > 0 ? '+' : ''}${change}%`;
     $('remaining').textContent = money(left);
     $('remaining').classList.toggle('is-short', left < 0);
-    $('resultLabel').textContent = t(left < 0 ? 'Short this week' : 'Left this week');
+    $('resultLabel').textContent = t(left < 0 ? 'Shortfall this week' : 'Remaining this week');
     $('scenario').textContent = money(scenario);
     $('reserve').textContent = money(reserve);
     $('runway').textContent = expenses ? t('{n} weeks').replace('{n}', (savings / expenses).toFixed(1)) : '—';
     window.STEADY.renderShare($('week-share'), [
       { label: 'Essentials', value: expenses, tone: 'tone-expense' },
       { label: 'Tax reserve', value: reserve, tone: 'tone-federal' },
-      { label: 'Left over', value: Math.max(0, left), tone: 'tone-left' },
+      { label: 'Remaining', value: Math.max(0, left), tone: 'tone-left' },
       { label: 'Short', value: Math.max(0, -left), tone: 'tone-short' }
     ]);
     document.querySelectorAll('.weekly input[type="range"]').forEach(paintRange);
