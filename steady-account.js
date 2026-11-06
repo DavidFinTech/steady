@@ -31,6 +31,25 @@
       window.STEADY.setAccount({ available: false, signedIn: false, me: null, isModerator: false });
     }
   };
+  function paintDemoBanner() {
+    if (window.STEADY_BACKEND.mode !== 'demo') return;
+    let banner = document.getElementById('demo-banner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'demo-banner';
+      document.querySelector('.topbar').before(banner);
+      banner.addEventListener('click', event => {
+        if (!event.target.closest('button')) return;
+        window.STEADY_BACKEND.reset();
+        location.reload();
+      });
+    }
+    banner.innerHTML = '<span></span><button type="button"></button>';
+    banner.querySelector('span').textContent = t('Demo mode: sample data. Nothing is sent.');
+    banner.querySelector('button').textContent = t('Reset demo');
+  }
+  window.addEventListener('steady-language-change', paintDemoBanner);
+  paintDemoBanner();
   window.addEventListener('steady-language-change', paint);
   paint();
   window.STEADY.refreshAccount();

@@ -622,3 +622,8 @@ html[lang="ur"] .art-card strong{line-height:1.7}
 #help .lede{margin:0;font-size:15px}
 #help .pill{margin-top:0}
 @media print{.hero-art{display:none}}
+
+/* Demo mode notice */
+#demo-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 12px;padding:5px 14px;background:var(--sage);color:var(--sage-ink);font-size:13px;font-weight:600;text-align:center}
+#demo-banner button{padding:2px 4px;border:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}
+@media print{#demo-banner{display:none}}
