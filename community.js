@@ -233,6 +233,7 @@
       submit.disabled = false;
     }
   });
-  window.addEventListener('steady-language-change', () => { render(); renderModeration(); });
+  // Demo sample posts come back in the new language, so fetch them again.
+  window.addEventListener('steady-language-change', () => { if (backend.mode === 'demo') load(); else { render(); renderModeration(); } });
   load();
 })();
