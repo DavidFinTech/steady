@@ -55,9 +55,9 @@
     const avatar = $('me-avatar');
     avatar.innerHTML = window.STEADY_AVATAR.html(account.me?.avatar || '');
     avatar.hidden = !account.me;
-    $('me-title').textContent = account.me ? `@${account.me.handle}` : t('Almost there.');
-    $('me-line').textContent = t(account.me ? 'You’re signed in.' : 'Pick a username');
-    $('continue-action').href = account.me ? returnTo : 'community.html?setup=1';
+    $('me-title').textContent = account.me ? `@${account.me.handle}` : t('You’re signed in.');
+    $('me-line').textContent = account.me ? t('You’re signed in.') : '';
+    $('continue-action').href = returnTo;
   }
 
   $('email-form').addEventListener('submit', async event => {
@@ -95,7 +95,7 @@
       clearInterval(timer);
       await window.STEADY.refreshAccount();
       const account = window.STEADY.account;
-      location.href = account.me ? returnTo : 'community.html?setup=1';
+      location.href = returnTo;
     } catch (error) {
       showError('code-error', error);
       input.select();

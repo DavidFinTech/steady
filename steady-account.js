@@ -8,11 +8,11 @@
 
   function paint() {
     document.querySelectorAll('[data-account-link]').forEach(link => {
-      link.href = state.signedIn && !state.me ? `signin.html?return_to=${encodeURIComponent(here)}` : 'profile.html';
-      link.querySelector('span').textContent = state.signedIn ? (state.me ? `@${state.me.handle}` : t('Pick a username')) : t('My profile');
+      link.href = state.signedIn && !state.me ? 'community.html?setup=1' : `signin.html?return_to=${encodeURIComponent(here)}`;
+      link.querySelector('span').textContent = state.signedIn ? (state.me ? `@${state.me.handle}` : t('Create profile')) : t('Sign in');
       link.classList.toggle('is-signed-in', state.signedIn);
       const icon = link.querySelector('i');
-      const avatar = state.signedIn && state.me?.avatar ? state.me.avatar : window.STEADY_AVATAR.load()?.character;
+      const avatar = state.signedIn && state.me?.avatar;
       if (avatar) { icon.innerHTML = window.STEADY_AVATAR.html(avatar); icon.classList.add('as-avatar'); }
       else { icon.innerHTML = window.steadyIcon('user'); icon.classList.remove('as-avatar'); }
     });

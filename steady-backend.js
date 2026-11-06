@@ -38,15 +38,15 @@
   // Demo mode: for presentations before real accounts exist. Runs entirely in this
   // browser. No email is sent, nothing leaves the device, and people on other
   // devices can't see any of it. Any email works with the code 123456.
-  function createDemo(storage, key, characterFor) {
+  function createDemo(storage, key, characterFor, translate = text => text) {
     const DAY = 86400000, HOUR = 3600000;
     const face = (emoji, parts) => (characterFor ? characterFor(parts) : emoji);
     function seed() {
       const now = Date.now();
-      const person = (handle, bio, avatar) => ({ handle, bio, avatar, created: now - 40 * DAY });
+      const person = (handle, bio, avatar) => ({ handle, bio, avatar, sample: true, created: now - 40 * DAY });
       const profiles = Object.fromEntries([
         person('maya_rides', 'Sample profile. Rideshare driver in Queens.', face('🌻', { skin: 6, hair: 5, hairColor: 0, eyes: 4, outfit: 2, outfitColor: 2, card: 1, work: 2 })),
-        person('luis_delivers', 'Perfil de muestra. Repartidor en el Bronx.', face('🌊', { skin: 4, hair: 1, hairColor: 0, beard: 2, head: 6, headColor: 4, outfit: 3, outfitColor: 4, card: 2, work: 1 })),
+        person('luis_delivers', 'Sample profile. Delivery worker in the Bronx.', face('🌊', { skin: 4, hair: 1, hairColor: 0, beard: 2, head: 6, headColor: 4, outfit: 3, outfitColor: 4, card: 2, work: 1 })),
         person('priya_freelance', 'Sample profile. Freelance designer in Jackson Heights.', face('🌿', { skin: 5, hair: 10, hairColor: 0, eyes: 1, glasses: 1, outfit: 4, outfitColor: 6, card: 4, work: 6 })),
         person('amina_cares', 'Sample profile. Home health aide in Brooklyn.', face('🪴', { skin: 7, head: 3, headColor: 2, eyes: 7, mouth: 6, outfit: 6, outfitColor: 0, card: 0, work: 4 }))
       ].map(profile => [profile.handle, profile]));
@@ -56,14 +56,14 @@
         session: null, moderatorIds: [], accounts: {}, profiles, reports: [],
         posts: [
           post('sample-1', 'Sample: how much do you set aside for taxes each week?', 'I move a set percent of each payout into a separate account the day it lands. What works for you?', 'taxes', 3 * HOUR, 'maya_rides', 14),
-          post('sample-2', 'Ejemplo: ¿cómo llevan el registro de sus millas?', 'Empecé a anotarlas cada noche. Se acumula rápido. ¿Alguien usa una app?', 'money', 20 * HOUR, 'luis_delivers', 9),
+          post('sample-2', 'Sample: how do you keep track of your miles?', 'I started writing them down every night. It adds up fast. Does anyone use an app?', 'money', 20 * HOUR, 'luis_delivers', 9),
           post('sample-3', 'Sample: a client paid me two months late. What did you do?', 'I sent a written reminder with the invoice attached and kept a copy of everything. Curious what helped others.', 'work', 2 * DAY, 'priya_freelance', 21),
           post('sample-4', 'Sample: finding a clinic without insurance', 'I found a health center that sets fees by income. It took one phone call to get started.', 'health', 3 * DAY, 'amina_cares', 17),
           post('sample-5', 'Sample: what is one small thing that made a slow week easier?', 'Mine was planning around my lowest week instead of my best one.', 'general', 5 * DAY, 'maya_rides', 11)
         ],
         comments: [
           comment('sample-c1', 'sample-1', 'I do the same with a smaller percent, and raise it in busy months.', 2 * HOUR, 'priya_freelance'),
-          comment('sample-c2', 'sample-1', 'Yo aparto un poco de cada pago. Así no me sorprende.', HOUR, 'luis_delivers'),
+          comment('sample-c2', 'sample-1', 'I set a little aside from every payment, so nothing surprises me.', HOUR, 'luis_delivers'),
           comment('sample-c3', 'sample-3', 'Keeping every message saved helped me a lot.', DAY, 'amina_cares'),
           comment('sample-c4', 'sample-4', 'Thank you for sharing this. I did not know that was an option.', 2 * DAY, 'maya_rides')
         ]
@@ -86,10 +86,12 @@
     const newId = () => `demo-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const myHandle = state => (state.session ? state.accounts[state.session.email] || null : null);
     const isMod = state => state.session?.email === 'mod@example.com';
+    const isSample = item => `${item.id}`.startsWith('sample-');
     const score = post => (post.base || 0) + Object.values(post.votes).reduce((sum, vote) => sum + vote, 0);
     const avatarOf = (state, handle) => state.profiles[handle]?.avatar;
     function view(state, post, me) {
       const { votes, base, ...rest } = post;
+      if (isSample(post)) Object.assign(rest, { title: translate(post.title), body: translate(post.body) });
       return { ...rest, avatar: avatarOf(state, post.handle), mine: Number(Boolean(me) && me === post.handle), score: score(post), myVote: votes[me] || 0, comments: state.comments.filter(item => item.post === post.id).length };
     }
     function list({ sort, topic, post, profile } = {}) {
@@ -103,8 +105,8 @@
       return {
         signedIn: Boolean(state.session), isModerator: mod, me: state.profiles[me] || null,
         posts: found.map(item => view(state, item, me)),
-        comments: state.comments.filter(item => item.post === post).map(item => ({ ...item, avatar: avatarOf(state, item.handle), mine: Number(item.handle === me) })),
-        profile: state.profiles[profile] || null
+        comments: state.comments.filter(item => item.post === post).map(item => ({ ...item, body: isSample(item) ? translate(item.body) : item.body, avatar: avatarOf(state, item.handle), mine: Number(item.handle === me) })),
+        profile: state.profiles[profile] ? { ...state.profiles[profile], bio: state.profiles[profile].sample ? translate(state.profiles[profile].bio) : state.profiles[profile].bio } : null
       };
     }
     return {
@@ -178,7 +180,7 @@
         if (!isMod(state)) throw fail('forbidden');
         return state.reports.filter(item => !item.resolved).map(item => {
           const post = state.posts.find(entry => entry.id === item.post);
-          return { id: item.id, reason: item.reason, postId: item.post, title: post?.title || '', hidden: Boolean(post?.hidden), created: item.created };
+          return { id: item.id, reason: item.reason, postId: item.post, title: post ? (isSample(post) ? translate(post.title) : post.title) : '', hidden: Boolean(post?.hidden), created: item.created };
         });
       },
       async moderate(postId, hidden) {
@@ -288,7 +290,7 @@
   if (typeof module !== 'undefined') module.exports = { createDemo };
   if (typeof window === 'undefined') return;
   // Each public site keeps its own demo data, even though they share a web address.
-  const demoFor = () => createDemo(window.localStorage, `steady-demo:${location.pathname.split('/').length > 2 ? location.pathname.split('/')[1] : 'local'}`,
-    window.STEADY_AVATAR ? parts => window.STEADY_AVATAR.encode({ ...window.STEADY_AVATAR.defaults(), ...parts }) : null);
+  const demoFor = () => createDemo(window.localStorage, `steady-demo-2:${location.pathname.split('/').length > 2 ? location.pathname.split('/')[1] : 'local'}`,
+    window.STEADY_AVATAR ? parts => window.STEADY_AVATAR.encode({ ...window.STEADY_AVATAR.defaults(), ...parts }) : null, text => window.STEADY.t(text));
   window.STEADY_BACKEND = { mode, ...(mode === 'dev' ? dev : mode === 'supabase' ? remote : mode === 'demo' ? demoFor() : none) };
 })();

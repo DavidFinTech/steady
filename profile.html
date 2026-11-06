@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#185079">
-<title>Steady — My profile</title>
+<title>Steady — Your character</title>
 <link rel="stylesheet" href="steady.css">
 </head>
-<body data-title="My profile">
+<body data-title="Your character">
 <a class="skip" href="#main" data-i18n="Skip to content">Skip to content</a>
 <header class="topbar">
   <a class="logo" href="index.html">steady<span>✳</span></a>
@@ -19,7 +19,7 @@
     <a href="community.html" data-i18n="Community">Community</a>
   </nav>
   <div class="lang-slot"></div>
-  <a class="account-link" href="profile.html" data-account-link aria-current="page"><i data-icon="user"></i><span>My profile</span></a>
+  <a class="account-link" href="signin.html" data-account-link><i data-icon="user"></i><span>Sign in</span></a>
 </header>
 
 <main id="main" class="maker">
@@ -42,10 +42,11 @@
       <div class="maker-foot">
         <button type="button" class="link" id="start-over" data-i18n="Start over">Start over</button>
         <button type="button" class="link" id="download" data-i18n="Download picture">Download picture</button>
-        <a class="link" id="account-settings" href="signin.html" data-i18n="Account" hidden>Account</a>
+        <a class="link" id="maker-close" href="community.html" data-i18n="Close">Close</a>
       </div>
       <button type="button" class="pill pill-sun" id="save-account" hidden><span data-i18n="Save to my profile">Save to my profile</span></button>
-      <p class="fine" id="account-note"><span data-i18n="Stays on your device.">Stays on your device.</span> <a href="signin.html" data-i18n="Sign in to show it in Community.">Sign in to show it in Community.</a></p>
+      <a class="pill pill-sun" id="use-character" href="community.html?setup=1&amp;character=1" hidden><span data-i18n="Use this character">Use this character</span></a>
+      <p class="fine" id="account-note"><span data-i18n="Stays on your device.">Stays on your device.</span> <a href="signin.html?return_to=profile.html" data-i18n="Sign in to show it in Community.">Sign in to show it in Community.</a></p>
     </section>
   </div>
 </main>

@@ -146,8 +146,8 @@
     button.disabled = true;
     try {
       await window.STEADY_BACKEND.action({ action: 'profile', isNew: false, bio, avatar: A.encode(character) });
-      await window.STEADY.refreshAccount();
-      paintStatus(t('Saved to your profile.'));
+      location.href = `community.html?profile=${encodeURIComponent(window.STEADY.account.me.handle)}`;
+      return;
     } catch (_) {
       paintStatus(t('Couldn’t save. Try again.'));
     }
@@ -159,14 +159,15 @@
     const me = account?.me;
     if (me && !adopted) {
       adopted = true;
-      // A new device picks up the character saved to the account.
-      if (!saved && A.isCharacter(me.avatar)) character = A.decode(me.avatar);
-      if (!saved && me.bio) bio = me.bio;
-      if (!saved) drawOptions();
+      // Editing an existing profile starts from what's already saved to it.
+      if (A.isCharacter(me.avatar)) character = A.decode(me.avatar);
+      if (me.bio) bio = me.bio;
+      drawOptions();
     }
     $('save-account').hidden = !me;
-    $('account-note').hidden = Boolean(me);
-    $('account-settings').hidden = !account?.signedIn;
+    $('use-character').hidden = !account?.signedIn || Boolean(me);
+    $('account-note').hidden = Boolean(account?.signedIn);
+    $('maker-close').href = me ? `community.html?profile=${encodeURIComponent(me.handle)}` : 'community.html';
     paintCard();
   }
   window.addEventListener('steady-language-change', drawAll);

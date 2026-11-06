@@ -124,13 +124,16 @@
     if (!data.signedIn) { needsAccount(); return; }
     const me = data.me || {};
     const mine = window.STEADY_AVATAR.load()?.character;
-    const current = me.avatar || mine || AVATARS[0];
+    const usingCharacter = url.searchParams.get('character') === '1';
+    const current = me.avatar || (usingCharacter && mine) || AVATARS[0];
+    let draft = {};
+    try { draft = JSON.parse(sessionStorage.getItem('steady-profile-draft') || '{}'); sessionStorage.removeItem('steady-profile-draft'); } catch (_) { /* private browsing */ }
     const choices = [...new Set([mine, window.STEADY_AVATAR.isCharacter(me.avatar) ? me.avatar : null].filter(Boolean)), ...AVATARS];
     dialog(data.me ? 'Edit profile' : 'Create profile',
-      `<fieldset class="picker"><legend>${e(t('Your avatar'))}</legend><div class="avatar-grid">${choices.map(avatar => `<label><input type="radio" name="avatar" value="${e(avatar)}" ${avatar === current ? 'checked' : ''}><span>${window.STEADY_AVATAR.html(avatar)}</span></label>`).join('')}</div><a class="hint" href="profile.html">${e(t('Design your character'))}</a></fieldset>`
-      + (data.me ? '' : field('handle', 'Username', '', 'input', 24)
+      `<fieldset class="picker"><legend>${e(t('Your avatar'))}</legend><div class="avatar-grid">${choices.map(avatar => `<label><input type="radio" name="avatar" value="${e(avatar)}" ${avatar === current ? 'checked' : ''}><span>${window.STEADY_AVATAR.html(avatar)}</span></label>`).join('')}</div><a class="design-link" href="profile.html" id="design-character">${e(t('Design your character'))}</a> <small class="hint">${e(t('Optional'))}</small></fieldset>`
+      + (data.me ? '' : field('handle', 'Username', draft.handle || '', 'input', 24)
       + `<small class="hint">${e(t('Use 3–24 lowercase letters, numbers, or underscores.'))}</small>`)
-      + field('bio', 'About you', me.bio || '', 'textarea', 280, false)
+      + field('bio', 'About you', me.bio || draft.bio || (usingCharacter && window.STEADY_AVATAR.load()?.bio) || '', 'textarea', 280, false)
       + `<small class="hint">${e(t('Optional'))} · ${e(t('Profiles, posts, and comments are public. Your sign-in email is never displayed.'))}</small>`,
       async fields => {
         await mutate({ action: 'profile', isNew: !data.me, ...fields });
@@ -153,6 +156,11 @@
       }, 'Create a post');
   }
 
+  // Keep what someone typed while they go to design a character.
+  document.addEventListener('click', event => {
+    if (!event.target.closest?.('#design-character')) return;
+    try { sessionStorage.setItem('steady-profile-draft', JSON.stringify({ handle: $('#f-handle')?.value || '', bio: $('#f-bio')?.value || '' })); } catch (_) { /* private browsing */ }
+  });
   document.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button) return;
@@ -235,6 +243,7 @@
       submit.disabled = false;
     }
   });
-  window.addEventListener('steady-language-change', () => { render(); renderModeration(); });
+  // Demo sample posts come back in the new language, so fetch them again.
+  window.addEventListener('steady-language-change', () => { if (backend.mode === 'demo') load(); else { render(); renderModeration(); } });
   load();
 })();
