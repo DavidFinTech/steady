@@ -80,7 +80,7 @@ if (typeof document !== 'undefined') {
         { label: 'Income tax', value: result.federal, tone: 'tone-federal' },
         { label: 'Self-employment tax', value: result.self, tone: 'tone-self' },
         { label: 'Extra Medicare tax', value: result.medicare, tone: 'tone-medicare' },
-        { label: 'Left over', value: Math.max(0, revenue - spent - result.total), tone: 'tone-left' }
+        { label: 'Remaining', value: Math.max(0, revenue - spent - result.total), tone: 'tone-left' }
       ]);
     }
     form.addEventListener('submit', event => event.preventDefault());

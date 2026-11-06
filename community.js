@@ -3,7 +3,7 @@
   const icon = name => window.steadyIcon(name);
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const t = text => window.STEADY.t(text);
-  const TOPICS = { all: ['All conversations', 'chat'], general: ['General', 'users'], money: ['Money & budgeting', 'coin'], taxes: ['Taxes', 'receipt'], health: ['Health & coverage', 'heart'], work: ['Work & rights', 'scale'] };
+  const TOPICS = { all: ['All conversations', 'chat'], general: ['General', 'users'], money: ['Finances & budgeting', 'coin'], taxes: ['Taxes', 'receipt'], health: ['Health & coverage', 'heart'], work: ['Work & rights', 'scale'] };
   const AVATARS = ['✳', '🌿', '☀', '🌻', '🌊', '🪴'];
   const ERRORS = { offline: 'The community isn’t available yet.', signin: 'Sign in to join the conversation.', profile: 'Create your profile first.', handle: 'Use 3–24 lowercase letters, numbers, or underscores.', taken: 'That username is taken. Try another.', invalid: 'Please complete all fields with valid values.', slow: 'Please wait a moment before posting again.', forbidden: 'You can only change your own content.', missing: 'This post is no longer available.', unavailable: 'Unable to connect. Please try again.' };
   const url = new URL(location.href);
