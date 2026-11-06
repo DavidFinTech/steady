@@ -12,18 +12,7 @@
     host.querySelector('.share-legend').innerHTML = visible.map(s => `<li><i class="${s.tone}"></i><span>${t(s.label)}</span><b class="num">${Math.round((s.value / total) * 100)}%</b></li>`).join('');
   };
 
-  const CHOOSERS = {
-    health: [
-      { icon: 'shield', label: 'Insurance', title: 'Compare plans', line: 'Your income may lower the price.', cta: 'HealthCare.gov', url: 'https://www.healthcare.gov/self-employed/coverage/' },
-      { icon: 'coin', label: 'Low-cost', title: 'Medicaid & CHIP', line: 'Your state decides who qualifies.', cta: 'See your options', url: 'https://www.healthcare.gov/medicaid-chip/' },
-      { icon: 'pin', label: 'Near me', title: 'Find a health center', line: 'Fees may depend on your income.', cta: 'Find a center', url: 'https://findahealthcenter.hrsa.gov/' }
-    ],
-    legal: [
-      { icon: 'coin', label: "I wasn't paid", title: 'NYC freelance protections', line: 'Check if the law covers your work.', cta: 'See your rights', url: 'https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page' },
-      { icon: 'badge', label: 'Am I an employee?', title: 'Employee or contractor?', line: "A job title or 1099 doesn't settle it.", cta: 'Find out more', url: 'https://www.usa.gov/job-misclassification' },
-      { icon: 'scale', label: 'I need legal help', title: 'Civil legal aid', line: 'Local groups help people who qualify.', cta: 'Find legal aid', url: 'https://www.lsc.gov/about-lsc/what-legal-aid/i-need-legal-help' }
-    ]
-  };
+  const CHOOSERS = window.STEADY_TOOLS.CHOOSERS;
   document.querySelectorAll('[data-chooser]').forEach(host => {
     const options = CHOOSERS[host.dataset.chooser];
     let active = 0;
@@ -33,7 +22,7 @@
     const draw = () => {
       tabs.innerHTML = options.map((option, i) => `<button type="button" aria-pressed="${i === active}" data-i="${i}">${window.steadyIcon(option.icon)}<span>${t(option.label)}</span></button>`).join('');
       const option = options[active];
-      panel.innerHTML = `<div class="chooser-card"><span class="chooser-icon">${window.steadyIcon(option.icon)}</span><h3>${t(option.title)}</h3><p>${t(option.line)}</p><a class="pill" href="${option.url}"><span>${t(option.cta)}</span>${arrow()}</a></div>`;
+      panel.innerHTML = `<div class="chooser-card"><span class="chooser-icon">${window.steadyIcon(option.icon)}</span><h3>${t(option.title)}</h3><p>${t(option.line)}</p><div class="rights-actions"><a class="pill pill-strong" href="${option.url}"><span>${t(option.cta)}</span>${arrow()}</a>${(option.more || []).map(link => `<a class="pill" href="${link.url}"><span>${t(link.label)}</span>${arrow()}</a>`).join('')}</div></div>`;
     };
     tabs.addEventListener('click', event => {
       const button = event.target.closest('[data-i]');

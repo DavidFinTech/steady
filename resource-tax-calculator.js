@@ -65,6 +65,7 @@ if (typeof document !== 'undefined') {
         return;
       }
       error.textContent = expenses > revenue ? t('Expenses are higher than income. Losses count as zero here.') : '';
+      window.dispatchEvent(new CustomEvent('steady-tax-result', { detail: { total: result.total } }));
       countTo(result.total / 12);
       $('monthly').textContent = money(result.total / 12);
       $('total-line').textContent = money(result.total);

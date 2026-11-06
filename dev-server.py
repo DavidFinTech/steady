@@ -30,6 +30,10 @@ comments = []
 
 
 class Handler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def session(self):
         cookie = SimpleCookie(self.headers.get("Cookie", ""))
         return cookie["steady_dev"].value if "steady_dev" in cookie else None

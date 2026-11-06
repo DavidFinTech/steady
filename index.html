@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Free tools and trusted help for independent workers in NYC: taxes, health care and your rights at work.">
+<meta name="description" content="Free tools and trusted help for NYC gig workers: unstable income, legal protection and health benefits.">
 <meta name="theme-color" content="#0b2238">
 <title>Steady — Resources for independent workers</title>
 <link rel="stylesheet" href="steady.css">
@@ -13,9 +13,9 @@
 <header class="topbar">
   <a class="logo" href="index.html">steady<span>✳</span></a>
   <nav class="topnav" data-i18n-aria="Main navigation" aria-label="Main navigation">
-    <a href="#tax" data-section="tax" data-i18n="Taxes">Taxes</a>
-    <a href="#health" data-section="health" data-i18n="Health">Health</a>
+    <a href="#money" data-section="money" data-i18n="Money">Money</a>
     <a href="#legal" data-section="legal" data-i18n="Rights">Rights</a>
+    <a href="#health" data-section="health" data-i18n="Health">Health</a>
     <a href="planner.html" data-i18n="Planner">Planner</a>
     <a href="community.html" data-i18n="Community">Community</a>
   </nav>
@@ -28,11 +28,10 @@
   <section class="hero">
     <h1><span data-i18n="A little more clarity.">A little more clarity.</span> <em data-i18n="A lot more support.">A lot more support.</em></h1>
     <h2 class="hero-ask" data-i18n="What do you need today?">What do you need today?</h2>
-    <div class="tiles">
-      <button type="button" class="tile" data-need="budget" aria-pressed="false"><i data-icon="calendar"></i><span data-i18n="My week">My week</span></button>
-      <button type="button" class="tile" data-need="tax" aria-pressed="false"><i data-icon="receipt"></i><span data-i18n="My taxes">My taxes</span></button>
-      <button type="button" class="tile" data-need="health" aria-pressed="false"><i data-icon="heart"></i><span data-i18n="My health">My health</span></button>
-      <button type="button" class="tile" data-need="pay" aria-pressed="false"><i data-icon="coin"></i><span data-i18n="My pay">My pay</span></button>
+    <div class="tiles three">
+      <a class="tile" href="#money"><i data-icon="coin"></i><span data-i18n="Money">Money</span></a>
+      <a class="tile" href="#legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
+      <a class="tile" href="#health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
     </div>
     <p class="hero-meta" data-i18n="Free. No account needed.">Free. No account needed.</p>
   </section>
@@ -59,12 +58,36 @@
     <p class="fine" data-i18n="Not saved. Print to keep it.">Not saved. Print to keep it.</p>
   </section>
 
-  <section class="band dark" id="tax">
+  <section class="band dark" id="money">
     <div class="reveal">
-      <h2 class="display" data-i18n="Less tax guesswork.">Less tax guesswork.</h2>
-      <p class="lede" data-i18n="Move the sliders.">Move the sliders.</p>
+      <h2 class="display" data-i18n="Uneven income. Steadier plan.">Uneven income. Steadier plan.</h2>
     </div>
-    <form id="tax-form" class="tax reveal" novalidate>
+    <div class="tabs on-dark reveal" data-tabs="money" role="group">
+      <button type="button" data-tab="swings" aria-pressed="true"><i data-icon="calendar"></i><span data-i18n="Income swings">Income swings</span></button>
+      <button type="button" data-tab="taxes" aria-pressed="false"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></button>
+      <button type="button" data-tab="short" aria-pressed="false"><i data-icon="coin"></i><span data-i18n="Short on money">Short on money</span></button>
+    </div>
+    <div data-panel-of="money" data-panel="swings" class="tax" id="swing-tool">
+      <div class="tax-answer">
+        <span class="tax-label" data-i18n="Plan on about">Plan on about</span>
+        <div class="tax-number"><span id="swing-low" class="num" aria-live="polite">—</span> <small data-i18n="a week">a week</small></div>
+        <p class="tax-note" data-i18n="Your lowest week. A safer number to plan around.">Your lowest week. A safer number to plan around.</p>
+      </div>
+      <div class="swing-bars" id="swing-bars" aria-hidden="true"></div>
+      <div class="sliders four"></div>
+      <dl class="rows">
+        <div><dt data-i18n="Average week">Average week</dt><dd id="swing-average" class="num"></dd></div>
+        <div><dt data-i18n="Best week">Best week</dt><dd id="swing-high" class="num"></dd></div>
+        <div><dt data-i18n="Set aside from an average week">Set aside from an average week</dt><dd id="swing-cushion" class="num"></dd></div>
+      </dl>
+      <div class="tax-foot">
+        <a class="pill" href="planner.html"><span data-i18n="Open the planner">Open the planner</span><i data-icon="arrow"></i></a>
+        <button type="button" class="pill" data-need="budget" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button>
+      </div>
+      <p class="fine" data-i18n="Stays on your device.">Stays on your device.</p>
+    </div>
+    <div data-panel-of="money" data-panel="taxes" hidden>
+      <form id="tax-form" class="tax" novalidate>
       <div class="tax-answer">
         <span class="tax-label" data-i18n="Set aside about">Set aside about</span>
         <div class="tax-number"><span id="monthly-display" class="num" aria-hidden="true">—</span> <small data-i18n="a month">a month</small></div>
@@ -86,11 +109,20 @@
           <span id="costs-range-label" class="visually-hidden" data-i18n="Yearly business expenses">Yearly business expenses</span>
         </div>
       </div>
+      <div class="miles">
+        <label for="miles" data-i18n="Miles driven for work">Miles driven for work</label>
+        <div class="miles-row"><input id="miles" type="number" inputmode="numeric" min="0" dir="ltr"><button type="button" class="pill" id="add-miles"><span data-i18n="Add to expenses">Add to expenses</span></button></div>
+        <p class="fine" data-i18n="Uses the IRS car rate of 72.5¢ a mile through June 2026. From July it’s 76¢.">Uses the IRS car rate of 72.5¢ a mile through June 2026. From July it’s 76¢.</p>
+      </div>
       <div class="segmented on-dark" role="group" data-i18n-aria="Filing status" aria-label="Filing status">
         <button type="button" data-filing="single" aria-pressed="true" data-i18n="Single">Single</button>
         <button type="button" data-filing="joint" aria-pressed="false" data-i18n="Married, one earner">Married, one earner</button>
       </div>
       <p id="error" role="alert"></p>
+      <div class="next-payment" id="next-payment">
+        <span class="tax-label" data-i18n="Next estimated tax payment">Next estimated tax payment</span>
+        <b id="due-date"></b><span class="chip" id="due-days"></span><span class="tax-note" id="due-amount"></span>
+      </div>
       <div class="share" id="tax-share"><div class="share-bar" aria-hidden="true"></div><ul class="share-legend"></ul></div>
       <details class="math">
         <summary><span data-i18n="See the math">See the math</span></summary>
@@ -109,27 +141,40 @@
         <a class="pill" href="https://www.irs.gov/filing/free-file-do-your-federal-taxes-for-free"><span data-i18n="Free File">Free File</span><i data-icon="arrow"></i></a>
       </div>
     </form>
-  </section>
-
-  <section class="band soft" id="health">
-    <h2 class="display reveal" data-i18n="Care, connected.">Care, connected.</h2>
-    <div class="chooser reveal" data-chooser="health"></div>
-    <div class="extras reveal">
-      <span data-i18n="In New York:">In New York:</span>
-      <a class="pill" href="https://nystateofhealth.ny.gov/agent/assistors?lang=en"><span data-i18n="Free application help">Free application help</span><i data-icon="arrow"></i></a>
-      <a class="pill" href="https://www.nyccare.nyc/enroll/"><span data-i18n="NYC Care (not insurance)">NYC Care (not insurance)</span><i data-icon="arrow"></i></a>
+      <div class="tax-foot"><button type="button" class="pill" data-need="tax" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button></div>
+    </div>
+    <div data-panel-of="money" data-panel="short" hidden>
+      <div class="chooser" data-chooser="money"></div>
     </div>
   </section>
 
   <section class="band" id="legal">
     <h2 class="display reveal" data-i18n="Your work has value.">Your work has value.</h2>
-    <div class="chooser reveal" data-chooser="legal"></div>
-    <div class="extras reveal">
-      <span data-i18n="Keep your:">Keep your:</span>
-      <span class="chip"><i data-icon="doc"></i><span data-i18n="Contracts">Contracts</span></span>
-      <span class="chip"><i data-icon="receipt"></i><span data-i18n="Invoices">Invoices</span></span>
-      <span class="chip"><i data-icon="coin"></i><span data-i18n="Payment records">Payment records</span></span>
+    <p class="lede reveal" data-i18n="Tell us what happened.">Tell us what happened.</p>
+    <div class="finder reveal" id="rights-finder"></div>
+    <div class="tax-foot reveal"><button type="button" class="pill" data-need="pay" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button></div>
+  </section>
+
+  <section class="band soft" id="health">
+    <h2 class="display reveal" data-i18n="Care, connected.">Care, connected.</h2>
+    <div class="tabs reveal" data-tabs="health" role="group">
+      <button type="button" data-tab="coverage" aria-pressed="true"><i data-icon="shield"></i><span data-i18n="Find coverage">Find coverage</span></button>
+      <button type="button" data-tab="care" aria-pressed="false"><i data-icon="heart"></i><span data-i18n="Care now">Care now</span></button>
+      <button type="button" data-tab="injury" aria-pressed="false"><i data-icon="scale"></i><span data-i18n="Hurt at work">Hurt at work</span></button>
     </div>
+    <div data-panel-of="health" data-panel="coverage" class="coverage" id="coverage-tool">
+      <div class="coverage-inputs">
+        <div class="stepper"><span class="stepper-label" data-i18n="People in your household">People in your household</span><div><button type="button" data-people="-1" data-i18n-aria="Fewer people" aria-label="Fewer people">−</button><b id="people-count" aria-live="polite">1</b><button type="button" data-people="1" data-i18n-aria="More people" aria-label="More people">+</button></div></div>
+        <div class="slider light"><label for="coverage-income" data-i18n="Household yearly income">Household yearly income</label><div class="money-field"><span>$</span><input id="coverage-income" type="number" inputmode="numeric" min="0" value="30000" dir="ltr"></div><input type="range" id="coverage-range" min="0" max="150000" step="500" value="30000" aria-labelledby="coverage-range-label"><span id="coverage-range-label" class="visually-hidden" data-i18n="Household yearly income">Household yearly income</span></div>
+      </div>
+      <div class="zones" id="coverage-zones"></div>
+      <div class="chooser-card coverage-result" id="coverage-result" aria-live="polite"></div>
+      <p class="fine" data-i18n="An estimate for New York. NY State of Health decides. Rules differ for pregnancy and some immigration statuses.">An estimate for New York. NY State of Health decides. Rules differ for pregnancy and some immigration statuses.</p>
+      <p class="fine enroll-note" id="enroll-note" data-i18n="Plan sign-up ends January 31, 2027. Enroll by December 15 for January 1 coverage.">Plan sign-up ends January 31, 2027. Enroll by December 15 for January 1 coverage.</p>
+      <div class="tax-foot"><button type="button" class="pill" data-go-tab="care"><span data-i18n="Can’t get insurance?">Can’t get insurance?</span></button><a class="pill" href="https://www.healthcare.gov/self-employed/coverage/"><span data-i18n="Outside New York?">Outside New York?</span><i data-icon="arrow"></i></a><button type="button" class="pill" data-need="health" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button></div>
+    </div>
+    <div data-panel-of="health" data-panel="care" hidden><div class="chooser" data-chooser="care"></div></div>
+    <div data-panel-of="health" data-panel="injury" hidden><div class="chooser" data-chooser="injury"></div></div>
   </section>
 
   <section class="band sun" id="help">
@@ -157,6 +202,9 @@
         <li><a href="https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page">NYC freelance worker rights</a></li>
         <li><a href="https://www.usa.gov/job-misclassification">Employee or contractor?</a></li>
         <li><a href="https://www.lsc.gov/about-lsc/what-legal-aid/i-need-legal-help">Find legal aid</a></li>
+        <li><a href="https://www.nyc.gov/site/dca/workers/workersrights/Delivery-Workers.page">NYC delivery worker rights</a></li>
+        <li><a href="https://www.nybcf.org">Black Car Fund</a></li>
+        <li><a href="https://access.nyc.gov/programs/one-shot-deal/">One Shot Deal</a></li>
         <li><a href="https://www.211.org/">211</a></li>
       </ul>
     </section>
@@ -172,9 +220,9 @@
 </footer>
 
 <nav class="tabbar" data-i18n-aria="Main navigation" aria-label="Main navigation">
-  <a href="#tax" data-section="tax"><i data-icon="receipt"></i><span data-i18n="Taxes">Taxes</span></a>
-  <a href="#health" data-section="health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
+  <a href="#money" data-section="money"><i data-icon="coin"></i><span data-i18n="Money">Money</span></a>
   <a href="#legal" data-section="legal"><i data-icon="scale"></i><span data-i18n="Rights">Rights</span></a>
+  <a href="#health" data-section="health"><i data-icon="heart"></i><span data-i18n="Health">Health</span></a>
   <a href="planner.html"><i data-icon="calendar"></i><span data-i18n="Planner">Planner</span></a>
   <a href="community.html"><i data-icon="chat"></i><span data-i18n="Community">Community</span></a>
 </nav>
@@ -185,8 +233,10 @@
 <script src="steady-config.js" defer></script>
 <script src="steady-backend.js" defer></script>
 <script src="steady-account.js" defer></script>
+<script src="steady-tools-data.js" defer></script>
 <script src="steady-experience.js" defer></script>
 <script src="support-navigator.js" defer></script>
 <script src="resource-tax-calculator.js" defer></script>
+<script src="steady-tools.js" defer></script>
 </body>
 </html>

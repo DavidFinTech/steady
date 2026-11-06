@@ -14,11 +14,23 @@ for (const path of Object.values(STEADY_PATHS)) {
   used.add(path.title); used.add(path.source); path.steps.forEach(step => used.add(step));
   if (path.outside) used.add(path.outside[0]);
 }
-for (const file of ['steady-experience.js', 'resource-tax-calculator.js', 'weekly-planner.js', 'support-navigator.js', 'steady-account.js', 'signin.js', 'community.js']) {
+for (const file of ['steady-tools.js', 'steady-experience.js', 'resource-tax-calculator.js', 'weekly-planner.js', 'support-navigator.js', 'steady-account.js', 'signin.js', 'community.js']) {
   const source = fs.readFileSync(file, 'utf8');
   for (const match of source.matchAll(/(?:label|title|line|cta): (['"])(.+?)\1/g)) if (!/^path\./.test(match[2])) used.add(match[2]);
   for (const match of source.matchAll(/\bt\((['"])(.+?)\1\)/g)) used.add(match[2]);
 }
+const tools = require('./steady-tools-data.js');
+const collect = value => {
+  if (Array.isArray(value)) return value.forEach(collect);
+  if (value && typeof value === 'object') {
+    for (const [key, item] of Object.entries(value)) {
+      if (['label', 'title', 'line', 'cta'].includes(key)) used.add(item);
+      else if (key === 'proof') item.forEach(entry => used.add(entry));
+      else collect(item);
+    }
+  }
+};
+collect(tools.RIGHTS); collect(tools.CHOOSERS); collect(tools.COVERAGE);
 const community = {};
 global.window = community;
 require('./community-i18n.js');
