@@ -16,6 +16,12 @@
     'Resources for independent workers': W('Recursos para trabajadores independientes', '独立工作者资源', 'স্বাধীন কর্মীদের জন্য সহায়তা', 'آزاد کارکنوں کے لیے وسائل', 'स्वतंत्र कामगारों के लिए संसाधन'),
     'Weekly planner': W('Planificador semanal', '每周规划', 'সাপ্তাহিক পরিকল্পনা', 'ہفتہ وار منصوبہ', 'साप्ताहिक योजनाकार'),
 
+    'Your next step': W('Tu próximo paso', '您的下一步', 'আপনার পরের ধাপ', 'آپ کا اگلا قدم', 'आपका अगला कदम'),
+    'A steadier tomorrow.': W('Un mañana más estable.', '更稳定的明天。', 'আরও স্থির আগামীকাল।', 'ایک زیادہ مستحکم کل۔', 'एक ज़्यादा स्थिर कल।'),
+    'Plan for taxes': W('Planifica tus impuestos', '规划税款', 'করের পরিকল্পনা করুন', 'ٹیکس کی منصوبہ بندی کریں', 'कर की योजना बनाएँ'),
+    'Find your coverage': W('Encuentra tu cobertura', '找到您的保险', 'আপনার কভারেজ খুঁজুন', 'اپنی کوریج تلاش کریں', 'अपना कवरेज खोजें'),
+    'Protect your work': W('Protege tu trabajo', '保护您的工作', 'আপনার কাজ সুরক্ষিত করুন', 'اپنے کام کا تحفظ کریں', 'अपने काम की रक्षा करें'),
+    'Small steps. Real peace of mind.': W('Pequeños pasos. Verdadera tranquilidad.', '小小几步，真正安心。', 'ছোট ছোট পদক্ষেপ। সত্যিকারের মানসিক শান্তি।', 'چھوٹے قدم۔ حقیقی ذہنی سکون۔', 'छोटे कदम। सच्ची मन की शांति।'),
     'A little more clarity.': W('Más claridad.', '多一点清晰。', 'আরেকটু স্পষ্টতা।', 'تھوڑی اور وضاحت۔', 'थोड़ी और स्पष्टता।'),
     'A lot more support.': W('Mucho más apoyo.', '多一份支持。', 'অনেক বেশি সহায়তা।', 'بہت زیادہ مدد۔', 'बहुत अधिक सहयोग।'),
     'What do you need today?': W('¿Qué necesitas hoy?', '您今天需要什么？', 'আজ আপনার কী দরকার?', 'آج آپ کو کیا چاہیے؟', 'आज आपको क्या चाहिए?'),
