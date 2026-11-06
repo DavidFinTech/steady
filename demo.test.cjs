@@ -63,5 +63,21 @@ const expectCode = async (promise, code) => assert.equal((await promise.then(() 
   assert.equal((await blocked.me()).signedIn, true);
   box.set('bad', '{nope');
   assert.equal((await createDemo(storage, 'bad').list({})).posts.length, 5);
+  // Every built-in sample has all six languages; things people type aren't touched.
+  const { DICTIONARY, LANGUAGES } = require('./steady-i18n.js');
+  const seen = new Set();
+  const translated = createDemo(storage, 'translated', null, text => { seen.add(text); return `T:${text}`; });
+  const all = await translated.list({ sort: 'new' });
+  assert.ok(all.posts.every(post => post.title.startsWith('T:') && post.body.startsWith('T:')));
+  for (const post of all.posts) (await translated.list({ post: post.id })).comments.forEach(item => assert.ok(item.body.startsWith('T:')));
+  for (const post of all.posts) assert.ok((await translated.list({ profile: post.handle })).profile.bio.startsWith('T:'));
+  assert.ok(seen.size >= 18);
+  for (const text of seen) for (const [code] of LANGUAGES) if (code !== 'en') assert.ok(DICTIONARY[text]?.[code], `${text} is missing ${code}`);
+  await translated.verifyCode('a@b.co', '123456');
+  await translated.action({ action: 'profile', isNew: true, handle: 'my_name', bio: 'My own bio' });
+  const own = await translated.action({ action: 'post', title: 'My title', body: 'My body', topic: 'general' });
+  const mine = await translated.list({ post: own.id });
+  assert.equal(mine.posts[0].title, 'My title');
+  assert.equal((await translated.list({ profile: 'my_name' })).profile.bio, 'My own bio');
   console.log('PASS: demo sign-in and Community, including wrong codes, permissions, moderation and reset.');
 })().catch(error => { console.error(error); process.exit(1); });
