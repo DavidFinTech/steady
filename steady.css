@@ -6,7 +6,6 @@
   --sun:#f6b04f;--sun-2:#ffd08a;--mint:#57c49c;--line:#dfe5e9;--soft:#f4f3ee;--tile:rgba(255,255,255,.09);
   --sans:"Figtree","PingFang SC","Noto Sans SC","Microsoft YaHei","Kohinoor Bangla","Noto Sans Bengali","Bangla Sangam MN","Nirmala UI","Noto Nastaliq Urdu","Noto Naskh Arabic","Urdu Typesetting","Kohinoor Devanagari","Noto Sans Devanagari",Arial,sans-serif;
   --ease:cubic-bezier(.2,.7,.2,1);
-  interpolate-size:allow-keywords;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
@@ -66,7 +65,7 @@ html[dir="rtl"] .scroll-progress{transform-origin:right}
 .hero::before{width:620px;height:620px;inset-inline-end:-120px;inset-block-start:-240px;background:rgba(0,123,167,.6);animation:drift 16s ease-in-out infinite alternate}
 .hero::after{width:520px;height:520px;inset-inline-start:-100px;inset-block-end:-300px;background:rgba(246,176,79,.34);animation:drift 20s ease-in-out infinite alternate-reverse}
 @keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+@keyframes rise{from{transform:translateY(14px)}}
 .hero h1{margin:0;font-size:clamp(44px,7.6vw,104px);line-height:1.02;font-weight:700;letter-spacing:-.04em;animation:settle .9s var(--ease) both}
 @keyframes settle{from{transform:translateY(18px) scale(.98)}}
 .hero h1 span,.hero h1 em{display:block;font-style:normal}
@@ -93,8 +92,8 @@ html[dir="rtl"] .scroll-progress{transform-origin:right}
 .fine{margin:16px auto 0;max-width:640px;font-size:13px;line-height:1.55;color:#6d7f8c}
 html[lang="ur"] .fine{line-height:2.1}
 .dark .fine{color:#a9c4d3}
-.can-reveal .reveal{opacity:0;transform:translateY(26px) scale(.985);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.can-reveal .reveal.is-visible{opacity:1;transform:none}
+.can-reveal .reveal{transform:translateY(26px) scale(.985);transition:transform .8s var(--ease)}
+.can-reveal .reveal.is-visible{transform:none}
 
 /* Pills and controls */
 .pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 18px;border:1px solid currentColor;border-radius:99px;background:transparent;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;transition:transform .2s var(--ease),background .2s,color .2s}
@@ -197,8 +196,6 @@ summary{display:flex;align-items:center;justify-content:space-between;gap:16px;m
 summary::-webkit-details-marker{display:none}
 summary::after{content:"+";flex-shrink:0;font-size:26px;font-weight:300;line-height:1;transition:transform .3s var(--ease)}
 details[open]>summary::after{transform:rotate(45deg)}
-details::details-content{height:0;overflow:clip;transition:height .35s var(--ease),content-visibility .35s allow-discrete}
-details[open]::details-content{height:auto}
 .math{max-width:560px;margin:22px auto 0;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
 .math summary{justify-content:center;font-size:15px}
 .math .fine{margin-block:14px;text-align:center}
@@ -219,7 +216,7 @@ details[open]::details-content{height:auto}
 .chooser-card{margin-top:14px;padding:clamp(34px,5vw,60px) 24px;border-radius:28px;background:#fff;box-shadow:0 2px 6px rgba(13,34,53,.05),0 20px 50px rgba(13,34,53,.09);animation:swap .45s var(--ease)}
 .soft .chooser-card{background:#fff}
 #legal .chooser-card{background:var(--soft);box-shadow:none}
-@keyframes swap{from{opacity:0;transform:translateY(12px) scale(.985)}}
+@keyframes swap{from{transform:translateY(12px) scale(.985)}}
 .chooser-icon{display:block;width:58px;height:58px;margin:0 auto 14px;color:var(--blue)}
 .chooser-card h3{margin:0;font-size:clamp(28px,3.8vw,46px);line-height:1.1;font-weight:700;letter-spacing:-.025em}
 html[lang="ur"] .chooser-card h3{line-height:1.8}
@@ -602,3 +599,7 @@ html[dir="rtl"] .back .ico{transform:scaleX(-1)}
   html[lang="ur"] .tabbar a{line-height:1.7}
   html[lang="ur"] .tabbar a span{overflow:visible;white-space:normal;font-size:12px}
 }
+
+/* Selected states change instantly, so text can't sit white-on-white while a color fades.
+   Entrance animations only move things: content must never depend on an animation to be visible. */
+.tabs button,.finder-grid button,.chooser-tabs button,.segmented button,.topics button,.topnav a,.tile,.pill,.step,.step-mark,.proof-grid span,.zones span,.quiet,.avatar-grid span,.topic-grid span,.vote button,.tabbar a{transition:transform .2s var(--ease)}
