@@ -381,6 +381,29 @@ html[dir="rtl"] .slider.light input[type="range"]::-webkit-slider-runnable-track
 .enroll-note{color:var(--navy);font-weight:600}
 #legal>.tax-foot .pill{border-color:var(--navy)}
 
+/* Pay checker */
+.tabs.two{grid-template-columns:repeat(2,1fr);max-width:560px}
+.pay-tool{max-width:760px;margin:26px auto 0}
+.pay-kinds{margin-bottom:20px}
+.coverage-inputs.even{grid-template-columns:1fr 1fr}
+.pay-tool .slider.light{background:var(--soft);box-shadow:none}
+.pay-hint{margin:10px 0 0;text-align:start;max-width:none}
+.pay-answer{margin-top:14px;padding:26px 24px 18px;border-radius:26px;background:var(--soft);transition:background .3s}
+.pay-answer.is-short{background:#fde8e3}
+.pay-answer.is-ok{background:var(--sage-soft,#e4f1ea)}
+.pay-answer .tax-label{color:var(--ink);font-weight:600}
+.pay-number{margin-top:4px;font-size:clamp(56px,10vw,110px);line-height:1.05;font-weight:700;letter-spacing:-.04em}
+.pay-answer.is-short .pay-number{color:#b23c2c}
+.pay-answer.is-ok .pay-number{color:#1f7a5a}
+.rows.light>div{border-bottom-color:rgba(13,34,53,.12)}
+.rows.light dt{color:var(--muted)}
+.rows.light{margin-top:12px}
+.pay-tool .rights-actions{margin-top:16px}
+.pay-tool .pill:not(.pill-strong){border-color:var(--navy)}
+.pay-tool .chooser-card{background:var(--soft);box-shadow:none}
+.chooser-icon i{width:100%;height:100%}
+.pay-tool .money-field{justify-content:flex-start}
+
 /* Account link */
 .account-link{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 13px;border-radius:99px;background:var(--navy);color:#fff;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s,transform .2s var(--ease)}
 .account-link:hover{background:var(--blue-deep);transform:translateY(-1px)}
@@ -551,6 +574,7 @@ html[dir="rtl"] .back .ico{transform:scaleX(-1)}
   .coverage-inputs{grid-template-columns:1fr}
   .zones span{font-size:12px;padding-inline:3px}
 }
+@media(max-width:820px){.coverage-inputs.even{grid-template-columns:1fr}.pay-kinds button{padding-inline:10px;font-size:13px}}
 @media print{.account-link{display:none}}
 @media(max-width:820px){
   html[lang="ur"] .tabbar a{line-height:1.7}

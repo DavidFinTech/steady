@@ -4,6 +4,8 @@
 (() => {
   const URLS = {
     delivery: 'https://www.nyc.gov/site/dca/workers/workersrights/Delivery-Workers.page',
+    deliveryFaq: 'https://www.nyc.gov/site/dca/workers/workersrights/food-delivery-worker-laws-faqs.page',
+    tlcCalculator: 'https://a156-nauf.nyc.gov/mrequpl/drvvcalc.html',
     freelance: 'https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page',
     newLaws: 'https://www.nyc.gov/site/dca/about/new-laws-rules.page',
     tlcPay: 'https://www.nyc.gov/site/tlc/about/driver-pay-rates.page',
@@ -30,6 +32,15 @@
     nycCare: 'https://www.nyccare.nyc/',
     healthCenter: 'https://findahealthcenter.hrsa.gov/'
   };
+  // DCWP standard method, per worker: pay before tips must be at least the rate times trip time.
+  // Applies to restaurant and grocery apps. The rate changes each April 1.
+  const DELIVERY_RATE = 22.13;
+  function checkDeliveryPay(tripHours, payBeforeTips, rate = DELIVERY_RATE) {
+    if (![tripHours, payBeforeTips].every(n => Number.isFinite(n) && n >= 0)) return null;
+    const minimum = Math.round(tripHours * rate * 100) / 100;
+    const short = Math.round((minimum - payBeforeTips) * 100) / 100;
+    return { minimum, short: Math.max(0, short), meets: short <= 0 };
+  }
   const HURT_GENERAL = { title: 'Get care first, then protect your claim', line: 'If workers’ comp applies, tell the company in writing within 30 days. File within 2 years.', cta: 'Advocate for Injured Workers', url: URLS.advocate, more: [{ label: 'File a claim', url: URLS.fileClaim }], proof: ['Photos', 'Medical records', 'Order or trip screenshot'] };
   const HURT_DRIVER = { title: 'The Black Car Fund may cover you', line: 'It can pay medical costs and lost wages if you’re hurt while dispatched by a member base, like Uber or Lyft.', cta: 'Black Car Fund', url: URLS.blackCar, more: [{ label: 'Drivers Benefits', url: URLS.driversBenefits }], proof: ['Trip details', 'Photos', 'Medical records'] };
 
@@ -94,7 +105,7 @@
     { key: 'marketplace', upTo: Infinity, label: 'Marketplace', title: 'Compare plans with free help', line: 'You may qualify for savings. A free helper can check.' }
   ];
   const OPEN_ENROLLMENT_ENDS = '2027-01-31';
-  const data = { URLS, RIGHTS, CHOOSERS, COVERAGE, POVERTY_BASE, POVERTY_PER_PERSON, OPEN_ENROLLMENT_ENDS };
+  const data = { URLS, RIGHTS, CHOOSERS, COVERAGE, POVERTY_BASE, POVERTY_PER_PERSON, OPEN_ENROLLMENT_ENDS, DELIVERY_RATE, checkDeliveryPay };
   if (typeof module !== 'undefined') module.exports = data;
   if (typeof window !== 'undefined') window.STEADY_TOOLS = data;
 })();

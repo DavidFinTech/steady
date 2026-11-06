@@ -151,7 +151,56 @@
   <section class="band" id="legal">
     <h2 class="display reveal" data-i18n="Your work has value.">Your work has value.</h2>
     <p class="lede reveal" data-i18n="Tell us what happened.">Tell us what happened.</p>
-    <div class="finder reveal" id="rights-finder"></div>
+    <div class="tabs two reveal" data-tabs="rights" role="group">
+      <button type="button" data-tab="paycheck" aria-pressed="true"><i data-icon="coin"></i><span data-i18n="Check my pay">Check my pay</span></button>
+      <button type="button" data-tab="happened" aria-pressed="false"><i data-icon="scale"></i><span data-i18n="Something happened">Something happened</span></button>
+    </div>
+    <div data-panel-of="rights" data-panel="paycheck" class="pay-tool" id="pay-tool">
+      <div class="segmented pay-kinds" role="group">
+        <button type="button" data-pay-kind="delivery" aria-pressed="true" data-i18n="Delivery app">Delivery app</button>
+        <button type="button" data-pay-kind="driver" aria-pressed="false" data-i18n="Uber or Lyft">Uber or Lyft</button>
+        <button type="button" data-pay-kind="freelance" aria-pressed="false" data-i18n="Freelance">Freelance</button>
+      </div>
+      <div data-pay-view="delivery">
+        <div class="coverage-inputs even">
+          <div class="slider light"><label for="trip-hours" data-i18n="Trip hours this pay period">Trip hours this pay period</label><div class="money-field"><input id="trip-hours" type="number" inputmode="decimal" min="0" step="0.25" value="10" dir="ltr"></div><input type="range" id="trip-hours-range" min="0" max="80" step="0.25" value="10" aria-labelledby="trip-hours-label"><span id="trip-hours-label" class="visually-hidden" data-i18n="Trip hours this pay period">Trip hours this pay period</span></div>
+          <div class="slider light"><label for="pay-before-tips" data-i18n="Pay before tips">Pay before tips</label><div class="money-field"><span>$</span><input id="pay-before-tips" type="number" inputmode="decimal" min="0" step="0.01" value="180" dir="ltr"></div><p class="fine pay-hint" data-i18n="Count trip time only, not waiting between orders.">Count trip time only, not waiting between orders.</p></div>
+        </div>
+        <div class="pay-answer" id="pay-answer" aria-live="polite">
+          <span class="tax-label" id="pay-label"></span>
+          <div class="pay-number num" id="pay-amount"></div>
+          <dl class="rows light">
+            <div><dt data-i18n="Minimum for your trip hours">Minimum for your trip hours</dt><dd id="pay-minimum" class="num"></dd></div>
+            <div><dt data-i18n="Your pay before tips">Your pay before tips</dt><dd id="pay-entered" class="num"></dd></div>
+          </dl>
+        </div>
+        <div class="rights-actions" id="pay-actions">
+          <a class="pill pill-strong" href="https://www.nyc.gov/site/dca/workers/workersrights/Delivery-Workers.page"><span data-i18n="File with DCWP">File with DCWP</span><i data-icon="arrow"></i></a>
+          <button type="button" class="pill" id="pay-note"><span data-i18n="Start a case note">Start a case note</span></button>
+        </div>
+        <p class="fine" data-i18n="Your app’s pay statement should show this. Apps must send one within 7 days after the pay period.">Your app’s pay statement should show this. Apps must send one within 7 days after the pay period.</p>
+        <p class="fine" data-i18n="An estimate for restaurant and grocery apps, at $22.13 an hour. Other apps aren’t covered yet. Not legal advice.">An estimate for restaurant and grocery apps, at $22.13 an hour. Other apps aren’t covered yet. Not legal advice.</p>
+      </div>
+      <div data-pay-view="driver" hidden>
+        <div class="chooser-card">
+          <span class="chooser-icon"><i data-icon="pin"></i></span>
+          <h3 data-i18n="Check trips with TLC’s calculator">Check trips with TLC’s calculator</h3>
+          <p data-i18n="Trip pay depends on miles, minutes and trip type, so use the official tool.">Trip pay depends on miles, minutes and trip type, so use the official tool.</p>
+          <div class="rights-actions"><a class="pill pill-strong" href="https://a156-nauf.nyc.gov/mrequpl/drvvcalc.html"><span data-i18n="TLC pay calculator">TLC pay calculator</span><i data-icon="arrow"></i></a><a class="pill" href="https://www.nyc.gov/site/tlc/about/driver-pay-rates.page"><span data-i18n="See current rates">See current rates</span><i data-icon="arrow"></i></a></div>
+        </div>
+      </div>
+      <div data-pay-view="freelance" hidden>
+        <div class="chooser-card">
+          <span class="chooser-icon"><i data-icon="doc"></i></span>
+          <h3 data-i18n="Freelance pay depends on your contract">Freelance pay depends on your contract</h3>
+          <p data-i18n="Check whether a payment is late and what you could seek.">Check whether a payment is late and what you could seek.</p>
+          <div class="rights-actions"><button type="button" class="pill pill-strong" id="pay-late"><span data-i18n="Check a late payment">Check a late payment</span></button></div>
+        </div>
+      </div>
+    </div>
+    <div data-panel-of="rights" data-panel="happened" hidden>
+      <div class="finder" id="rights-finder"></div>
+    </div>
     <div class="tax-foot reveal"><button type="button" class="pill" data-need="pay" aria-pressed="false"><span data-i18n="Make a 3-step plan">Make a 3-step plan</span></button></div>
   </section>
 

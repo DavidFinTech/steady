@@ -1,11 +1,12 @@
 // Interactive rights, money and health tools. Nothing entered here leaves the browser or is saved.
 (() => {
-  const { RIGHTS, COVERAGE, POVERTY_BASE, POVERTY_PER_PERSON, OPEN_ENROLLMENT_ENDS } = window.STEADY_TOOLS;
+  const { RIGHTS, COVERAGE, POVERTY_BASE, POVERTY_PER_PERSON, OPEN_ENROLLMENT_ENDS, URLS, checkDeliveryPay } = window.STEADY_TOOLS;
   const t = text => window.STEADY.t(text);
   const icon = name => window.steadyIcon(name);
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = n => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
   const $ = id => document.getElementById(id);
+  const money2 = n => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   const fill = range => {
     const min = Number(range.min), span = Number(range.max) - min;
     range.style.setProperty('--fill', `${((Number(range.value) - min) / span) * 100}%`);
@@ -160,8 +161,60 @@
       if (overdueKey) { overdue[overdueKey] = event.target.value; $('overdue-result').innerHTML = overdueText(); }
       if (proof !== undefined) { event.target.checked ? proofDone.add(Number(proof)) : proofDone.delete(Number(proof)); }
     });
+    window.STEADY.openRights = (nextRole, nextIssue, noteFields = {}) => {
+      document.querySelector('[data-tab="happened"]').click();
+      role = nextRole; issue = nextIssue; proofDone = new Set();
+      note = { ...note, ...noteFields };
+      draw();
+      const details = finder.querySelector('.case-note');
+      if (details && Object.keys(noteFields).length) details.open = true;
+      finder.querySelector('#rights-result').scrollIntoView();
+      finder.querySelector('#rights-result').focus({ preventScroll: true });
+    };
     window.addEventListener('steady-language-change', () => draw());
     draw();
+  }
+
+  // Pay checker
+  const payTool = $('pay-tool');
+  if (payTool) {
+    let kind = 'delivery';
+    const hours = $('trip-hours'), hoursRange = $('trip-hours-range'), pay = $('pay-before-tips');
+    const hoursText = value => Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    function paintPay() {
+      payTool.querySelectorAll('[data-pay-kind]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.payKind === kind)));
+      payTool.querySelectorAll('[data-pay-view]').forEach(view => { view.hidden = view.dataset.payView !== kind; });
+      fill(hoursRange);
+      const answer = $('pay-answer');
+      const result = hours.value === '' || pay.value === '' ? null : checkDeliveryPay(Number(hours.value), Number(pay.value));
+      answer.hidden = !result;
+      if (!result) { $('pay-actions').hidden = true; return; }
+      answer.classList.toggle('is-short', !result.meets);
+      answer.classList.toggle('is-ok', result.meets);
+      $('pay-label').textContent = t(result.meets ? 'Meets the minimum' : 'Looks short by');
+      $('pay-amount').textContent = result.meets ? '✓' : money2(result.short);
+      $('pay-minimum').textContent = money2(result.minimum);
+      $('pay-entered').textContent = money2(Number(pay.value));
+      $('pay-actions').hidden = result.meets;
+    }
+    payTool.addEventListener('click', event => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      if (button.dataset.payKind) { kind = button.dataset.payKind; paintPay(); }
+      if (button.id === 'pay-note') {
+        const result = checkDeliveryPay(Number(hours.value), Number(pay.value));
+        window.STEADY.openRights('delivery', 'lowpay', {
+          amount: String(result.short),
+          what: t('Pay looks short by {amount} for {hours} trip hours.').replace('{amount}', money2(result.short)).replace('{hours}', hoursText(hours.value))
+        });
+      }
+      if (button.id === 'pay-late') window.STEADY.openRights('freelance', 'unpaid');
+    });
+    hours.addEventListener('input', () => { hoursRange.value = Math.min(Number(hoursRange.max), Number(hours.value) || 0); paintPay(); });
+    hoursRange.addEventListener('input', () => { hours.value = hoursRange.value; paintPay(); });
+    pay.addEventListener('input', paintPay);
+    window.addEventListener('steady-language-change', paintPay);
+    paintPay();
   }
 
   // Health coverage finder
