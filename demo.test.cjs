@@ -1,0 +1,67 @@
+const assert = require('node:assert/strict');
+const { createDemo } = require('./steady-backend.js');
+const box = new Map();
+const storage = { getItem: k => box.get(k) ?? null, setItem: (k, v) => box.set(k, v), removeItem: k => box.delete(k) };
+const expectCode = async (promise, code) => assert.equal((await promise.then(() => null, error => error))?.code, code);
+(async () => {
+  const demo = createDemo(storage, 'k');
+  let data = await demo.list({ sort: 'new' });
+  assert.equal(data.signedIn, false);
+  assert.equal(data.posts.length, 5);
+  await expectCode(demo.action({ action: 'post', title: 'x', body: 'y', topic: 'general' }), 'signin');
+  await expectCode(demo.verifyCode('sample@example.com', '000000'), 'badcode');
+  await demo.sendCode('sample@example.com');
+  await demo.verifyCode('Sample@Example.com ', '123456');
+  data = await demo.me();
+  assert.equal(data.signedIn, true);
+  assert.equal(data.me, null);
+  await expectCode(demo.action({ action: 'post', title: 'x', body: 'y', topic: 'general' }), 'profile');
+  await expectCode(demo.action({ action: 'profile', isNew: true, handle: 'no spaces' }), 'handle');
+  await expectCode(demo.action({ action: 'profile', isNew: true, handle: 'maya_rides' }), 'taken');
+  await demo.action({ action: 'profile', isNew: true, handle: 'Sample_Test', bio: 'hi', avatar: '🌻' });
+  assert.equal((await demo.me()).me.handle, 'sample_test');
+  const { id } = await demo.action({ action: 'post', title: 'Mine', body: 'Body', topic: 'money' });
+  data = await demo.list({ post: id });
+  assert.equal(data.posts[0].mine, 1);
+  await demo.action({ action: 'comment', id, body: 'A comment' });
+  data = await demo.list({ post: id });
+  assert.equal(data.comments.length, 1);
+  assert.equal(data.posts[0].comments, 1);
+  await demo.action({ action: 'vote', id: 'sample-1', value: 1 });
+  const voted = (await demo.list({ post: 'sample-1' })).posts[0];
+  assert.equal(voted.myVote, 1);
+  assert.equal(voted.score, 15);
+  await expectCode(demo.action({ action: 'delete', id: 'sample-1' }), 'forbidden');
+  assert.equal((await demo.list({ sort: 'top' })).posts[0].id, 'sample-3');
+  await expectCode(demo.queue(), 'forbidden');
+  await demo.action({ action: 'report', id: 'sample-2', reason: 'test' });
+  // Signing back in returns to the same account, and data survives a reload.
+  await demo.signOut();
+  const reopened = createDemo(storage, 'k');
+  assert.equal((await reopened.me()).signedIn, false);
+  await reopened.verifyCode('sample@example.com', '123456');
+  assert.equal((await reopened.me()).me.handle, 'sample_test');
+  // Moderator tools
+  await reopened.signOut();
+  await reopened.verifyCode('mod@example.com', '123456');
+  const reports = await reopened.queue();
+  assert.equal(reports.length, 1);
+  await reopened.moderate('sample-2', true);
+  await reopened.resolve(reports[0].id);
+  assert.equal((await reopened.queue()).length, 0);
+  await reopened.signOut();
+  assert.ok(!(await reopened.list({})).posts.some(post => post.id === 'sample-2'));
+  // Deleting an account removes its posts; reset brings back the samples.
+  await reopened.verifyCode('sample@example.com', '123456');
+  await reopened.deleteAccount();
+  assert.ok(!(await reopened.list({})).posts.some(post => post.id === id));
+  reopened.reset();
+  assert.equal((await reopened.list({})).posts.length, 5);
+  // Blocked storage still works for the session, and damaged data starts fresh.
+  const blocked = createDemo({ getItem() { throw new Error('no'); }, setItem() { throw new Error('no'); }, removeItem() {} }, 'k');
+  await blocked.verifyCode('a@b.co', '123456');
+  assert.equal((await blocked.me()).signedIn, true);
+  box.set('bad', '{nope');
+  assert.equal((await createDemo(storage, 'bad').list({})).posts.length, 5);
+  console.log('PASS: demo sign-in and Community, including wrong codes, permissions, moderation and reset.');
+})().catch(error => { console.error(error); process.exit(1); });

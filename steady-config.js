@@ -3,5 +3,7 @@
 // Never put a "secret" or "service_role" key here.
 window.STEADY_CONFIG = {
   supabaseUrl: '',
-  supabaseKey: ''
+  supabaseKey: '',
+  // Sample sign-in for presentations. Real accounts replace it automatically once the two keys above are filled in.
+  demo: true
 };

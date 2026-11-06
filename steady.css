@@ -685,7 +685,7 @@ html[lang="ur"] .art-card strong{line-height:1.7}
 /* Characters */
 .av{display:block;width:100%;height:100%}
 .avatar{overflow:hidden}
-.account-link i.as-avatar{overflow:hidden;border-radius:50%;background:#fff}
+.account-link i.as-avatar{overflow:hidden;border-radius:50%;background:#fff;color:var(--ink)}
 .account-link:has(.as-avatar) i{width:26px;height:26px}
 .avatar-grid span .av{border-radius:inherit}
 .avatar-grid span{overflow:hidden}
@@ -758,3 +758,7 @@ body:has(.maker){background:var(--soft)}
 .me-card .pill-sun:hover,#save-account:hover,.maker-strip .pill-sun:hover{background:var(--navy-2)}
 .maker-actions .pill{padding-inline:20px}
 
+/* Demo mode notice */
+#demo-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 12px;padding:5px 14px;background:var(--sage);color:var(--sage-ink);font-size:13px;font-weight:600;text-align:center}
+#demo-banner button{padding:2px 4px;border:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}
+@media print{#demo-banner{display:none}}

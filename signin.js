@@ -37,14 +37,20 @@
     const address = document.createElement('bdi');
     address.textContent = email;
     $('code-sent').replaceChildren(before, address, after || '');
-    $('dev-hint').hidden = backend.mode !== 'dev';
+    $('dev-hint').hidden = backend.mode !== 'dev' && backend.mode !== 'demo';
   }
   function render() {
     const account = window.STEADY.account;
     if (step === 'code') { paintCodeStep(); paintCooldown(); return; }
     if (!account.checked) return show('checking');
     if (!account.available) return show('offline');
-    if (!account.signedIn) return show('email');
+    if (!account.signedIn) {
+      if (backend.mode === 'demo') {
+        $('demo-email-hint').hidden = false;
+        if (!$('email').value) $('email').value = 'sample@example.com';
+      }
+      return show('email');
+    }
     show('signed-in');
     const avatar = $('me-avatar');
     avatar.innerHTML = window.STEADY_AVATAR.html(account.me?.avatar || '');
