@@ -12,7 +12,7 @@
     host.querySelector('.share-legend').innerHTML = visible.map(s => `<li><i class="${s.tone}"></i><span>${t(s.label)}</span><b class="num">${Math.round((s.value / total) * 100)}%</b></li>`).join('');
   };
 
-  const CHOOSERS = window.STEADY_TOOLS.CHOOSERS;
+  const CHOOSERS = window.STEADY_TOOLS?.CHOOSERS || {};
   document.querySelectorAll('[data-chooser]').forEach(host => {
     const options = CHOOSERS[host.dataset.chooser];
     let active = 0;
