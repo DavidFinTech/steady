@@ -55,7 +55,7 @@
     const avatar = $('me-avatar');
     avatar.textContent = account.me?.avatar || '';
     avatar.hidden = !account.me;
-    $('me-title').textContent = account.me ? `@${account.me.handle}` : t('Almost there.');
+    $('me-title').textContent = account.me ? `\u2066@${account.me.handle}\u2069` : t('Almost there.');
     $('me-line').textContent = t(account.me ? 'You’re signed in.' : 'Pick a username');
     $('continue-action').href = account.me ? returnTo : 'community.html?setup=1';
   }
