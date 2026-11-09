@@ -34,7 +34,7 @@
   function paintCard() {
     const account = window.STEADY.account;
     $('me-portrait').innerHTML = A.svg(character, { title: t('Your character') });
-    $('me-name').textContent = account?.me ? `@${account.me.handle}` : t('Your character');
+    $('me-name').textContent = account?.me ? `\u2066@${account.me.handle}\u2069` : t('Your character');
     const work = A.WORK[character.work];
     $('me-work').textContent = character.work ? t(work.label) : '';
     $('me-work').hidden = !character.work;

@@ -55,7 +55,7 @@
     const avatar = $('me-avatar');
     avatar.innerHTML = window.STEADY_AVATAR.html(account.me?.avatar || '');
     avatar.hidden = !account.me;
-    $('me-title').textContent = account.me ? `@${account.me.handle}` : t('You’re signed in.');
+    $('me-title').textContent = account.me ? `\u2066@${account.me.handle}\u2069` : t('You’re signed in.');
     $('me-line').textContent = account.me ? t('You’re signed in.') : '';
     $('continue-action').href = returnTo;
   }

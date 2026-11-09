@@ -36,5 +36,5 @@ global.window = community;
 require('./community-i18n.js');
 const missing = [...used].filter(key => !DICTIONARY[key] && !community.COMMUNITY_I18N[key]);
 assert.deepEqual(missing, []);
-for (const [key, value] of Object.entries(community.COMMUNITY_I18N)) for (const code of ['es', 'zh-Hans', 'hi', 'bn', 'ur']) assert.ok(value[code], `community: ${key} is missing ${code}`);
+for (const [key, value] of Object.entries(community.COMMUNITY_I18N)) for (const code of ['es', 'zh-Hans', 'hi', 'bn', 'ar']) assert.ok(value[code], `community: ${key} is missing ${code}`);
 console.log(`PASS: ${used.size} strings used; every string has all six languages.`);
