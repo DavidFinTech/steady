@@ -9,7 +9,7 @@
   function paint() {
     document.querySelectorAll('[data-account-link]').forEach(link => {
       link.href = `signin.html?return_to=${encodeURIComponent(here)}`;
-      link.querySelector('span').textContent = state.signedIn ? (state.me ? `@${state.me.handle}` : t('Pick a username')) : t('Sign in');
+      link.querySelector('span').textContent = state.signedIn ? (state.me ? `\u2066@${state.me.handle}\u2069` : t('Pick a username')) : t('Sign in');
       link.classList.toggle('is-signed-in', state.signedIn);
       const icon = link.querySelector('i');
       if (state.signedIn && state.me?.avatar) { icon.textContent = state.me.avatar; icon.classList.add('as-avatar'); }

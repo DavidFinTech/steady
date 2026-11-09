@@ -6,7 +6,7 @@ assert.match(translatedUrl(DELIVERY, 'bn'), /bengali/);
 assert.match(translatedUrl(DELIVERY, 'zh-Hans'), /simplified-chinese/);
 assert.equal(translatedUrl(DELIVERY, 'hi'), null);
 assert.match(translatedUrl('https://www.nyc.gov/site/dca/workers/workersrights/freelancer-workers.page', 'hi'), /Hindi\.pdf$/);
-assert.equal(translatedUrl('https://access.nyc.gov/programs/one-shot-deal/', 'ur'), 'https://access.nyc.gov/ur/programs/one-shot-deal/');
+assert.equal(translatedUrl('https://access.nyc.gov/programs/one-shot-deal/', 'ar'), 'https://access.nyc.gov/ar/programs/one-shot-deal/');
 assert.equal(translatedUrl('https://access.nyc.gov/programs/one-shot-deal/', 'zh-Hans'), 'https://access.nyc.gov/zh-hant/programs/one-shot-deal/');
 assert.equal(translatedUrl('https://access.nyc.gov/programs/one-shot-deal/', 'hi'), null);
 assert.equal(translatedUrl('https://www.irs.gov/businesses/small-businesses-self-employed/estimated-taxes', 'bn'), null);
