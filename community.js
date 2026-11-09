@@ -125,7 +125,7 @@
     const me = data.me || {};
     const mine = window.STEADY_AVATAR.load()?.character;
     const usingCharacter = url.searchParams.get('character') === '1';
-    const current = me.avatar || (usingCharacter && mine) || AVATARS[0];
+    const current = me.avatar || mine || AVATARS[0];
     let draft = {};
     try { draft = JSON.parse(sessionStorage.getItem('steady-profile-draft') || '{}'); sessionStorage.removeItem('steady-profile-draft'); } catch (_) { /* private browsing */ }
     const choices = [...new Set([mine, window.STEADY_AVATAR.isCharacter(me.avatar) ? me.avatar : null].filter(Boolean)), ...AVATARS];

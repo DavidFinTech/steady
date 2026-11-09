@@ -46,10 +46,35 @@
   function paintStatus(message) {
     $('me-status').textContent = message;
   }
+  // With a profile, every change saves to it on its own, so nothing is lost by leaving.
+  let pending = null;
+  let saving = Promise.resolve(true);
+  function saveToProfile() {
+    clearTimeout(pending);
+    pending = null;
+    const me = window.STEADY.account?.me;
+    if (!me) return saving;
+    const avatar = A.encode(character);
+    if (avatar === me.avatar && bio === (me.bio || '')) return saving;
+    saving = saving.then(() => window.STEADY_BACKEND.action({ action: 'profile', isNew: false, bio, avatar }))
+      .then(() => {
+        window.STEADY.setAccount({ me: { ...window.STEADY.account.me, avatar, bio } });
+        paintStatus(t('Saved to your profile.'));
+        return true;
+      })
+      .catch(() => { paintStatus(t('Couldn’t save. Try again.')); return false; });
+    return saving;
+  }
   function changed() {
     A.save(character, bio);
     paintCard();
-    paintStatus(t('Saved on this device.'));
+    if (window.STEADY.account?.me) {
+      paintStatus(t('Saving…'));
+      clearTimeout(pending);
+      pending = setTimeout(saveToProfile, 500);
+    } else {
+      paintStatus(t('Saved on this device.'));
+    }
   }
   function drawTabs() {
     $('maker-tabs').innerHTML = TABS.map(tab => `<button type="button" data-maker-tab="${tab.id}" aria-pressed="${tab.id === active}">${e(t(tab.label))}</button>`).join('');
@@ -144,15 +169,20 @@
   $('save-account').addEventListener('click', async () => {
     const button = $('save-account');
     button.disabled = true;
-    try {
-      await window.STEADY_BACKEND.action({ action: 'profile', isNew: false, bio, avatar: A.encode(character) });
+    if (await saveToProfile()) {
       location.href = `community.html?profile=${encodeURIComponent(window.STEADY.account.me.handle)}`;
       return;
-    } catch (_) {
-      paintStatus(t('Couldn’t save. Try again.'));
     }
     button.disabled = false;
   });
+  // Leaving before the last change is saved: save it first.
+  $('maker-close').addEventListener('click', async event => {
+    if (!pending) return;
+    event.preventDefault();
+    await saveToProfile();
+    location.href = $('maker-close').href;
+  });
+  window.addEventListener('pagehide', () => { if (pending) saveToProfile(); });
 
   function paintAccount() {
     const account = window.STEADY.account;
